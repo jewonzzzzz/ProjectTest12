@@ -214,11 +214,11 @@ public class SalaryController {
 		vo.setCheck_in_end(check_in_end);
 		
 		//급여산출 메서드
-//		List<CalSalaryFinalVO> CalSalaryFinalInfo = sService.calSalary(employeeIds, vo);
-//		
-//		logger.debug(CalSalaryFinalInfo.toString());
-//		model.addAttribute("CalSalaryFinalInfo", CalSalaryFinalInfo);
-//		model.addAttribute("calSalaryInfo", vo);
+		List<CalSalaryFinalVO> CalSalaryFinalInfo = sService.calSalary(employeeIds, vo);
+		
+		logger.debug(CalSalaryFinalInfo.toString());
+		model.addAttribute("CalSalaryFinalInfo", CalSalaryFinalInfo);
+		model.addAttribute("calSalaryInfo", vo);
 		
 		return "/salary/calSalaryStep3";
 	}

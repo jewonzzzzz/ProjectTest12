@@ -90,12 +90,12 @@
                     	
                     	<form id="deleteSubmit" action="/salary/deleteSalaryInfo" method="post" style="display: inline-block;">
                     		<input type="hidden" id="inputForDelete" name="sal_list_id">
-                    		<button type="submit" class="btn btn-primary" id="deleteBtn">삭제하기</button>
+                    		<button type="submit" class="btn btn-primary" id="deleteBtn" disabled>삭제하기</button>
                     	</form>
                     	
                     	<form id="confirmSubmit" action="/salary/confirmSalaryList" method="post" style="display: inline-block;">
                     		<input type="hidden" id="inputForConfirm" name="sal_list_id">
-                    		<button type="submit" class="btn btn-primary" id="confirmBtn">최종확정</button>
+                    		<button type="submit" class="btn btn-primary" id="confirmBtn" disabled>최종확정</button>
                     	</form>
                     	
                   	</div>
@@ -144,13 +144,36 @@
     
      <script>
         $(document).ready(function() {
-        	
+        	//데이터테이블 설정
         	$("#basic-datatables").DataTable({
         		pageLength: 6,
         	});
         	
+        	$('input[type="checkbox"]').click(function() {
+                if ($(this).is(':checked')) {
+                    // 체크박스가 체크되면 버튼 활성화
+                    $('#deleteBtn').prop('disabled', false);
+                    // 하나만 체크할 수 있도록 하는 기능
+                    $('input[type="checkbox"]').not(this).prop('checked', false);
+                } else {
+                    // 체크박스가 해제되면 버튼 비활성화
+                    $('#deleteBtn').prop('disabled', true);
+                }
+            });
+        	
+        	$('input[type="checkbox"]').click(function() {
+        		var tdText = $(this).closest('tr').find('td:eq(5)').text();
+	        	if($(this).is(':checked') && tdText === '결재완료') {
+	            	// 체크되고 '결재완료'일때만 활성화
+	                $('#confirmBtn').prop('disabled', false);
+	        	} else {
+                    // 체크박스가 해제되면 버튼 비활성화
+                    $('#confirmBtn').prop('disabled', true);
+                }
+        	});
+        	
         	// 테이블 가운대 정렬
-        	$('table th td').wrap('<div style="text-align: center;"></div>');
+        	$('table th, table td').css('text-align', 'center');
         	
         	// 삭제버튼 시 리스트id 가지고 이동하기
             $('#deleteBtn').click(function(event){

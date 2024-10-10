@@ -123,8 +123,9 @@ public class SalaryDAOImpl implements SalaryDAO{
 					
 					for (String emp_id : employeeIds) {
 						// 직원정보 가져오기
-						MemberInfoForSalaryVO memberInfo = sqlSession.selectOne(NAMESPACE + ".getMemberAllInfoForSalary",
-								emp_id);
+						vo.setEmp_id(emp_id);
+						MemberInfoForSalaryVO memberInfo = sqlSession.selectOne(NAMESPACE + ".getMemberInfoForSalary",
+								vo);
 						
 						// 공통사항 계산
 						SalaryCalculrator salaryCalculrator = new SalaryCalculrator();
@@ -219,8 +220,8 @@ public class SalaryDAOImpl implements SalaryDAO{
 	class SalaryCalculrator {
 		
 		// 직급급 확인
-		public int checkRankSalary(String employee_grade, SalaryPositionJobVO positionJobInfo) {
-			switch (employee_grade) {
+		public int checkRankSalary(String emp_position, SalaryPositionJobVO positionJobInfo) {
+			switch (emp_position) {
 			case "사장":
 				return positionJobInfo.getSal_position_ceo();
 			case "부사장":
@@ -243,8 +244,8 @@ public class SalaryDAOImpl implements SalaryDAO{
 		}
 
 		// 직무급 확인
-		public int checkDutySalary(String employee_duty, SalaryPositionJobVO positionJobInfo) {
-			switch (employee_duty) {
+		public int checkDutySalary(String emp_job, SalaryPositionJobVO positionJobInfo) {
+			switch (emp_job) {
 			case "직무1":
 				return positionJobInfo.getSal_job1();
 			case "직무2":
@@ -285,42 +286,42 @@ public class SalaryDAOImpl implements SalaryDAO{
 		}
 		
 		//소득세 계산
-		public int calIncomeTax(int sal_total_basic, SalaryBasicInfoVO basciInfo) {
-			if(sal_total_basic*12 < 14000000) {
-				return (int)(sal_total_basic * basciInfo.getIncometax_rate1());
-			} else if(sal_total_basic*12 < 50000000) {
+		public int calIncomeTax(int sal_total_before, SalaryBasicInfoVO basciInfo) {
+			if(sal_total_before*12 < 14000000) {
+				return (int)(sal_total_before * basciInfo.getIncometax_rate1());
+			} else if(sal_total_before*12 < 50000000) {
 				return (int)(((14000000/12)*basciInfo.getIncometax_rate1()) + 
-						(sal_total_basic-14000000/12)*basciInfo.getIncometax_rate2());
-			} else if(sal_total_basic < (int)88000000/12) {
+						(sal_total_before-14000000/12)*basciInfo.getIncometax_rate2());
+			} else if(sal_total_before < (int)88000000/12) {
 				return (int)(((14000000/12)*basciInfo.getIncometax_rate1()) + 
 						(50000000/12 - 14000000/12)*basciInfo.getIncometax_rate2() +
-						(sal_total_basic - 50000000/12)*basciInfo.getIncometax_rate3());
-			} else if(sal_total_basic < (int)150000000/12) {
+						(sal_total_before - 50000000/12)*basciInfo.getIncometax_rate3());
+			} else if(sal_total_before < (int)150000000/12) {
 				return (int)(((14000000/12)*basciInfo.getIncometax_rate1()) + 
 						(50000000/12 - 14000000/12)*basciInfo.getIncometax_rate2() +
 						(88000000/12 - 50000000/12)*basciInfo.getIncometax_rate3() +
-						(sal_total_basic - 88000000/12)*basciInfo.getIncometax_rate4());
-			} else if(sal_total_basic < (int)300000000/12) {
+						(sal_total_before - 88000000/12)*basciInfo.getIncometax_rate4());
+			} else if(sal_total_before < (int)300000000/12) {
 				return (int)(((14000000/12)*basciInfo.getIncometax_rate1()) + 
 						(50000000/12 - 14000000/12)*basciInfo.getIncometax_rate2() +
 						(88000000/12 - 50000000/12)*basciInfo.getIncometax_rate3() +
 						(150000000/12 - 88000000/12)*basciInfo.getIncometax_rate4() +
-						(sal_total_basic - 150000000/12)*basciInfo.getIncometax_rate5());
-			} else if(sal_total_basic < (int)500000000/12) {
+						(sal_total_before - 150000000/12)*basciInfo.getIncometax_rate5());
+			} else if(sal_total_before < (int)500000000/12) {
 				return (int)(((14000000/12)*basciInfo.getIncometax_rate1()) + 
 						(50000000/12 - 14000000/12)*basciInfo.getIncometax_rate2() +
 						(88000000/12 - 50000000/12)*basciInfo.getIncometax_rate3() +
 						(150000000/12 - 88000000/12)*basciInfo.getIncometax_rate4() +
 						(300000000/12 - 150000000/12)*basciInfo.getIncometax_rate5() +
-						(sal_total_basic - 300000000/12)*basciInfo.getIncometax_rate6());
-			} else if(sal_total_basic < (int)1000000000/12) {
+						(sal_total_before - 300000000/12)*basciInfo.getIncometax_rate6());
+			} else if(sal_total_before < (int)1000000000/12) {
 				return (int)(((14000000/12)*basciInfo.getIncometax_rate1()) + 
 						(50000000/12 - 14000000/12)*basciInfo.getIncometax_rate2() +
 						(88000000/12 - 50000000/12)*basciInfo.getIncometax_rate3() +
 						(150000000/12 - 88000000/12)*basciInfo.getIncometax_rate4() +
 						(300000000/12 - 150000000/12)*basciInfo.getIncometax_rate5() +
 						(500000000/12 - 300000000/12)*basciInfo.getIncometax_rate6() +
-						(sal_total_basic - 500000000/12)*basciInfo.getIncometax_rate7());
+						(sal_total_before - 500000000/12)*basciInfo.getIncometax_rate7());
 			} else {
 				return (int)(((14000000/12)*basciInfo.getIncometax_rate1()) + 
 						(50000000/12 - 14000000/12)*basciInfo.getIncometax_rate2() +
@@ -329,7 +330,7 @@ public class SalaryDAOImpl implements SalaryDAO{
 						(300000000/12 - 150000000/12)*basciInfo.getIncometax_rate5() +
 						(500000000/12 - 300000000/12)*basciInfo.getIncometax_rate6() +
 						(1000000000/12 - 500000000/12)*basciInfo.getIncometax_rate7() +
-						(sal_total_basic - 1000000000/12)*basciInfo.getIncometax_rate8());
+						(sal_total_before - 1000000000/12)*basciInfo.getIncometax_rate8());
 			}
 		}
 

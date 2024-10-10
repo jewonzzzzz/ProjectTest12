@@ -278,6 +278,53 @@
               </div>
           </div>
                  
+          <script>
+        $(document).ready(function() {
+            // 모든 input 요소의 텍스트를 오른쪽으로 정렬
+            $('input').css('text-align', 'right');
+            
+        	 // 쉼표 추가 함수
+            function addCommas(value) {
+                return value.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+
+            // 페이지 로드 시 특정 입력 필드의 값에 쉼표 추가
+            $('input').each(function() {
+                var originalValue = $(this).val();  // 입력 필드의 기존 값 가져오기
+                if (originalValue) {  // 값이 존재하면 쉼표 추가
+                    var formattedValue = addCommas(originalValue);
+                    $(this).val(formattedValue);  // 포맷된 값으로 업데이트
+                }
+            });
+            
+            $("#alert_demo_3_1").click(function (event) {
+            	  event.preventDefault();  // 기본 동작 막기
+            	  
+            	  // 1. 모든 쉼표를 제거하는 함수
+            	  function removeCommas(value) {
+            	    return value.replace(/,/g, '');
+            	  }
+
+            	  // 2. 특정 form 안의 모든 input 필드의 쉼표 제거
+            	  $(this).closest("form").find("input").each(function() {
+            	    var cleanedValue = removeCommas($(this).val());  // 각 input 필드의 쉼표 제거
+            	    $(this).val(cleanedValue);  // 제거한 값으로 업데이트
+            	  });
+
+            	  swal("저장되었습니다.", {
+            	    icon: "success",
+            	    buttons: {
+            	      confirm: {
+            	        className: "btn btn-success",
+            	      },
+            	    },
+            	  }).then(function() {  
+            	    $(this).closest("form").submit(); 
+            	  }.bind(this)); 
+            	});
+        });
+    </script>       
+                 
 <!------------------------------------------------------------------------------------------------------------------>
           </div>
           <!-- page-inner -->
