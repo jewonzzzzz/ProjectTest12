@@ -242,10 +242,11 @@ public class SalaryController {
 		List<CalSalaryFinalVO> CalSalaryFinalInfo = sService.calSalary(employeeIds, vo);
 		logger.debug(CalSalaryFinalInfo.toString());
 		
-		// 급여내역테이블 저장
-		sService.saveCalSalaryList(vo);
 		//산출된 급여 급여상세내역 테이블 저장
 		sService.saveCalSalaryFinal(CalSalaryFinalInfo);
+		
+		// 급여내역테이블 저장
+		sService.saveCalSalaryList(vo);
 		
 		return "ok";
 	}
@@ -318,7 +319,7 @@ public class SalaryController {
 		return calSalaryInquiryList;
 	}
 	
-	// 급여조회 상세페이지
+	// 급여조회 상세페이지(매니저 및 직원 겸용)
 	@GetMapping(value = "salaryDetail")
 	public String getSalaryDetail(@RequestParam("sal_final_id") int sal_final_id, Model model) {
 		logger.debug(""+sal_final_id);
@@ -357,6 +358,12 @@ public class SalaryController {
 		return calSalaryInquiryList;
 	}	
 		
+	
+	// 성과급/상여금 만드는중
+	//getSalaryInquiryForManageToId 메퍼수정 필요
+	
+	
+	
 		
 	
 }

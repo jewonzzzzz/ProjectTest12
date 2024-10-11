@@ -194,14 +194,14 @@ public class SalaryDAOImpl implements SalaryDAO{
 				// 급여형태에 따른 분류(월급여/성과급/상여금)
 				String sal_type = vo.getSal_type();
 				
+				//salary_info_id 설정
+				String sal_list_id = "s"+vo.getYear()+vo.getMonth()+vo.getSal_type();
+				
 				switch (sal_type) {
 				case "월급여":
 					
 					//최종 반환할 CalSalaryFinalVO 리스트 생성
 					List<CalSalaryFinalVO> calSalaryFinalList = new ArrayList<CalSalaryFinalVO>();
-					
-					//salary_info_id 설정
-					String sal_list_id = "s"+vo.getYear()+vo.getMonth()+vo.getSal_type();
 					
 					for (String emp_id : employeeIds) {
 						// 직원정보 가져오기
@@ -217,12 +217,13 @@ public class SalaryDAOImpl implements SalaryDAO{
 						int sal_position = salaryCalculrator.checkRankSalary(emp_position, positionJobInfo);
 						int sal_job = salaryCalculrator.checkDutySalary(emp_job, positionJobInfo);
 						int sal_allow = (salaryCalculrator.calAllow(sal_position, sal_job, memberInfo)/1000)*1000;
-						int sal_total_before = sal_position + sal_job + sal_allow;
-						int incometax = (salaryCalculrator.calIncomeTax(sal_total_before, basciInfo)/1000)*10;
-						int pension = ((int)(sal_total_before * pension_rate)/1000)*10;
-						int heal_ins = ((int)(sal_total_before * heal_ins_rate)/1000)*10;
+						int sal_month = sal_position + sal_job + sal_allow;
+						int incometax = (salaryCalculrator.calIncomeTax(sal_month, basciInfo)/1000)*10;
+						int pension = ((int)(sal_month * pension_rate)/1000)*10;
+						int heal_ins = ((int)(sal_month * heal_ins_rate)/1000)*10;
 						int long_ins = ((int)(heal_ins * long_ins_rate)/1000)*10;
-						int emp_ins = ((int)(sal_total_before * emp_ins_rate)/1000)*10;
+						int emp_ins = ((int)(sal_month * emp_ins_rate)/1000)*10;
+						int sal_total_before = sal_month;
 						int sal_total_deduct = incometax + pension + heal_ins + long_ins + emp_ins;
 						int sal_total_after = sal_total_before - sal_total_deduct;
 						
@@ -241,12 +242,13 @@ public class SalaryDAOImpl implements SalaryDAO{
 							calSalaryFinalInfo.setSal_position(sal_position);
 							calSalaryFinalInfo.setSal_job(sal_job);
 							calSalaryFinalInfo.setSal_allow(sal_allow);
-							calSalaryFinalInfo.setSal_total_before(sal_total_before);
+							calSalaryFinalInfo.setSal_month(sal_month);
 							calSalaryFinalInfo.setIncometax(incometax);
 							calSalaryFinalInfo.setPension(pension);
 							calSalaryFinalInfo.setHeal_ins(heal_ins);
 							calSalaryFinalInfo.setLong_ins(long_ins);
 							calSalaryFinalInfo.setEmp_ins(emp_ins);
+							calSalaryFinalInfo.setSal_total_before(sal_total_before);
 							calSalaryFinalInfo.setSal_total_deduct(sal_total_deduct);
 							calSalaryFinalInfo.setSal_total_after(sal_total_after);
 							
@@ -257,12 +259,13 @@ public class SalaryDAOImpl implements SalaryDAO{
 							sal_position = 0;
 							sal_job = 0;
 							sal_allow = basciInfo.getHourwage() * memberInfo.getOvertime();
-							sal_total_before = basciInfo.getHourwage()* memberInfo.getWorking_time();
-							incometax = (salaryCalculrator.calIncomeTax(sal_total_before, basciInfo)/1000)*10;
-							pension = ((int)(sal_total_before * pension_rate)/1000)*10;
-							heal_ins = ((int)(sal_total_before * heal_ins_rate)/1000)*10;
+							sal_month = basciInfo.getHourwage()* memberInfo.getWorking_time();
+							incometax = (salaryCalculrator.calIncomeTax(sal_month, basciInfo)/1000)*10;
+							pension = ((int)(sal_month * pension_rate)/1000)*10;
+							heal_ins = ((int)(sal_month * heal_ins_rate)/1000)*10;
 							long_ins = ((int)(heal_ins * long_ins_rate)/1000)*10;
-							emp_ins = ((int)(sal_total_before * emp_ins_rate)/1000)*10;
+							emp_ins = ((int)(sal_month * emp_ins_rate)/1000)*10;
+							sal_total_before = sal_month;
 							sal_total_deduct = incometax + pension + heal_ins + long_ins + emp_ins;
 							sal_total_after = sal_total_before - sal_total_deduct;
 							
@@ -276,12 +279,13 @@ public class SalaryDAOImpl implements SalaryDAO{
 							calSalaryFinalInfo.setSal_position(sal_position);
 							calSalaryFinalInfo.setSal_job(sal_job);
 							calSalaryFinalInfo.setSal_allow(sal_allow);
-							calSalaryFinalInfo.setSal_total_before(sal_total_before);
+							calSalaryFinalInfo.setSal_month(sal_month);
 							calSalaryFinalInfo.setIncometax(incometax);
 							calSalaryFinalInfo.setPension(pension);
 							calSalaryFinalInfo.setHeal_ins(heal_ins);
 							calSalaryFinalInfo.setLong_ins(long_ins);
 							calSalaryFinalInfo.setEmp_ins(emp_ins);
+							calSalaryFinalInfo.setSal_total_before(sal_total_before);
 							calSalaryFinalInfo.setSal_total_deduct(sal_total_deduct);
 							calSalaryFinalInfo.setSal_total_after(sal_total_after);
 							
@@ -290,6 +294,106 @@ public class SalaryDAOImpl implements SalaryDAO{
 						}//switch 근무유형
 					}//for
 					return calSalaryFinalList;
+					
+				case "성과급":
+					
+					//최종 반환할 CalSalaryFinalVO 리스트 생성
+					List<CalSalaryFinalVO> calSalaryFinalList2 = new ArrayList<CalSalaryFinalVO>();
+					
+					for (String emp_id : employeeIds) {
+						// 직원정보 가져오기
+						vo.setEmp_id(emp_id);
+						MemberInfoForSalaryVO memberInfo = sqlSession.selectOne(NAMESPACE + ".getMemberInfoForSalary",
+								vo);
+						
+						// 공통사항 계산
+						SalaryCalculrator salaryCalculrator = new SalaryCalculrator();
+						String emp_position = memberInfo.getEmp_position();
+						String emp_job = memberInfo.getEmp_job();
+						String dgrade = memberInfo.getDgrade();
+						int dgrade_rate = memberInfo.getDgrade_rate();
+						
+						int sal_position = salaryCalculrator.checkRankSalary(emp_position, positionJobInfo);
+						int sal_job = salaryCalculrator.checkDutySalary(emp_job, positionJobInfo);
+						int sal_allow = (salaryCalculrator.calAllow(sal_position, sal_job, memberInfo)/1000)*1000;
+						int sal_month = sal_position + sal_job + sal_allow;
+						int sal_perform = (sal_month * dgrade_rate)/100;
+						int incometax = (salaryCalculrator.calIncomeTax(sal_perform, basciInfo)/1000)*10;
+						int pension = ((int)(sal_perform * pension_rate)/1000)*10;
+						int heal_ins = ((int)(sal_perform * heal_ins_rate)/1000)*10;
+						int long_ins = ((int)(heal_ins * long_ins_rate)/1000)*10;
+						int emp_ins = ((int)(sal_perform * emp_ins_rate)/1000)*10;
+						int sal_total_before = sal_perform;
+						int sal_total_deduct = incometax + pension + heal_ins + long_ins + emp_ins;
+						int sal_total_after = sal_total_before - sal_total_deduct;
+						
+						CalSalaryFinalVO calSalaryFinalInfo = new CalSalaryFinalVO();
+						// 근무유형(WorkType) 분류(통상,교대,시급)
+						switch (memberInfo.getEmp_work_type()) {
+						case "통상근무":
+						case "교대근무":
+							calSalaryFinalInfo.setSal_list_id(sal_list_id);
+							calSalaryFinalInfo.setEmp_id(memberInfo.getEmp_id());
+							calSalaryFinalInfo.setEmp_name(memberInfo.getEmp_name());
+							calSalaryFinalInfo.setDname(memberInfo.getDname());
+							calSalaryFinalInfo.setEmp_position(memberInfo.getEmp_position());
+							calSalaryFinalInfo.setEmp_job(memberInfo.getEmp_job());
+							calSalaryFinalInfo.setEmp_work_type(memberInfo.getEmp_work_type());
+							calSalaryFinalInfo.setDgrade(dgrade);
+							calSalaryFinalInfo.setDgrade_rate(dgrade_rate);
+							calSalaryFinalInfo.setSal_perform(sal_perform);
+							calSalaryFinalInfo.setIncometax(incometax);
+							calSalaryFinalInfo.setPension(pension);
+							calSalaryFinalInfo.setHeal_ins(heal_ins);
+							calSalaryFinalInfo.setLong_ins(long_ins);
+							calSalaryFinalInfo.setEmp_ins(emp_ins);
+							calSalaryFinalInfo.setSal_total_before(sal_total_before);
+							calSalaryFinalInfo.setSal_total_deduct(sal_total_deduct);
+							calSalaryFinalInfo.setSal_total_after(sal_total_after);
+							
+							calSalaryFinalList2.add(calSalaryFinalInfo);
+							break;
+
+						case "시급제":
+							sal_position = 0;
+							sal_job = 0;
+							sal_allow = basciInfo.getHourwage() * memberInfo.getOvertime();
+							sal_month = basciInfo.getHourwage()* memberInfo.getWorking_time();
+							sal_perform = (sal_month * dgrade_rate)/100;
+							incometax = (salaryCalculrator.calIncomeTax(sal_perform, basciInfo)/1000)*10;
+							pension = ((int)(sal_perform * pension_rate)/1000)*10;
+							heal_ins = ((int)(sal_perform * heal_ins_rate)/1000)*10;
+							long_ins = ((int)(heal_ins * long_ins_rate)/1000)*10;
+							emp_ins = ((int)(sal_perform * emp_ins_rate)/1000)*10;
+							sal_total_before = sal_perform;
+							sal_total_deduct = incometax + pension + heal_ins + long_ins + emp_ins;
+							sal_total_after = sal_total_before - sal_total_deduct;
+							
+							calSalaryFinalInfo.setSal_list_id(sal_list_id);
+							calSalaryFinalInfo.setEmp_id(memberInfo.getEmp_id());
+							calSalaryFinalInfo.setEmp_name(memberInfo.getEmp_name());
+							calSalaryFinalInfo.setDname(memberInfo.getDname());
+							calSalaryFinalInfo.setEmp_position(memberInfo.getEmp_position());
+							calSalaryFinalInfo.setEmp_job(memberInfo.getEmp_job());
+							calSalaryFinalInfo.setEmp_work_type(memberInfo.getEmp_work_type());
+							calSalaryFinalInfo.setDgrade(dgrade);
+							calSalaryFinalInfo.setDgrade_rate(dgrade_rate);
+							calSalaryFinalInfo.setSal_perform(sal_perform);
+							calSalaryFinalInfo.setIncometax(incometax);
+							calSalaryFinalInfo.setPension(pension);
+							calSalaryFinalInfo.setHeal_ins(heal_ins);
+							calSalaryFinalInfo.setLong_ins(long_ins);
+							calSalaryFinalInfo.setEmp_ins(emp_ins);
+							calSalaryFinalInfo.setSal_total_before(sal_total_before);
+							calSalaryFinalInfo.setSal_total_deduct(sal_total_deduct);
+							calSalaryFinalInfo.setSal_total_after(sal_total_after);
+							
+							calSalaryFinalList2.add(calSalaryFinalInfo);
+							break;
+						}//switch 근무유형
+					}//for
+					return calSalaryFinalList2;
+					
 				}//switch 급여형태
 				return null;
 	}//급여산출

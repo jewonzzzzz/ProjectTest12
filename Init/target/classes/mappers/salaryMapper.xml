@@ -82,8 +82,9 @@
 	
 	<!-- 모달창에서 검색된 직원정보를 본 테이블로 이동(근무이력 포함하여 출력) -->
 	<select id="getMemberInfoForSalary" resultType="MemberInfoForSalaryVO">
-		select e.emp_id, emp_name, dname, emp_position, emp_job, emp_work_type, sum(working_time) working_time, 
-		sum(overtime) overtime, sum(night_work_time) night_work_time, sum(special_working_time) special_working_time 
+		select e.emp_id, emp_name, dname, dgrade, dgrade_rate, emp_position, emp_job, emp_work_type, 
+		sum(working_time) working_time, sum(overtime) overtime, sum(night_work_time) night_work_time, 
+		sum(special_working_time) special_working_time 
 		from employee e, attendance_ch a, dept d 
 		where e.emp_id = a.emp_id and e.emp_dnum = d.dnum and e.emp_id = #{emp_id} and check_in 
 		between #{check_in } and concat(last_day(#{check_in}), ' 23:59:59') 
@@ -109,12 +110,12 @@
 	
 	<!-- 급여산출정보를 테이블에 저장하기 -->
 	<select id="saveCalSalaryFinal">
-		insert into salary_final(sal_list_id, emp_id, emp_name, dname, emp_position, emp_job, 
-		emp_work_type, sal_position, sal_job, sal_allow, sal_total_before, 
+		insert into salary_final(sal_list_id, emp_id, emp_name, dname, dgrade, dgrade_rate, emp_position, 
+		emp_job, emp_work_type, sal_position, sal_job, sal_allow, sal_month, sal_perform, sal_total_before, 
 		incometax, pension, heal_ins, long_ins, emp_ins, sal_total_deduct, sal_total_after) 
-		values(#{sal_list_id}, #{emp_id}, #{emp_name}, #{dname}, #{emp_position}, #{emp_job}, 
-		#{emp_work_type}, #{sal_position}, #{sal_job}, #{sal_allow}, #{sal_total_before}, 
-		#{incometax}, #{pension}, #{heal_ins}, #{long_ins}, #{emp_ins}, 
+		values(#{sal_list_id}, #{emp_id}, #{emp_name}, #{dname}, #{dgrade}, #{dgrade_rate}, #{emp_position}, 
+		#{emp_job}, #{emp_work_type}, #{sal_position}, #{sal_job}, #{sal_allow}, #{sal_month}, #{sal_perform}, 
+		#{sal_total_before}, #{incometax}, #{pension}, #{heal_ins}, #{long_ins}, #{emp_ins}, 
 		#{sal_total_deduct}, #{sal_total_after} )
 	</select>
 	
@@ -163,9 +164,9 @@
 	
 	<!-- 급여조회(관리자) : 상세보기 클릭 시 상세급여 가져오기 -->
 	<select id="getSalaryDetail" resultType="CalSalaryFinalVO">
-		select emp_id, emp_name, emp_position, emp_job, emp_work_type, year, month, sal_position, sal_job, 
-		sal_allow, incometax, pension, heal_ins, long_ins, emp_ins, sal_total_before, sal_total_deduct, sal_total_after  
-		from salary_final f, salary_list l
+		select emp_id, emp_name, emp_position, emp_job, emp_work_type, year, month, sal_type, sal_position, 
+		sal_job, sal_allow, incometax, pension, heal_ins, long_ins, emp_ins, sal_total_before, sal_total_deduct, 
+		sal_total_after from salary_final f, salary_list l 
 		where f.sal_list_id = l.sal_list_id and sal_final_id=#{sal_final_id} 
 	</select>
 	

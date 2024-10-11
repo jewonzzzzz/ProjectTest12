@@ -109,14 +109,14 @@
 									<div class="row">
 										<div class="col-5 col-md-3">
 											<div class="nav flex-column nav-pills nav-secondary" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-												<a class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">종합내역</a>
-												<a class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">급여 항목</a>
-												<a class="nav-link" id="v-pills-messages-tab" data-bs-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">공제금 항목</a>
+												<a class="nav-link active" id="v-pills-one-tab" data-bs-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">종합내역</a>
+												<a class="nav-link" id="v-pills-two-tab" data-bs-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">급여항목</a>
+												<a class="nav-link" id="v-pills-four-tab" data-bs-toggle="pill" href="#v-pills-four" role="tab" aria-controls="v-pills-four" aria-selected="false">공제금 항목</a>
 											</div>
 										</div>
 										<div class="col-8 col-md-9">
 											<div class="tab-content" id="v-pills-tabContent">
-												<div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+												<div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-one-tab">
 													<label class="mb-3"><b>직원 기본정보</b></label>
 													<table class="table table-bordered table-hover" id="calSalaryTable">
                         <thead>
@@ -144,6 +144,7 @@
                           <tr>
                             <th>귀속연도</th>
                             <th>귀속월</th>
+                            <th>급여유형</th>
                             <th>(세전)급여액</th>
                             <th>공제금</th>
                             <th>(세후)실지급액</th>
@@ -153,6 +154,7 @@
                         	<tr>
 								<td>${calSalaryFinalInfo.year }</td>                        	
 								<td>${calSalaryFinalInfo.month }</td>                        	
+								<td>${calSalaryFinalInfo.sal_type }</td>                        	
 								<td>${calSalaryFinalInfo.sal_total_before }</td>                        	
 								<td>${calSalaryFinalInfo.sal_total_deduct }</td>                        	
 								<td>${calSalaryFinalInfo.sal_total_after }</td>                        	
@@ -160,12 +162,12 @@
                         </tbody>
                       </table>
 						</div>
-						<div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-						<label class="mb-3"><b>급여 항목</b></label>
+						<div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-two-tab">
+						<label class="mb-3"><b>월급여 항목</b></label>
 						<table class="table table-bordered" id="calSalaryTable">
                         <thead>
                           <tr>
-                            <th>(세전)급여액</th>
+                            <th>(세전)월급여액</th>
                             <th>직급급</th>
                             <th>직무급</th>
                             <th>법정수당</th>
@@ -173,18 +175,39 @@
                         </thead>
                         <tbody>
                         	<tr>
-								<td>${calSalaryFinalInfo.sal_total_before }</td>                        	
+								<td>${calSalaryFinalInfo.sal_month }</td>                        	
 								<td>${calSalaryFinalInfo.sal_position }</td>                        	
 								<td>${calSalaryFinalInfo.sal_job }</td>                        	
 								<td>${calSalaryFinalInfo.sal_allow }</td>                        	
                         	</tr>
                         </tbody>
                       </table>
-                      <p> * (세전)급여액 산출식 : 직급급 + 직무급 + 법정수당<br>
-                       * 법정수당 산출식 : 통상임금 * ((초과근무시간 + 야간근로시간) * 0.5) + 특별근로시간)</p>
+                      <p> * 법정수당 산출 : 통상임금 * ((초과근무시간 + 야간근로시간) * 0.5) + 특별근로시간)</p>
+                      
+                      <label class="mb-3"><b>성과급 항목</b></label>
+						<table class="table table-bordered" id="calSalaryTable">
+                        <thead>
+                          <tr>
+                            <th>(세전)성과급</th>
+                            <th>소속부서</th>
+                            <th>부서평가</th>
+                            <th>성과지급율(%)</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        	<tr>
+								<td>${calSalaryFinalInfo.sal_perform }</td>                        	
+								<td>${calSalaryFinalInfo.dname }</td>                        	
+								<td>${calSalaryFinalInfo.dgrade }</td>                        	
+								<td>${calSalaryFinalInfo.dgrade_rate }</td>                        	
+                        	</tr>
+                        </tbody>
+                      </table>
+                      <p> * 성과급 산출 : (직급급 + 직무급) * 성과지급율(%)</p>
                       
 						</div>
-						<div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+						
+						<div class="tab-pane fade" id="v-pills-four" role="tabpanel" aria-labelledby="v-pills-four-tab">
 						<label class="mb-3"><b>공제금 항목</b></label>
 						<table class="table table-bordered" id="calSalaryTable">
                         <thead>
