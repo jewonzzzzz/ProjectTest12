@@ -56,9 +56,8 @@
         <div class="container">
           <div class="page-inner">
 <!------------------------------------------------------------------------------------------------------------------>
-
-<div class="page-header">
-              <h3 class="fw-bold mb-3">급여산출</h3>
+			<div class="page-header">
+              <h3 class="fw-bold mb-3">급여조회(관리자)</h3>
               <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
                   <a href="/salary/main">
@@ -75,144 +74,135 @@
                   <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                  <a href="#">급여산출</a>
+                  <a href="#">급여조회(관리자)</a>
                 </li>
               </ul>
             </div>
-        <div class="row">
+            
+            <div class="row">
               <div class="col-md-10">
+              <div class="form">
+                      <div style="display: flex; margin-bottom: 10px;">
+                          <select
+                          	style="margin-right: 5px;"
+                            class="form-select input-fixed"
+                            id="yearSelect"
+                            name="year"
+                          >
+                          </select>
+                          <input type="hidden" id="emp_id" value="${emp_id }">
+                    </div>
                 <div class="card">
                   <div class="card-header">
-                    <div class="card-title">급여산출내역</div>
+                    <div class="card-title">급여내역 조회</div>
                   </div>
-                  	<div style="margin-left: 15px; margin-bottom: 10px; padding-top: 10px;">
-                    	<a href="/salary/calSalaryStep1"><button class="btn btn-primary">신규생성</button></a>
-                    	
-                    	<form id="deleteSubmit" action="/salary/deleteSalaryInfo" method="post" style="display: inline-block;">
-                    		<input type="hidden" id="inputForDelete" name="sal_list_id">
-                    		<button type="submit" class="btn btn-primary" id="deleteBtn" disabled>삭제하기</button>
-                    	</form>
-                    	
-                    	<form id="confirmSubmit" action="/salary/confirmSalaryList" method="post" style="display: inline-block;">
-                    		<input type="hidden" id="inputForConfirm" name="sal_list_id">
-                    		<button type="submit" class="btn btn-primary" id="confirmBtn" disabled>최종확정</button>
-                    	</form>
-                    	
-                  	</div>
-                  <div class="card-body" style="padding-top: 10px;">
-                    <table id="basic-datatables"
-                        class="display table table-striped table-hover">
-                      <thead>
-                        <tr>
-                          <th scope="col">구분</th>
-                          <th scope="col">연도</th>
-                          <th scope="col">월</th>
-                          <th scope="col">급여형태</th>
-                          <th scope="col">제목</th>
-                          <th scope="col">상태</th>
-                          <th scope="col">최종작성일</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                      <c:forEach var="list" items="${calSalaryListInfo }">
-                      	<tr>
-                      		<td><input type="checkbox" data-id="sal_list_id" name="sal_list_id" value="${list.sal_list_id }"></td>
-                      		<td>${list.year }</td>
-                      		<td>${list.month }</td>
-                      		<td>${list.sal_type }</td>
-                      		<td><a href="/salary/calSalaryView?sal_list_id=${list.sal_list_id }">${list.sal_list_subject }</a></td>
-                      		<td>${list.sal_list_status }</td>
-                      		<td>${list.sal_list_date }</td>
-                      	</tr>
-                      </c:forEach>
-                      </tbody>
-                    </table>
+                  
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table
+                        id="basic-datatables"
+                        class="display table table-striped table-hover"
+                      >
+                        <thead>
+                          <tr>
+                          <th>사번</th>
+                          <th>급여유형</th>
+                          <th>연도</th>
+                          <th>월</th>
+                          <th>(세전)급여액</th>
+                          <th>공제금 총액</th>
+                          <th>(세후)실지급액</th>
+                          <th>비고</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
+              
+              	
+            </div>
             </div>
             
             <script>
         $(document).ready(function() {
-        	//데이터테이블 설정
-        	$("#basic-datatables").DataTable({
-        		pageLength: 5,
-        	});
-        	
-        	// 체크박스 체크여부에 다른 동작 분리(삭제버튼 활성화, 다중체크방지)
-        	$('input[type="checkbox"]').click(function() {
-                if ($(this).is(':checked')) {
-                    // 체크박스가 체크되면 버튼 활성화
-                    $('#deleteBtn').prop('disabled', false);
-                    // 하나만 체크할 수 있도록 하는 기능
-                    $('input[type="checkbox"]').not(this).prop('checked', false);
-                } else {
-                    // 체크박스가 해제되면 버튼 비활성화
-                    $('#deleteBtn').prop('disabled', true);
-                }
-            });
-        	
-        	// 체크여부에 따라 최종확정 버튼 활성화
-        	$('input[type="checkbox"]').click(function() {
-        		var tdText = $(this).closest('tr').find('td:eq(5)').text();
-	        	if($(this).is(':checked') && tdText === '결재완료') {
-	            	// 체크되고 '결재완료'일때만 활성화
-	                $('#confirmBtn').prop('disabled', false);
-	        	} else {
-                    // 체크박스가 해제되면 버튼 비활성화
-                    $('#confirmBtn').prop('disabled', true);
-                }
-        	});
-        	
         	// 테이블 가운대 정렬
-        	$('table th, table td').css('text-align', 'center');
-        	
-        	// 삭제버튼 시 리스트id 가지고 이동하기
-            $('#deleteBtn').click(function(event){
-            	event.preventDefault();
-            	swal({
-     	              title: "삭제하시겠습니까?",
-     	              text: "삭제 후에는 신규작성을 통해 다시 작성하셔야 됩니다.",
-     	              type: "warning",
-     	              buttons: {
-     	                cancel: {
-     	                  visible: true,
-     	                  text: "취소하기",
-     	                  className: "btn btn-danger",
-     	                },
-     	                confirm: {
-     	                  text: "삭제하기",
-     	                  className: "btn btn-success",
-     	                },
-     	              },
-     	            }).then(function(willDelete) {  // 일반 함수 문법으로 변경
-     	             if (willDelete) {
-     	            	$('#inputForDelete').val($('input[name="sal_list_id"]:checked').val());
-     	            	swal({
-     	            	    title: "Success!",
-     	            	    text: "삭제완료",
-     	            	    icon: "success",
-     	            	    buttons: "OK", 
-     	            	}).then(function() {
-     	            		$('#deleteSubmit').submit();
+        	$('table th td').wrap('<div style="text-align: center;"></div>');
+        	// 현재 연도 구하기
+            const currentYear = new Date().getFullYear();
+            for (let year = currentYear; year > currentYear - 10; year--) {
+                $('#yearSelect').append(new Option(year, year));  // Option 생성 및 추가
+            }
+            
+            // 첫화면 로드 시 최근 연도에 대한 급여정보 가져오기
+            	var checkSalaryInfo = [];
+            	checkSalaryInfo.push($('#yearSelect').val());
+            	checkSalaryInfo.push($('#emp_id').val());
+            	$.ajax({
+            		url:'/salary/getSalaryInquiryForEmployee',
+            		type: 'POST',
+            		data: JSON.stringify(checkSalaryInfo),
+            		contentType: 'application/json',
+            		success: function(response) {
+                        $('#basic-datatables tbody').empty();
+            			response.forEach(function(data){
+                        	var row = '<tr>' +
+                            '<td style="text-align: center;">' + data.emp_id + '</td>' +
+                            '<td style="text-align: center;">' + data.sal_type + '</td>' +
+                            '<td style="text-align: center;">' + data.year + '</td>' +
+                            '<td style="text-align: center;">' + data.month + '</td>' +
+                            '<td style="text-align: center;">' + data.sal_total_before + '</td>' +
+                            '<td style="text-align: center;">' + data.sal_total_deduct + '</td>' +
+                            '<td style="text-align: center;">' + data.sal_total_after + '</td>' +
+                            '<td style="text-align: center;"><a href="/salary/salaryDetail?sal_final_id=' + data.sal_final_id + '">상세보기</a></td>' +
+                            '</tr>';
+                            $('#basic-datatables tbody').append(row);
                         });
-   	             	}
-                    });
-     	     	 });
-        	
-         // 최종확정버튼 시 리스트id 가지고 이동하기
-        	$('#confirmBtn').click(function(event){
-        		event.preventDefault();
-        		$('#inputForConfirm').val($('input[name="sal_list_id"]:checked').val());
-        		swal({
-	            	    title: "Success!",
-	            	    text: "최종확정되었습니다.",
-	            	    icon: "success",
-	            	    buttons: "OK", 
-            	}).then(function() {
-            		$('#confirmSubmit').submit();
-                });
-        	});
+            		},
+            		error: function(xhr, status, error) {
+                        swal("Error!", "실패", "error");
+                    }
+            	});
+            
+            
+         	// 연도 변경 시 해당연도에 대한 급여정보 가져오기
+            $('#yearSelect').change(function(event){
+            	var checkSalaryInfo = [];
+            	checkSalaryInfo.push($('#yearSelect').val());
+            	checkSalaryInfo.push($('#emp_id').val());
+            	$.ajax({
+            		url:'/salary/getSalaryInquiryForEmployee',
+            		type: 'POST',
+            		data: JSON.stringify(checkSalaryInfo),
+            		contentType: 'application/json',
+            		success: function(response) {
+                        $('#basic-datatables tbody').empty();
+            			response.forEach(function(data){
+                        	var row = '<tr>' +
+                            '<td style="text-align: center;">' + data.emp_id + '</td>' +
+                            '<td style="text-align: center;">' + data.sal_type + '</td>' +
+                            '<td style="text-align: center;">' + data.year + '</td>' +
+                            '<td style="text-align: center;">' + data.month + '</td>' +
+                            '<td style="text-align: center;">' + data.sal_total_before + '</td>' +
+                            '<td style="text-align: center;">' + data.sal_total_deduct + '</td>' +
+                            '<td style="text-align: center;">' + data.sal_total_after + '</td>' +
+                            '<td style="text-align: center;"><a href="/salary/salaryDetail?sal_final_id=' + data.sal_final_id + '">상세보기</a></td>' +
+                            '</tr>';
+                            $('#basic-datatables tbody').append(row);
+                        });
+            		},
+            		error: function(xhr, status, error) {
+                        swal("Error!", "실패", "error");
+                    }
+            	});
+            });
+            
+            $("#basic-datatables").DataTable({
+            	pageLength: 5,
+            });
         });
     </script>
 <!------------------------------------------------------------------------------------------------------------------>
@@ -224,8 +214,8 @@
       </div>
       <!-- main-panel -->
     </div>
-    <!-- main-wrapper -->
-
+    <!-- main-wrapper -->   
+    
     <!--   Core JS Files   -->
     <script src="${pageContext.request.contextPath }/resources/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="${pageContext.request.contextPath }/resources/assets/js/core/popper.min.js"></script>

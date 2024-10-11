@@ -45,7 +45,7 @@
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/assets/css/demo.css" />
     <style>
-    .table-responsive {
+    	.table-responsive {
 		  overflow-x: auto; /* 가로 스크롤 활성화 */
 		}
 		.table th, .table td {

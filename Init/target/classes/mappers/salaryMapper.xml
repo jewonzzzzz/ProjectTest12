@@ -86,7 +86,7 @@
 		sum(overtime) overtime, sum(night_work_time) night_work_time, sum(special_working_time) special_working_time 
 		from employee e, attendance_ch a, dept d 
 		where e.emp_id = a.emp_id and e.emp_dnum = d.dnum and e.emp_id = #{emp_id} and check_in 
-		&gt; #{check_in_start} and check_in &lt; #{check_in_end} 
+		between #{check_in } and concat(last_day(#{check_in}), ' 23:59:59') 
 	</select>
 	
 	<!-- 전체 직원정보 가져오기 -->
@@ -95,9 +95,78 @@
 		emp_work_type, sum(working_time) working_time, sum(overtime) overtime, 
 		sum(night_work_time) night_work_time, sum(special_working_time) special_working_time 
 		from employee e, attendance_ch a, dept d 
-		where e.emp_id = a.emp_id and e.emp_dnum = d.dnum and 
-		check_in &gt; #{check_in_start } and check_in &lt; #{check_in_end } 
+		where e.emp_id = a.emp_id and e.emp_dnum = d.dnum and check_in 
+		between #{check_in } and concat(last_day(#{check_in}), ' 23:59:59') 
 		group by e.emp_id 
+	</select>
+	
+	<!-- 급여산출결과 급여내역리스트 저장 -->
+	<select id="saveCalSalaryList">
+		insert into salary_list(sal_list_id, year, month, sal_type, sal_list_subject, sal_list_date, 
+		sal_list_status) values(#{sal_list_id}, #{year}, #{month}, #{sal_type}, #{sal_list_subject}, 
+		now(), '임시저장')
+	</select>	
+	
+	<!-- 급여산출정보를 테이블에 저장하기 -->
+	<select id="saveCalSalaryFinal">
+		insert into salary_final(sal_list_id, emp_id, emp_name, dname, emp_position, emp_job, 
+		emp_work_type, sal_position, sal_job, sal_allow, sal_total_before, 
+		incometax, pension, heal_ins, long_ins, emp_ins, sal_total_deduct, sal_total_after) 
+		values(#{sal_list_id}, #{emp_id}, #{emp_name}, #{dname}, #{emp_position}, #{emp_job}, 
+		#{emp_work_type}, #{sal_position}, #{sal_job}, #{sal_allow}, #{sal_total_before}, 
+		#{incometax}, #{pension}, #{heal_ins}, #{long_ins}, #{emp_ins}, 
+		#{sal_total_deduct}, #{sal_total_after} )
+	</select>
+	
+	<!-- 급여내역리스트에서 삭제시 급여내역리스트 테이블 삭제 -->
+	<select id="deleteCalSalaryList">
+		delete from salary_list where sal_list_id = #{sal_list_id} 
+	</select>	
+	
+	<!-- 급여내역리스트에서 삭제시 급여상세내역 테이블 삭제 -->
+	<select id="deleteCalSalaryFinal">
+		delete from salary_final where sal_list_id = #{sal_list_id} 
+	</select>	
+	
+	<!-- 급여내역리스트에서 최종확정으로 변경 -->
+	<select id="confirmSalaryList">
+		update salary_list set sal_list_status = '최종확정' where sal_list_id = #{sal_list_id} 
+	</select>	
+	
+	<!-- 급여내역리스트에서 조회시 급여상세내역 조회 -->
+	<select id="getCalSalaryFinalListForView" resultType="CalSalaryFinalVO">
+		select * from salary_final where sal_list_id = #{sal_list_id} 
+	</select>	
+	
+	<!-- 급여내역리스트에서 조회시 급여정보(형태/연/월) 조회 -->
+	<select id="getCalSalaryListForView" resultType="CalSalaryListVO">
+		select year, month, sal_type from salary_list where sal_list_id = #{sal_list_id} 
+	</select>
+	
+	<!-- 급여조회(사번)하기 급여정보(연/월/사번) 급여상세정보로 리턴-->
+	<select id="getSalaryInquiryForManageToId" resultType="CalSalaryFinalVO">
+		select f.emp_id, sal_final_id, f.sal_list_id, sal_type, year, month, sal_total_before, sal_total_deduct, sal_total_after 
+		from salary_final f, salary_list l 
+		where f.sal_list_id = l.sal_list_id 
+		and year=#{year} and emp_id=#{emp_id} 
+		order by emp_id desc, year desc, CAST(month AS UNSIGNED) DESC 
+	</select>	
+	
+	<!-- 급여조회(이름)하기 급여정보(연/월/이름) 급여상세정보로 리턴-->
+	<select id="getSalaryInquiryForManageToName" resultType="CalSalaryFinalVO">
+		select f.emp_id, sal_final_id, f.sal_list_id, sal_type, year, month, sal_total_before, sal_total_deduct, sal_total_after 
+		from salary_final f, salary_list l 
+		where f.sal_list_id = l.sal_list_id 
+		and year=#{year} and emp_name=#{emp_name} 
+		order by emp_id desc, year desc, CAST(month AS UNSIGNED) DESC 
+	</select>
+	
+	<!-- 급여조회(관리자) : 상세보기 클릭 시 상세급여 가져오기 -->
+	<select id="getSalaryDetail" resultType="CalSalaryFinalVO">
+		select emp_id, emp_name, emp_position, emp_job, emp_work_type, year, month, sal_position, sal_job, 
+		sal_allow, incometax, pension, heal_ins, long_ins, emp_ins, sal_total_before, sal_total_deduct, sal_total_after  
+		from salary_final f, salary_list l
+		where f.sal_list_id = l.sal_list_id and sal_final_id=#{sal_final_id} 
 	</select>
 	
 

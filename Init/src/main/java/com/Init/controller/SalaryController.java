@@ -3,6 +3,8 @@ package com.Init.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,15 +169,12 @@ public class SalaryController {
 		
 		String year = data.get("year");
 		String month = data.get("month");
-		String check_in_start = year + "-" + month+"-01";
-		String check_in_end = year + "-" + (Integer.parseInt(month) + 1) + "-01";
-		logger.debug(check_in_start);
-		logger.debug(check_in_end);
+		String check_in = year + "-" + month+"-01";
+		logger.debug(check_in);
 		
 		MemberInfoForSalaryVO vo = new MemberInfoForSalaryVO();
 		vo.setEmp_id(data.get("emp_id"));
-		vo.setCheck_in_start(check_in_start);
-		vo.setCheck_in_end(check_in_end);
+		vo.setCheck_in(check_in);
 		
 		return sService.getMemberInfoForSalary(vo);
 	}
@@ -187,14 +186,11 @@ public class SalaryController {
 	public List<MemberInfoForSalaryVO> getMemberAllInfo(@RequestBody Map<String, String> data){
 		String year = data.get("year");
 		String month = data.get("month");
-		String check_in_start = year + "-" + month+"-01";
-		String check_in_end = year + "-" + (Integer.parseInt(month) + 1) + "-01";
-		logger.debug(check_in_start);
-		logger.debug(check_in_end);
+		String check_in = year + "-" + month+"-01";
+		logger.debug(check_in);
 		
 		MemberInfoForSalaryVO vo = new MemberInfoForSalaryVO();
-		vo.setCheck_in_start(check_in_start);
-		vo.setCheck_in_end(check_in_end);
+		vo.setCheck_in(check_in);
 		logger.debug(vo.toString());
 		
 		return sService.getMemberAllInfo(vo);
@@ -208,10 +204,8 @@ public class SalaryController {
 		logger.debug(employeeIds.toString());
 		logger.debug(vo.toString());
 		
-		String check_in_start = vo.getYear() + "-" + vo.getMonth()+"-01";
-		String check_in_end = vo.getYear() + "-" + (Integer.parseInt(vo.getMonth()) + 1) + "-01";
-		vo.setCheck_in_start(check_in_start);
-		vo.setCheck_in_end(check_in_end);
+		String check_in = vo.getYear() + "-" + vo.getMonth()+"-01";
+		vo.setCheck_in(check_in);
 		
 		//급여산출 메서드
 		List<CalSalaryFinalVO> CalSalaryFinalInfo = sService.calSalary(employeeIds, vo);
@@ -224,13 +218,145 @@ public class SalaryController {
 	}
 	
 	
+	// 최종 급여산출내용을 테이블로 저장하기
+	@PostMapping(value = "/saveSalaryInfo")
+	@ResponseBody
+	public String saveSalaryInfo(@RequestBody Map<String, Object> data){
+		
+		//전달된 데이터 저장
+		logger.debug(data.toString());
+		List<String> employeeIds = (List<String>)data.get("employeeIds");
+		String year = (String)data.get("year");
+		String month = (String)data.get("month");
+		String sal_type = (String)data.get("sal_type");
+		String check_in = year + "-" + month+"-01";
+		
+		// 전달된 정보 저장 idList, (급여유형, 연도, 월) => 객체 저장
+		CalSalaryListVO vo = new CalSalaryListVO();
+		vo.setSal_type(sal_type);
+		vo.setYear(year);
+		vo.setMonth(month);
+		vo.setCheck_in(check_in);
+		
+		//급여산출
+		List<CalSalaryFinalVO> CalSalaryFinalInfo = sService.calSalary(employeeIds, vo);
+		logger.debug(CalSalaryFinalInfo.toString());
+		
+		// 급여내역테이블 저장
+		sService.saveCalSalaryList(vo);
+		//산출된 급여 급여상세내역 테이블 저장
+		sService.saveCalSalaryFinal(CalSalaryFinalInfo);
+		
+		return "ok";
+	}
 	
+	// 급여내역리스트에서 삭제하기
+	@PostMapping(value = "/deleteSalaryInfo")
+	public String deleteSalaryInfo(@RequestParam("sal_list_id") String sal_list_id){
+		logger.debug("deleteSalaryList(@RequestParam(\"sal_list_id\") String sal_list_id) 실행");
+		// 급여내역리스트 및 급여상세테이블 삭제하기
+		sService.deleteSalaryInfo(sal_list_id);
+		
+		return "redirect:/salary/calSalary";
+	}
 	
+	// 급여내역리스트에서 최종확정 하기
+	@PostMapping(value = "/confirmSalaryList")
+	public String confirmSalaryList(@RequestParam("sal_list_id") String sal_list_id){
+		logger.debug("confirmSalaryList(@RequestParam(\"sal_list_id\") String sal_list_id) 실행");
+		logger.debug(sal_list_id);
+		// 급여내역리스트 상태 최종확정으로 변경
+		sService.confirmSalaryList(sal_list_id);
+		
+		return "redirect:/salary/calSalary";
+	}
 	
+	// 급여내역페이지에서 조회시 급여조회 페이지 이동
+	// http://localhost:8088/salary/calSalaryView
+	@GetMapping(value = "/calSalaryView")
+	public String calSalaryView(@RequestParam("sal_list_id") String sal_list_id, Model model){
+		logger.debug("calSalaryView(@RequestParam(\"sal_list_id\") String sal_list_id, Model model) 실행");
+		logger.debug(sal_list_id);
+		
+		// 급여상세내역 가져오기
+		List<CalSalaryFinalVO> calSalaryFinalInfo = sService.getCalSalaryFinalListForView(sal_list_id);
+		model.addAttribute("calSalaryFinalInfo", calSalaryFinalInfo);
+		
+		// 기본내용가져오기(급여형태/연/월)
+		CalSalaryListVO calSalaryListInfo = sService.getCalSalaryListForView(sal_list_id);
+		model.addAttribute("calSalaryListInfo", calSalaryListInfo);
+		
+		return "/salary/calSalaryView";
+	}
 	
+	// 급여조회(관리자) 페이지 호출
+	@GetMapping(value = "salaryInquiryForManage")
+	public String salaryInquiryForManage() {
+		return "/salary/salaryInquiryForManage";
+	}
 	
+	// 급여조회(관리자) 조회하기
+	@PostMapping(value = "getSalaryInquiryForManage")
+	@ResponseBody
+	public List<CalSalaryFinalVO> getSalaryInquiryForManage(@RequestBody List<String> checkSalaryInfo) {
+		logger.debug(checkSalaryInfo.toString());
+		
+		CalSalaryListVO vo = new CalSalaryListVO();
+		vo.setYear(checkSalaryInfo.get(0));
+		vo.setEmp_id(checkSalaryInfo.get(1));
+		vo.setEmp_name(checkSalaryInfo.get(1));
+		
+		//사번으로 먼저 select
+		List<CalSalaryFinalVO> calSalaryInquiryList = sService.getSalaryInquiryForManageToId(vo) ;
+		
+		//사번으로 검색 없으면
+		if(calSalaryInquiryList.size() == 0) {
+			calSalaryInquiryList = sService.getSalaryInquiryForManageToName(vo);
+		}
+		logger.debug(calSalaryInquiryList.toString());
+		
+		return calSalaryInquiryList;
+	}
 	
-	
-	
+	// 급여조회 상세페이지
+	@GetMapping(value = "salaryDetail")
+	public String getSalaryDetail(@RequestParam("sal_final_id") int sal_final_id, Model model) {
+		logger.debug(""+sal_final_id);
+		
+		// 해당 급여번호 급여정보 가져가기
+		CalSalaryFinalVO calSalaryFinalInfo = sService.getSalaryDetail(sal_final_id);
+		model.addAttribute("calSalaryFinalInfo", calSalaryFinalInfo);
+		
+		return "/salary/salaryDetail";
+	}
 
+	// 급여조회(관리자) 페이지 호출
+		@GetMapping(value = "salaryInquiryForEmployee")
+		public String salaryInquiryForEmployee(HttpSession session) {
+			// 임시 사번저장(로그인으로 대체)
+			session.setAttribute("emp_id", "user30");
+			
+			return "/salary/salaryInquiryForEmployee";
+		}
+	
+	// 급여조회(관리자) 조회하기
+	@PostMapping(value = "getSalaryInquiryForEmployee")
+	@ResponseBody
+	public List<CalSalaryFinalVO> getSalaryInquiryForEmployee(@RequestBody List<String> checkSalaryInfo) {
+		logger.debug(checkSalaryInfo.toString());
+		
+		CalSalaryListVO vo = new CalSalaryListVO();
+		vo.setYear(checkSalaryInfo.get(0));
+		vo.setEmp_id(checkSalaryInfo.get(1));
+		
+		//사번으로 먼저 select
+		List<CalSalaryFinalVO> calSalaryInquiryList = sService.getSalaryInquiryForManageToId(vo) ;
+		
+		logger.debug(calSalaryInquiryList.toString());
+		
+		return calSalaryInquiryList;
+	}	
+		
+		
+	
 }

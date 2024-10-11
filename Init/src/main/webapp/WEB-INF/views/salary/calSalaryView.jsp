@@ -44,6 +44,20 @@
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="${pageContext.request.contextPath }/resources/assets/css/demo.css" />
+    
+    <style>
+    	.table-responsive {
+		  overflow-x: auto; /* 가로 스크롤 활성화 */
+		}
+		.table th, .table td {
+		  white-space: nowrap; /* 텍스트가 줄바꿈되지 않도록 설정 */
+		}
+		
+		.table th {
+		  min-width: 100px; /* 각 열의 최소 너비 설정 */
+		  text-align: center; /* 텍스트 중앙 정렬 */
+		}
+    </style>
   </head>
   <body>
     <div class="wrapper">
@@ -56,8 +70,7 @@
         <div class="container">
           <div class="page-inner">
 <!------------------------------------------------------------------------------------------------------------------>
-
-<div class="page-header">
+		<div class="page-header">
               <h3 class="fw-bold mb-3">급여산출</h3>
               <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
@@ -79,142 +92,138 @@
                 </li>
               </ul>
             </div>
-        <div class="row">
+            
+            <div class="row">
               <div class="col-md-10">
+              	<div style="margin-bottom: 10px; display: flex; justify-content: flex-end;;">
+              		<a href="/salary/calSalary"><button type="button" class="btn btn-primary">
+                            목록으로
+                 	</button></a>
+              	</div>
                 <div class="card">
                   <div class="card-header">
-                    <div class="card-title">급여산출내역</div>
+                    <div class="card-title">급여산출 종합내역</div>
                   </div>
-                  	<div style="margin-left: 15px; margin-bottom: 10px; padding-top: 10px;">
-                    	<a href="/salary/calSalaryStep1"><button class="btn btn-primary">신규생성</button></a>
-                    	
-                    	<form id="deleteSubmit" action="/salary/deleteSalaryInfo" method="post" style="display: inline-block;">
-                    		<input type="hidden" id="inputForDelete" name="sal_list_id">
-                    		<button type="submit" class="btn btn-primary" id="deleteBtn" disabled>삭제하기</button>
-                    	</form>
-                    	
-                    	<form id="confirmSubmit" action="/salary/confirmSalaryList" method="post" style="display: inline-block;">
-                    		<input type="hidden" id="inputForConfirm" name="sal_list_id">
-                    		<button type="submit" class="btn btn-primary" id="confirmBtn" disabled>최종확정</button>
-                    	</form>
-                    	
-                  	</div>
-                  <div class="card-body" style="padding-top: 10px;">
-                    <table id="basic-datatables"
-                        class="display table table-striped table-hover">
+                  
+                  <div class="card-body">
+                    <table class="table table-bordered" id="resultTable">
                       <thead>
                         <tr>
-                          <th scope="col">구분</th>
-                          <th scope="col">연도</th>
-                          <th scope="col">월</th>
-                          <th scope="col">급여형태</th>
-                          <th scope="col">제목</th>
-                          <th scope="col">상태</th>
-                          <th scope="col">최종작성일</th>
+                          <th>급여유형</th>
+                          <th>연도</th>
+                          <th>월</th>
+                          <th>대상 인원</th>
+                          <th>(세전)급여 총액</th>
+                          <th>공제금 총액</th>
+                          <th>(세후)실지급액 총액</th>
                         </tr>
                       </thead>
                       <tbody>
-                      <c:forEach var="list" items="${calSalaryListInfo }">
                       	<tr>
-                      		<td><input type="checkbox" data-id="sal_list_id" name="sal_list_id" value="${list.sal_list_id }"></td>
-                      		<td>${list.year }</td>
-                      		<td>${list.month }</td>
-                      		<td>${list.sal_type }</td>
-                      		<td><a href="/salary/calSalaryView?sal_list_id=${list.sal_list_id }">${list.sal_list_subject }</a></td>
-                      		<td>${list.sal_list_status }</td>
-                      		<td>${list.sal_list_date }</td>
+                      	  <td>${calSalaryListInfo.sal_type }</td>
+                      	  <td>${calSalaryListInfo.year }</td>
+                      	  <td>${calSalaryListInfo.month }</td>
+                      	  <td id="sumMember"></td>
+                      	  <td id="sumSalBasic"></td>
+                      	  <td id="sumSalDeduct"></td>
+                      	  <td id="sumSalTotal"></td>
                       	</tr>
-                      </c:forEach>
                       </tbody>
                     </table>
                   </div>
                 </div>
               </div>
+              
+              	<div class="col-md-10">
+              <div class="card">
+                  <div class="card-header">
+                    <div class="card-title">급여산출 상세내역</div>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                      <table class="table table-bordered" id="calSalaryTable">
+                        <thead>
+                          <tr>
+                            <th>사번</th>
+                            <th>이름</th>
+                            <th>부서</th>
+                            <th>직급</th>
+                            <th>직무</th>
+                            <th>근무형태</th>
+                            <th>직급급</th>
+                            <th>직무급</th>
+                            <th>법정수당</th>
+                            <th>(세전)급여액</th>
+                            <th>소득세</th>
+                            <th>국민연금</th>
+                            <th>건강보험료</th>
+                            <th>장기요양보험료</th>
+                            <th>고용보험료</th>
+                            <th>공제금 합계</th>
+                            <th>(세후)실지급액</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach var="list" items="${calSalaryFinalInfo }">
+                        	<tr>
+								<td class="employee_id">${list.emp_id }</td>                        	
+								<td>${list.emp_name }</td>                        	
+								<td>${list.dname }</td>                        	
+								<td>${list.emp_position }</td>                        	
+								<td>${list.emp_job }</td>                        	
+								<td>${list.emp_work_type }</td>                        	
+								<td>${list.sal_position }</td>                        	
+								<td>${list.sal_job }</td>                        	
+								<td>${list.sal_allow }</td>                        	
+								<td class="salBasic">${list.sal_total_before }</td>                        	
+								<td>${list.incometax }</td>                        	
+								<td>${list.pension }</td>                        	
+								<td>${list.heal_ins }</td>                        	
+								<td>${list.long_ins }</td>                        	
+								<td>${list.emp_ins }</td>                        	
+								<td class="salDeduct">${list.sal_total_deduct }</td>                        	
+								<td class="salTotal">${list.sal_total_after }</td>                        	
+                        	</tr>
+                        </c:forEach>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                </div>
             </div>
             
             <script>
         $(document).ready(function() {
-        	//데이터테이블 설정
-        	$("#basic-datatables").DataTable({
-        		pageLength: 5,
+        	
+        	// 전체 테이블 가운대 정렬
+        	$('table').wrap('<div style="text-align: center;"></div>');
+        	
+        	// 화면로드 시 기본급,공제금,실지급액 합 계산 및 출력
+        	let sumSalBasic = 0;
+        	$('td.salBasic').each(function(){
+        		sumSalBasic += parseInt($(this).text());
         	});
-        	
-        	// 체크박스 체크여부에 다른 동작 분리(삭제버튼 활성화, 다중체크방지)
-        	$('input[type="checkbox"]').click(function() {
-                if ($(this).is(':checked')) {
-                    // 체크박스가 체크되면 버튼 활성화
-                    $('#deleteBtn').prop('disabled', false);
-                    // 하나만 체크할 수 있도록 하는 기능
-                    $('input[type="checkbox"]').not(this).prop('checked', false);
-                } else {
-                    // 체크박스가 해제되면 버튼 비활성화
-                    $('#deleteBtn').prop('disabled', true);
-                }
-            });
-        	
-        	// 체크여부에 따라 최종확정 버튼 활성화
-        	$('input[type="checkbox"]').click(function() {
-        		var tdText = $(this).closest('tr').find('td:eq(5)').text();
-	        	if($(this).is(':checked') && tdText === '결재완료') {
-	            	// 체크되고 '결재완료'일때만 활성화
-	                $('#confirmBtn').prop('disabled', false);
-	        	} else {
-                    // 체크박스가 해제되면 버튼 비활성화
-                    $('#confirmBtn').prop('disabled', true);
-                }
+            $('#sumSalBasic').text(sumSalBasic);
+            
+        	let sumSalDeduct = 0;
+        	$('td.salDeduct').each(function(){
+        		sumSalDeduct += parseInt($(this).text());
         	});
-        	
-        	// 테이블 가운대 정렬
-        	$('table th, table td').css('text-align', 'center');
-        	
-        	// 삭제버튼 시 리스트id 가지고 이동하기
-            $('#deleteBtn').click(function(event){
-            	event.preventDefault();
-            	swal({
-     	              title: "삭제하시겠습니까?",
-     	              text: "삭제 후에는 신규작성을 통해 다시 작성하셔야 됩니다.",
-     	              type: "warning",
-     	              buttons: {
-     	                cancel: {
-     	                  visible: true,
-     	                  text: "취소하기",
-     	                  className: "btn btn-danger",
-     	                },
-     	                confirm: {
-     	                  text: "삭제하기",
-     	                  className: "btn btn-success",
-     	                },
-     	              },
-     	            }).then(function(willDelete) {  // 일반 함수 문법으로 변경
-     	             if (willDelete) {
-     	            	$('#inputForDelete').val($('input[name="sal_list_id"]:checked').val());
-     	            	swal({
-     	            	    title: "Success!",
-     	            	    text: "삭제완료",
-     	            	    icon: "success",
-     	            	    buttons: "OK", 
-     	            	}).then(function() {
-     	            		$('#deleteSubmit').submit();
-                        });
-   	             	}
-                    });
-     	     	 });
-        	
-         // 최종확정버튼 시 리스트id 가지고 이동하기
-        	$('#confirmBtn').click(function(event){
-        		event.preventDefault();
-        		$('#inputForConfirm').val($('input[name="sal_list_id"]:checked').val());
-        		swal({
-	            	    title: "Success!",
-	            	    text: "최종확정되었습니다.",
-	            	    icon: "success",
-	            	    buttons: "OK", 
-            	}).then(function() {
-            		$('#confirmSubmit').submit();
-                });
+            $('#sumSalDeduct').text(sumSalDeduct);
+            
+        	let sumSalTotal = 0;
+        	$('td.salTotal').each(function(){
+        		sumSalTotal += parseInt($(this).text());
         	});
+            $('#sumSalTotal').text(sumSalTotal);
+            
+            // 대상인원 출력
+            $('#sumMember').text($('#calSalaryTable tbody tr').length);
+            
         });
     </script>
+            
 <!------------------------------------------------------------------------------------------------------------------>
           </div>
           <!-- page-inner -->
@@ -225,7 +234,7 @@
       <!-- main-panel -->
     </div>
     <!-- main-wrapper -->
-
+    
     <!--   Core JS Files   -->
     <script src="${pageContext.request.contextPath }/resources/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="${pageContext.request.contextPath }/resources/assets/js/core/popper.min.js"></script>

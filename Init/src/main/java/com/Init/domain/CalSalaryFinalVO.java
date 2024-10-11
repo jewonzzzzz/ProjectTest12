@@ -14,6 +14,7 @@ public class CalSalaryFinalVO {
 	private String emp_work_type;
 	private String year;
 	private String month;
+	private String sal_type;
 	private int sal_position;
 	private int sal_job;
 	private int sal_allow;

@@ -177,7 +177,7 @@
 			            	<input type="hidden" name="year" value="${calSalaryInfo.year }">
 			            	<input type="hidden" name="month" value="${calSalaryInfo.month }">
 			            	<input type="hidden" id="employeeIds" name="employeeIds">
-				            <button type="submit" id="submitBtn" class="btn btn-primary">
+				            <button type="submit" id="submitBtn" class="btn btn-primary" >
 		                          다음으로
 		                    </button>
 		            	</form>

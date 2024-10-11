@@ -82,12 +82,12 @@
                       </a>
                     </li>
                     <li>
-                      <a href="/salary/calSalaryInquiryForManage">
+                      <a href="/salary/salaryInquiryForManage">
                         <span class="sub-item">급여조회(관리자)</span>
                       </a>
                     </li>
                     <li>
-                      <a href="components/notifications.html">
+                      <a href="/salary/salaryInquiryForEmployee">
                         <span class="sub-item">급여조회</span>
                       </a>
                     </li>

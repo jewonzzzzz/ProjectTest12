@@ -10,8 +10,7 @@ public class MemberInfoForSalaryVO {
 	private String emp_position;
 	private String emp_job;
 	private String emp_work_type;
-	private String check_in_start;
-	private String check_in_end;
+	private String check_in;
 	private int working_time;
 	private int overtime;
 	private int night_work_time;

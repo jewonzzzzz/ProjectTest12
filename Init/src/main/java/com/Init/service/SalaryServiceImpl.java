@@ -96,5 +96,58 @@ public class SalaryServiceImpl implements SalaryService{
 		return sdao.calSalary(employeeIds, vo);
 	}
 	
+	// 급여산출결과 급여내역 테이블에 저장
+	@Override
+	public void saveCalSalaryList(CalSalaryListVO vo) {
+		sdao.saveCalSalaryList(vo);
+	}
+	
+	// 급여산출결과 급여상세 테이블에 저장
+	@Override
+	public void saveCalSalaryFinal(List<CalSalaryFinalVO> CalSalaryFinalInfo) {
+		sdao.saveCalSalaryFinal(CalSalaryFinalInfo);
+	}
+	
+	// 급여내역테이블 삭제시 급여내역 및 상세테이블 삭제
+	@Override
+	public void deleteSalaryInfo(String sal_list_id) {
+		sdao.deleteSalaryInfo(sal_list_id);
+	}
+	
+	// 급여내역리스트 상태 최종확정으로 변경
+	@Override
+	public void confirmSalaryList(String sal_list_id) {
+		sdao.confirmSalaryList(sal_list_id);
+	}
+	
+	// 급여내역테이블 조회시 급여상세내역 가져오기
+	@Override
+	public List<CalSalaryFinalVO> getCalSalaryFinalListForView(String sal_list_id) {
+		return sdao.getCalSalaryFinalListForView(sal_list_id);
+	}
+	
+	// 급여내역테이블 조회시 급여정보(형태/연/월) 가져오기
+	@Override
+	public CalSalaryListVO getCalSalaryListForView(String sal_list_id) {
+		return sdao.getCalSalaryListForView(sal_list_id);
+	}
+	
+	// 급여조회(사번)하기 급여정보(연/월/사번)
+	@Override
+	public List<CalSalaryFinalVO> getSalaryInquiryForManageToId(CalSalaryListVO vo) {
+		return sdao.getSalaryInquiryForManageToId(vo);
+	}
+	
+	// 급여조회(이름)하기 급여정보(연/월/이름)
+	@Override
+	public List<CalSalaryFinalVO> getSalaryInquiryForManageToName(CalSalaryListVO vo) {
+		return sdao.getSalaryInquiryForManageToName(vo);
+	}
+	
+	// 급여조회(관리자) : 상세보기 클릭 시 상세급여 가져오기
+	@Override
+	public CalSalaryFinalVO getSalaryDetail(int sal_final_id) {
+		return sdao.getSalaryDetail(sal_final_id);
+	}
 	
 }
