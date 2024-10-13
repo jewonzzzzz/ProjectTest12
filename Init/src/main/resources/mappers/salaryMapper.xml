@@ -173,5 +173,14 @@
 		where f.sal_list_id = l.sal_list_id and sal_final_id=#{sal_final_id} 
 	</select>
 	
+	<!-- 엑셀내려받기 테스트용 전체직원정보 가져오기 -->
+	<select id="excelDownload" resultType="BankTransperVO">
+		select emp_account_name, emp_bank_name, emp_account_num, sal_total_after, sal_type, year, month  
+		from employee e, salary_final f, salary_list l 
+		where l.sal_list_id = f.sal_list_id and e.emp_id = f.emp_id and l.sal_list_id =#{sal_list_id}; 
+	</select>
+	
+	
+	
 
 </mapper>

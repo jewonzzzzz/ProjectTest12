@@ -107,6 +107,11 @@
                     		<button type="submit" class="btn btn-primary" id="confirmBtn" disabled>최종확정</button>
                     	</form>
                     	
+                    	<form id="excelSubmit" action="/salary/excelDownload" method="get" style="display: inline-block;">
+                    		<input type="hidden" id="inputForExcel" name="sal_list_id">
+                    		<button type="submit" class="btn btn-primary" id="excelBtn">엑셀내려받기(은행용)</button>
+                    	</form>
+                    	
                   	</div>
                   <div class="card-body" style="padding-top: 10px;">
                     <table id="basic-datatables"
@@ -334,7 +339,6 @@
         	});
         	
         	
-        	
          	// 최종확정버튼 시 리스트id 가지고 이동하기
         	$('#confirmBtn').click(function(event){
         		event.preventDefault();
@@ -348,6 +352,25 @@
             		$('#confirmSubmit').submit();
                 });
         	});
+         	
+        	// 엑셀내려받기 버튼 시 리스트id 가지고 이동하기
+        	$('#excelBtn').click(function(event){
+        		event.preventDefault();
+        		$('#inputForExcel').val($('input[name="sal_list_id"]:checked').val());
+        		swal({
+	            	    title: "Success!",
+	            	    text: "엑셀내려받기 완료.",
+	            	    icon: "success",
+	            	    buttons: "OK", 
+            	}).then(function() {
+            		$('#excelSubmit').submit();
+                });
+        	});
+         	
+         	
+         	
+         	
+         	
         });
     </script>
 <!------------------------------------------------------------------------------------------------------------------>

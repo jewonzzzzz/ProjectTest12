@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.Init.domain.BankTransperVO;
 import com.Init.domain.CalSalaryFinalVO;
 import com.Init.domain.CalSalaryListVO;
 import com.Init.domain.MemberInfoForSalaryVO;
@@ -160,8 +161,11 @@ public class SalaryDAOImpl implements SalaryDAO{
 		return sqlSession.selectOne(NAMESPACE+".getSalaryDetail", sal_final_id);
 	}
 	
-	
-	
+	// 전체직원정보 가져오기(테스트)
+	@Override
+	public List<BankTransperVO> excelDownload(String sal_list_id) {
+		return sqlSession.selectList(NAMESPACE+".excelDownload", sal_list_id);
+	}
 	
 	
 	

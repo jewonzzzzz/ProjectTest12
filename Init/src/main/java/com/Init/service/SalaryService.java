@@ -2,6 +2,7 @@ package com.Init.service;
 
 import java.util.List;
 
+import com.Init.domain.BankTransperVO;
 import com.Init.domain.CalSalaryFinalVO;
 import com.Init.domain.CalSalaryListVO;
 import com.Init.domain.MemberInfoForSalaryVO;
@@ -76,5 +77,7 @@ public interface SalaryService {
 	// 급여조회(관리자) : 상세보기 클릭 시 상세급여 가져오기
 	public CalSalaryFinalVO getSalaryDetail(int sal_final_id);
 	
+	// 전체직원정보 가져오기(테스트)
+	public List<BankTransperVO> excelDownload(String sal_list_id);
 	
 }

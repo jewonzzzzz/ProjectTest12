@@ -1,10 +1,18 @@
 package com.Init.controller;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.Init.domain.BankTransperVO;
 import com.Init.domain.CalSalaryFinalVO;
 import com.Init.domain.CalSalaryListVO;
 import com.Init.domain.MemberInfoForSalaryVO;
@@ -360,7 +369,52 @@ public class SalaryController {
 		return calSalaryInquiryList;
 	}	
 		
-	
+	// 엑셀내려받기 시 은행이체양식으로 작성 및 엑셀 다운로드
+	@GetMapping(value = "excelDownload")
+	public String excelTest(HttpServletResponse response, @RequestParam("sal_list_id") String sal_list_id) throws IOException {
+		logger.debug("sal_list_id: "+sal_list_id);
+		
+		Workbook workbook = new XSSFWorkbook();
+		Sheet sheet = workbook.createSheet("BankTransperData");
+		
+		// 은행이체용 정보 가져오기
+		List<BankTransperVO> csList = sService.excelDownload(sal_list_id);
+		
+		 // 2. 헤더 생성 (첫 번째 행)
+        String[] headers = { "수취인명", "은행명", "계좌번호", "이체금액", "지급일", "이체구분", 
+        			"송금인명", "송금인 계좌", "비고" };
+        Row headerRow = sheet.createRow(0);
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+        }
+        
+        LocalDate today = LocalDate.now();
+        int year = today.getYear();           // 연도
+        int month = today.getMonthValue();    // 월 (숫자 형식)
+        
+        int rowNum = 1; // 두 번째 행부터 데이터 시작
+        for (BankTransperVO dto : csList) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(dto.getEmp_account_name());
+            row.createCell(1).setCellValue(dto.getEmp_bank_name());
+            row.createCell(2).setCellValue(dto.getEmp_account_num());
+            row.createCell(3).setCellValue(dto.getSal_total_after());
+            row.createCell(4).setCellValue(year+""+month+"25");
+            row.createCell(5).setCellValue(dto.getSal_type());
+            row.createCell(6).setCellValue("주식회사 Init");
+            row.createCell(7).setCellValue("121-2112-121212");
+            row.createCell(8).setCellValue(dto.getYear()+"년 "+dto.getMonth()+"월 "+dto.getSal_type());
+        }
+		
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=\"data.xlsx\"");
+        
+        workbook.write(response.getOutputStream());
+        workbook.close();
+		
+		return "/salary/calSalary";
+	}
 	
 	
 	
