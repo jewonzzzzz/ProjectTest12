@@ -93,6 +93,15 @@
                     		<button type="submit" class="btn btn-primary" id="deleteBtn" disabled>삭제하기</button>
                     	</form>
                     	
+                   		<button
+	                        class="btn btn-primary"
+	                        id = "signBtn"
+	                        data-bs-toggle="modal"
+	                        data-bs-target="#addRowModal"
+	                      	>
+	                        결재요청
+                        </button>
+                    	
                     	<form id="confirmSubmit" action="/salary/confirmSalaryList" method="post" style="display: inline-block;">
                     		<input type="hidden" id="inputForConfirm" name="sal_list_id">
                     		<button type="submit" class="btn btn-primary" id="confirmBtn" disabled>최종확정</button>
@@ -132,11 +141,125 @@
               </div>
             </div>
             
+            <!-- 모달  -->
+            <div
+                      class="modal fade"
+                      id="addRowModal"
+                      tabindex="-1"
+                      role="dialog"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog" role="document" style="max-width: 1000px; margin-top: 100px;">
+                        <div class="modal-content" style="width: 1000px;">
+                        <div style="display: flex;">
+                        <div class="col-6">
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title">
+                              <span class="fw-mediumbold"> New</span>
+                              <span class="fw-light"> Row </span>
+                            </h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <p class="small">
+                              Create a new row using this form, make sure you
+                              fill them all
+                            </p>
+                            <form>
+                              <div class="row">
+                                <div class="col-sm-12">
+                                  <div class="form-group form-group-default">
+                                    <label>Name</label>
+                                    <input id="addName" type="text" class="form-control" placeholder="fill name">
+                                  </div>
+                                </div>
+                                <div class="col-md-6 pe-0">
+                                  <div class="form-group form-group-default">
+                                    <label>Position</label>
+                                    <input id="addPosition" type="text" class="form-control" placeholder="fill position">
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group form-group-default">
+                                    <label>Office</label>
+                                    <input id="addOffice" type="text" class="form-control" placeholder="fill office">
+                                  </div>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                          <div class="modal-footer border-0">
+                            <button type="button" id="addRowButton" class="btn btn-primary">
+                              Add
+                            </button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                        <div>
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title">
+                              <span class="fw-mediumbold"> New</span>
+                              <span class="fw-light"> Row </span>
+                            </h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <p class="small">
+                              Create a new row using this form, make sure you
+                              fill them all
+                            </p>
+                            <form>
+                              <div class="row">
+                                <div class="col-sm-12">
+                                  <div class="form-group form-group-default">
+                                    <label>Name</label>
+                                    <input id="addName" type="text" class="form-control" placeholder="fill name">
+                                  </div>
+                                </div>
+                                <div class="col-md-6 pe-0">
+                                  <div class="form-group form-group-default">
+                                    <label>Position</label>
+                                    <input id="addPosition" type="text" class="form-control" placeholder="fill position">
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group form-group-default">
+                                    <label>Office</label>
+                                    <input id="addOffice" type="text" class="form-control" placeholder="fill office">
+                                  </div>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                          <div class="modal-footer border-0">
+                            <button type="button" id="addRowButton" class="btn btn-primary">
+                              Add
+                            </button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                        </div>
+                        
+                        
+                        
+                          
+                        </div>
+                    </div>
+           </div>
+            
             <script>
         $(document).ready(function() {
         	//데이터테이블 설정
         	$("#basic-datatables").DataTable({
-        		pageLength: 5,
+        		pageLength: 8,
         	});
         	
         	// 체크박스 체크여부에 다른 동작 분리(삭제버튼 활성화, 다중체크방지)
@@ -200,7 +323,19 @@
                     });
      	     	 });
         	
-         // 최종확정버튼 시 리스트id 가지고 이동하기
+        	
+        	 
+        	
+        	// 결재요청 버튼 시 워크플로우 모달팝업 초기화
+        	$('#signBtn').click(function(){
+        		$('#modalInputText').val('');
+         		$('#modalContent').show();     
+            	$('#modalNextContent').hide();   
+        	});
+        	
+        	
+        	
+         	// 최종확정버튼 시 리스트id 가지고 이동하기
         	$('#confirmBtn').click(function(event){
         		event.preventDefault();
         		$('#inputForConfirm').val($('input[name="sal_list_id"]:checked').val());

@@ -14,4 +14,5 @@ public class CalSalaryListVO {
 	private String sal_list_subject;
 	private String sal_list_date;
 	private String sal_list_status;
+	private double bonus_rate;
 }

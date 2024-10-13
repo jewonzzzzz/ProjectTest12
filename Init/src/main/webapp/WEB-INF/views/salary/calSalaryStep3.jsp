@@ -225,7 +225,12 @@
                             <th>근무형태</th>
                             <th>직급급</th>
                             <th>직무급</th>
+                            <th>기본급</th>
                             <th>법정수당</th>
+                            <th>성과지급율(%)</th>
+                            <th>상여지급율(%)</th>
+                            <th>성과급</th>
+                            <th>상여금</th>
                             <th>(세전)급여액</th>
                             <th>소득세</th>
                             <th>국민연금</th>
@@ -247,7 +252,12 @@
 								<td>${list.emp_work_type }</td>                        	
 								<td>${list.sal_position }</td>                        	
 								<td>${list.sal_job }</td>                        	
+								<td>${list.sal_total_basic }</td>                        	
 								<td>${list.sal_allow }</td>                        	
+								<td>${list.perform_rate }</td>                        	
+								<td>${list.bonus_rate }</td>                        	
+								<td>${list.sal_perform }</td>                        	
+								<td>${list.sal_bonus }</td>                        	
 								<td class="salBasic">${list.sal_total_before }</td>                        	
 								<td>${list.incometax }</td>                        	
 								<td>${list.pension }</td>                        	
@@ -268,6 +278,7 @@
 			<input type="hidden"  name="sal_type" value="${calSalaryInfo.sal_type }">
             <input type="hidden"  name="year" value="${calSalaryInfo.year }">
             <input type="hidden"  name="month" value="${calSalaryInfo.month }">
+            <input type="hidden"  name="bonus_rate" value="${calSalaryInfo.bonus_rate }">
 	
 	<script>
         $(document).ready(function() {
@@ -285,7 +296,8 @@
 	        		employeeIds: employeeIds,
 	        		sal_type: $('input[name="sal_type"]').val(),
 		            year: $('input[name="year"]').val(),
-		            month: $('input[name="month"]').val()
+		            month: $('input[name="month"]').val(),
+		            bonus_rate: $('input[name="bonus_rate"]').val()
 		        };
         		
         		$.ajax({

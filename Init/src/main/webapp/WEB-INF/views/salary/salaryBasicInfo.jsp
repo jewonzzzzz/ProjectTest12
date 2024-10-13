@@ -105,6 +105,7 @@
                             />
                             <span class="input-group-text">원</span>
                           </div>
+                          <p>* 시급제 직원 급여산출 시 활용</p>
                         </div>
                         
                         <div class="form-group">

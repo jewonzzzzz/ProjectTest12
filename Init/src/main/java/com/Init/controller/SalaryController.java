@@ -229,6 +229,7 @@ public class SalaryController {
 		String year = (String)data.get("year");
 		String month = (String)data.get("month");
 		String sal_type = (String)data.get("sal_type");
+		double bonus_rate = Double.parseDouble((String)data.get("bonus_rate"));
 		String check_in = year + "-" + month+"-01";
 		
 		// 전달된 정보 저장 idList, (급여유형, 연도, 월) => 객체 저장
@@ -236,6 +237,7 @@ public class SalaryController {
 		vo.setSal_type(sal_type);
 		vo.setYear(year);
 		vo.setMonth(month);
+		vo.setBonus_rate(bonus_rate);
 		vo.setCheck_in(check_in);
 		
 		//급여산출
@@ -331,16 +333,16 @@ public class SalaryController {
 		return "/salary/salaryDetail";
 	}
 
-	// 급여조회(관리자) 페이지 호출
+	// 급여조회(직원) 페이지 호출
 		@GetMapping(value = "salaryInquiryForEmployee")
 		public String salaryInquiryForEmployee(HttpSession session) {
 			// 임시 사번저장(로그인으로 대체)
-			session.setAttribute("emp_id", "user30");
+			session.setAttribute("emp_id", "user31");
 			
 			return "/salary/salaryInquiryForEmployee";
 		}
 	
-	// 급여조회(관리자) 조회하기
+	// 급여조회(직원) 조회하기
 	@PostMapping(value = "getSalaryInquiryForEmployee")
 	@ResponseBody
 	public List<CalSalaryFinalVO> getSalaryInquiryForEmployee(@RequestBody List<String> checkSalaryInfo) {
@@ -359,8 +361,6 @@ public class SalaryController {
 	}	
 		
 	
-	// 성과급/상여금 만드는중
-	//getSalaryInquiryForManageToId 메퍼수정 필요
 	
 	
 	

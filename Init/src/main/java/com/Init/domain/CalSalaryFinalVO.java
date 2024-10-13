@@ -16,21 +16,21 @@ public class CalSalaryFinalVO {
 	private String year;
 	private String month;
 	private String sal_type;
-	private int dgrade_rate;
+	private double perform_rate;
+	private double bonus_rate;
 	private int sal_position;
 	private int sal_job;
 	private int sal_allow;
 	private int sal_month;
 	private int sal_perform;
-	private int perform_rate;
 	private int sal_bonus;
-	private int sal_bonus_rate;
-	private int sal_total_before;
 	private int incometax;
 	private int pension;
 	private int heal_ins;
 	private int long_ins;
 	private int emp_ins;
+	private int sal_total_basic;
+	private int sal_total_before;
 	private int sal_total_deduct;
 	private int sal_total_after;
 }

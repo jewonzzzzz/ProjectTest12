@@ -91,11 +91,6 @@
                         <span class="sub-item">급여조회</span>
                       </a>
                     </li>
-                    <li>
-                      <a href="components/sweetalert.html">
-                        <span class="sub-item">성과급/상여금 조회</span>
-                      </a>
-                    </li>  
                   </ul>
                 </div>
               </li>

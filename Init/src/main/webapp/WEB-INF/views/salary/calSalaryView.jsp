@@ -152,7 +152,12 @@
                             <th>근무형태</th>
                             <th>직급급</th>
                             <th>직무급</th>
+                            <th>기본급</th>
                             <th>법정수당</th>
+                            <th>성과지급율(%)</th>
+                            <th>상여지급율(%)</th>
+                            <th>성과급</th>
+                            <th>상여금</th>
                             <th>(세전)급여액</th>
                             <th>소득세</th>
                             <th>국민연금</th>
@@ -174,7 +179,12 @@
 								<td>${list.emp_work_type }</td>                        	
 								<td>${list.sal_position }</td>                        	
 								<td>${list.sal_job }</td>                        	
+								<td>${list.sal_total_basic }</td>                        	
 								<td>${list.sal_allow }</td>                        	
+								<td>${list.perform_rate }</td>                        	
+								<td>${list.bonus_rate }</td>                        	
+								<td>${list.sal_perform }</td>                        	
+								<td>${list.sal_bonus }</td>                        	
 								<td class="salBasic">${list.sal_total_before }</td>                        	
 								<td>${list.incometax }</td>                        	
 								<td>${list.pension }</td>                        	

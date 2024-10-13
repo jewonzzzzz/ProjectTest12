@@ -163,11 +163,11 @@
                       </table>
 						</div>
 						<div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-two-tab">
-						<label class="mb-3"><b>월급여 항목</b></label>
+						<label class="mb-3"><b>급여 기본정보</b></label>
 						<table class="table table-bordered" id="calSalaryTable">
                         <thead>
                           <tr>
-                            <th>(세전)월급여액</th>
+                            <th>기본급(직급급+직무급)</th>
                             <th>직급급</th>
                             <th>직무급</th>
                             <th>법정수당</th>
@@ -175,36 +175,56 @@
                         </thead>
                         <tbody>
                         	<tr>
-								<td>${calSalaryFinalInfo.sal_month }</td>                        	
+								<td>${calSalaryFinalInfo.sal_total_basic }</td>                        	
 								<td>${calSalaryFinalInfo.sal_position }</td>                        	
 								<td>${calSalaryFinalInfo.sal_job }</td>                        	
 								<td>${calSalaryFinalInfo.sal_allow }</td>                        	
                         	</tr>
                         </tbody>
                       </table>
-                      <p> * 법정수당 산출 : 통상임금 * ((초과근무시간 + 야간근로시간) * 0.5) + 특별근로시간)</p>
                       
-                      <label class="mb-3"><b>성과급 항목</b></label>
+                      <label class="mb-3"><b>성과 및 상여지급율</b></label>
 						<table class="table table-bordered" id="calSalaryTable">
                         <thead>
                           <tr>
-                            <th>(세전)성과급</th>
+                            <th>성과지급율(%)</th>
                             <th>소속부서</th>
                             <th>부서평가</th>
-                            <th>성과지급율(%)</th>
+                            <th>상여지급율(%)</th>
                           </tr>
                         </thead>
                         <tbody>
                         	<tr>
-								<td>${calSalaryFinalInfo.sal_perform }</td>                        	
+								<td>${calSalaryFinalInfo.perform_rate }</td>                        	
 								<td>${calSalaryFinalInfo.dname }</td>                        	
 								<td>${calSalaryFinalInfo.dgrade }</td>                        	
-								<td>${calSalaryFinalInfo.dgrade_rate }</td>                        	
+								<td>${calSalaryFinalInfo.bonus_rate }</td>                        	
                         	</tr>
                         </tbody>
                       </table>
-                      <p> * 성과급 산출 : (직급급 + 직무급) * 성과지급율(%)</p>
                       
+                      <label class="mb-3"><b>급여항목</b></label>
+						<table class="table table-bordered" id="calSalaryTable">
+                        <thead>
+                          <tr>
+                            <th>(세전)급여액</th>
+                            <th>월급여액</th>
+                            <th>성과급</th>
+                            <th>상여금</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        	<tr>
+								<td>${calSalaryFinalInfo.sal_total_before }</td>                        	
+								<td>${calSalaryFinalInfo.sal_month }</td>                        	
+								<td>${calSalaryFinalInfo.sal_perform }</td>                        	
+								<td>${calSalaryFinalInfo.sal_bonus }</td>                        	
+                        	</tr>
+                        </tbody>
+                      </table>
+                      <p> * (세전)급여액 : 월급여액 + 성과급 + 상여금 <br>
+                      * 월급여액 : 기본급 + 법정수당  /  성과급 : 기본급 * 성과급 지급율(%)  /  상여금 : 기본급 * 상여금 지급율(%)<br>
+                      * 법정수당 : 통상임금 * ((초과근무시간 + 야간근로시간) * 0.5) + 특별근로시간)</p>
 						</div>
 						
 						<div class="tab-pane fade" id="v-pills-four" role="tabpanel" aria-labelledby="v-pills-four-tab">

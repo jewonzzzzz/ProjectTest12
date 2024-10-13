@@ -57,7 +57,7 @@
           <div class="page-inner">
 <!------------------------------------------------------------------------------------------------------------------>
 			<div class="page-header">
-              <h3 class="fw-bold mb-3">급여조회(관리자)</h3>
+              <h3 class="fw-bold mb-3">급여조회</h3>
               <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
                   <a href="/salary/main">
@@ -74,7 +74,7 @@
                   <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                  <a href="#">급여조회(관리자)</a>
+                  <a href="#">급여조회</a>
                 </li>
               </ul>
             </div>
@@ -201,7 +201,7 @@
             });
             
             $("#basic-datatables").DataTable({
-            	pageLength: 5,
+            	pageLength: 8,
             });
         });
     </script>

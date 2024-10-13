@@ -162,7 +162,7 @@
                         <div class="col-lg-3 col-md-3 col-sm-4 text-end">
                           <label>급여형태 :</label>
                         </div>
-                        <div class="col-lg-4 col-md-9 col-sm-8">
+                        <div class="col-lg-9 col-md-9 col-sm-8">
                           <select
                             class="form-select input-fixed"
                             id="notify_placement_from"
@@ -174,6 +174,21 @@
                           </select>
                         </div>
                       </div>
+                      <div class="form-group form-show-notify row" id="bonusInput" style="display: none;">
+                        <div class="col-lg-3 col-md-3 col-sm-4 text-end">
+                          <label>상여지급율(%) :</label>
+                        </div>
+                        <div class="col-lg-9 col-md-9 col-sm-8">
+                          <input type="text" 
+				           class="form-control input-fixed" 
+				           id="bonus_rate" 
+				           name="bonus_rate"
+				           placeholder="상여지급율(%) 입력" 
+				           style="margin-bottom: 0px; padding: 5px 14px; border-bottom-width: 1px;">
+                        </div>
+                      </div>
+                      
+                      
                       <div class="form-group form-show-notify row">
                         <div class="col-lg-3 col-md-3 col-sm-4 text-end">
                           <label>연도 :</label>
@@ -235,14 +250,28 @@
                 $('#monthSelect').append(new Option(month, month));  // Option 생성 및 추가
             }
             
-         // 다음으로 버튼 시 사번가지고 이동하기
+            // 상여금 옵션 선택 시 상여지급율 input 보이기
+            $('select[name="sal_type"]').change(function() {
+		        if ($(this).val() === '상여금') {
+		          $('#bonusInput').show();  // div 보이기
+		        } else {
+		          $('#bonusInput').hide();  // div 숨기기
+		        }
+	      	});
+            
+         	// 다음으로 버튼 시 사번가지고 이동하기
             $('#nextBtn').click(function(event){
             	event.preventDefault();
-            	
-            	var checkSalaryInfo = [];
-            	$('option:checked').each(function () {
-            		checkSalaryInfo.push($(this).val());
-                });
+            	// 상여지급율 없을 시 값 0으로 초기화
+            	var bonus_rate = $('#bonus_rate').val();
+            	if(bonus_rate === ""){
+            		$('#bonus_rate').val(0);
+            	}
+           		var checkSalaryInfo = [];
+               	$('option:checked').each(function () {
+               		checkSalaryInfo.push($(this).val());
+                   });
+               	checkSalaryInfo.push(bonus_rate);
             	
             	$.ajax({
             		url:'/salary/checkCreateSalary',

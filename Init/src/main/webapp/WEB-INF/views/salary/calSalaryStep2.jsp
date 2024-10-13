@@ -56,7 +56,6 @@
         <div class="container">
           <div class="page-inner">
 <!------------------------------------------------------------------------------------------------------------------>
-	
 	<div class="page-header">
               <h3 class="fw-bold mb-3">급여산출</h3>
               <ul class="breadcrumbs mb-3">
@@ -154,28 +153,30 @@
                   </div>
                   
                   <div class="form-group from-show-notify row">
-                        <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="col-lg-12 col-md-12 col-sm-12" style="display:flex; justify-content: flex-end;">
                           <button
 	                        class="btn btn-primary"
 	                        id = "modalOpenBtn"
 	                        data-bs-toggle="modal"
 	                        data-bs-target="#addRowModal"
+	                        style="margin-right: 5px;"
 	                      	>
 		                        직원조회
 	                      </button>
-                          <button type="button" id="selectAllMemberBtn" class="btn btn-primary">
+                          <button type="button" id="selectAllMemberBtn" class="btn btn-primary" style="margin-right: 5px;">
                             전직원 불러오기
                           </button>
-                          <button type="button" id="checkAllBtn" class="btn btn-primary">
+                          <button type="button" id="checkAllBtn" class="btn btn-primary" style="margin-right: 5px;">
                             전체선택
                           </button>
-                          <button type="button" id="deleteMemberBtn" class="btn btn-primary">
+                          <button type="button" id="deleteMemberBtn" class="btn btn-primary" style="margin-right: 5px;">
                             삭제하기
                           </button>
 	                      <form id="dataForm" action="/salary/calSalaryStep3" method="post" style="display:inline-block;">
 			            	<input type="hidden" name="sal_type" value="${calSalaryInfo.sal_type }">
 			            	<input type="hidden" name="year" value="${calSalaryInfo.year }">
 			            	<input type="hidden" name="month" value="${calSalaryInfo.month }">
+			            	<input type="hidden" name="bonus_rate" value="${calSalaryInfo.bonus_rate }">
 			            	<input type="hidden" id="employeeIds" name="employeeIds">
 				            <button type="submit" id="submitBtn" class="btn btn-primary" >
 		                          다음으로
@@ -215,7 +216,7 @@
                       role="dialog"
                       aria-hidden="true"
                     >
-                      <div class="modal-dialog" role="document">
+                      <div class="modal-dialog" role="document" style="margin-top: 100px;">
                         <div class="modal-content">
                           <div class="modal-header border-0">
                             <h5 class="modal-title">
@@ -303,7 +304,6 @@
                             </button>
                           </div>
                           </div>
-                          
                         </div>
                       </div>
                     </div>
@@ -401,7 +401,7 @@
             	$('#dataForm').submit(); 
             });
             
-         	// 모달반응
+         	// 직원검색 클릭 시 모달 창 초기화
          	$('#modalOpenBtn').click(function(){
          		$('#modalInputText').val('');
          		$('#modalContent').show();     
