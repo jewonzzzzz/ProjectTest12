@@ -151,10 +151,35 @@ public class SalaryServiceImpl implements SalaryService{
 		return sdao.getSalaryDetail(sal_final_id);
 	}
 	
-	// 전체직원정보 가져오기(테스트)
+	// 엑셀내려받기 클릭 시 은행이체양식용 정보 가져오기
 	@Override
 	public List<BankTransperVO> excelDownload(String sal_list_id) {
 		return sdao.excelDownload(sal_list_id);
 	}
+	
+	// 결재요청 눌렀을 때 사번으로 직원정보 가져오기
+	@Override
+	public MemberInfoForSalaryVO getMemberInfoForSignToId(String emp_id) {
+		return sdao.getMemberInfoForSignToId(emp_id);
+	}
+	
+	// 결재요청 눌렀을 때 사원정보로 본부장 및 부서원 정보가져오기
+	@Override
+	public MemberInfoForSalaryVO getMemberInfoForSignToBnum(MemberInfoForSalaryVO vo) {
+		return sdao.getMemberInfoForSignToBnum(vo);
+	}
+	
+	// 결재요청 눌렀을 때 사원정보로 부서원 정보가져오기
+	@Override
+	public List<MemberInfoForSalaryVO> getMemberInfoForSignToDname(MemberInfoForSalaryVO vo) {
+		return sdao.getMemberInfoForSignToDname(vo);
+	}
+	
+	// 결재요청 시 급여내역리스트 상태(결재중) 변경
+	@Override
+	public void updateCalSalaryListForSigning(String sal_list_id) {
+		sdao.updateCalSalaryListForSigning(sal_list_id);
+	}
+	
 	
 }

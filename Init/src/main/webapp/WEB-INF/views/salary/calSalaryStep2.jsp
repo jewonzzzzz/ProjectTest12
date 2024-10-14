@@ -145,15 +145,11 @@
                   </div>
                 </div>
               </div>
-            
-                <div class="col-md-10">
-                <div class="card">
-                  <div class="card-header">
-                    <div class="card-title">직원정보 조회</div>
-                  </div>
-                  
-                  <div class="form-group from-show-notify row">
-                        <div class="col-lg-12 col-md-12 col-sm-12" style="display:flex; justify-content: flex-end;">
+              
+              <div class="col-md-10">
+              	<div style="margin-bottom: 10px; display: flex; justify-content: space-between;">
+             	 	<button type="button" class="btn btn-primary" onclick="history.back()">이전으로</button>
+                        <div>
                           <button
 	                        class="btn btn-primary"
 	                        id = "modalOpenBtn"
@@ -178,13 +174,19 @@
 			            	<input type="hidden" name="month" value="${calSalaryInfo.month }">
 			            	<input type="hidden" name="bonus_rate" value="${calSalaryInfo.bonus_rate }">
 			            	<input type="hidden" id="employeeIds" name="employeeIds">
-				            <button type="submit" id="submitBtn" class="btn btn-primary" >
+				            <button type="submit" id="submitBtn" class="btn btn-primary" disabled>
 		                          다음으로
 		                    </button>
 		            	</form>
-                        </div>
-                      </div>
-                     
+		            	</div>
+              	</div>
+              </div>
+            
+                <div class="col-md-10">
+                <div class="card">
+                  <div class="card-header">
+                    <div class="card-title">직원정보 조회</div>
+                  </div>
                   <div class="card-body">
                     <table class="table table-striped mt-3" id="resultTable">
                       <thead>
@@ -312,11 +314,26 @@
 	<script>
         $(document).ready(function() {
         	
+        	// 체크박스 클릭 시 다음버튼 활성화
+        	$('#resultTable tbody').on('click', 'input[type="checkbox"]', function() {
+        		updateSubmitBtn()
+        	});
+        	
         	// 전체 선택하기 
         	$('#checkAllBtn').click(function(){
         		var checkStatus = $('input[type="checkbox"]').length === $('input[type="checkbox"]:checked').length;
         		$('input[type="checkbox"]').prop('checked', !checkStatus);
+        		updateSubmitBtn()
         	});
+        	
+        	// 다음으로 버튼 활성화 상태를 업데이트하는 함수
+        	function updateSubmitBtn(){
+        		if($('input[type="checkbox"]:checked').length > 0){
+        			$('#submitBtn').prop('disabled',false);
+        		} else {
+        			$('#submitBtn').prop('disabled',true);
+        		}
+        	}
         	
         	// 선택 정보 삭제하기
         	$('#deleteMemberBtn').click(function() {

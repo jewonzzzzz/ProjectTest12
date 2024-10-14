@@ -57,7 +57,8 @@
 	
 	<!-- 급여산출페이지 이동 시 급여내역리스트 가져오기 -->
 	<select id="getCalSalaryList" resultType="CalSalaryListVO">
-		select * from salary_list order by sal_list_id desc 
+		select * from salary_list 
+		order by year desc, CAST(month AS UNSIGNED) DESC
 	</select>
 	
 	<!-- 급여생성 중복방지 체크 -->
@@ -150,7 +151,7 @@
 		select f.emp_id, sal_final_id, f.sal_list_id, sal_type, year, month, sal_total_before, sal_total_deduct, sal_total_after 
 		from salary_final f, salary_list l 
 		where f.sal_list_id = l.sal_list_id 
-		and year=#{year} and emp_id=#{emp_id} 
+		and year=#{year} and emp_id=#{emp_id} and sal_list_status = '최종확정' 
 		order by emp_id desc, year desc, CAST(month AS UNSIGNED) DESC 
 	</select>	
 	
@@ -159,7 +160,7 @@
 		select f.emp_id, sal_final_id, f.sal_list_id, sal_type, year, month, sal_total_before, sal_total_deduct, sal_total_after 
 		from salary_final f, salary_list l 
 		where f.sal_list_id = l.sal_list_id 
-		and year=#{year} and emp_name=#{emp_name} 
+		and year=#{year} and emp_name=#{emp_name} and sal_list_status = '최종확정' 
 		order by emp_id desc, year desc, CAST(month AS UNSIGNED) DESC 
 	</select>
 	
@@ -179,6 +180,37 @@
 		from employee e, salary_final f, salary_list l 
 		where l.sal_list_id = f.sal_list_id and e.emp_id = f.emp_id and l.sal_list_id =#{sal_list_id}; 
 	</select>
+	
+	<!-- 결재요청 버튼 클릭 시 해당직원 정보 가져오기 -->
+	<select id="getMemberInfoForSignToId" resultType="MemberInfoForSalaryVO">
+		select emp_id, emp_name, emp_bnum, dname, emp_position 
+		from employee e, dept d 
+		where e.emp_dnum = d.dnum and emp_id = #{emp_id} 
+	</select>
+	
+	<!-- 결재요청 버튼 클릭 시 본부정보로 본부장 정보 가져오기 -->
+	<select id="getMemberInfoForSignToBnum" resultType="MemberInfoForSalaryVO">
+		select emp_id, emp_name, emp_position, dname 
+		from employee e, dept d 
+		where e.emp_dnum = d.dnum and emp_bnum = #{emp_bnum} and emp_position = '본부장' 
+	</select>
+	
+	<!-- 결재요청 버튼 클릭 시 본부정보로 본부장 정보 가져오기 -->
+	<select id="getMemberInfoForSignToDname" resultType="MemberInfoForSalaryVO">
+		select emp_id, emp_name, emp_position, dname 
+		from employee e, dept d 
+		where e.emp_dnum = d.dnum and emp_bnum = #{emp_bnum} and dname = #{dname} 
+		and emp_position in ('부장', '팀장') 
+	</select>
+	
+	<!-- 결재요청 시 급여내역리스트 결재중으로 변경 -->
+	<select id="updateCalSalaryListForSigning">
+		update salary_list 
+		set sal_list_status = '결재중' 
+		where sal_list_id = #{sal_list_id} 
+	</select>
+	
+	
 	
 	
 	

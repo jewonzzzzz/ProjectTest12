@@ -8,6 +8,7 @@ public class MemberInfoForSalaryVO {
 	private String emp_name;
 	private String dname;
 	private String dgrade;
+	private String emp_bnum;
 	private String emp_position;
 	private String emp_job;
 	private String emp_work_type;

@@ -80,4 +80,18 @@ public interface SalaryService {
 	// 전체직원정보 가져오기(테스트)
 	public List<BankTransperVO> excelDownload(String sal_list_id);
 	
+	// 결재요청 눌렀을 때 직원정보 가져오기
+	public MemberInfoForSalaryVO getMemberInfoForSignToId(String emp_id);
+	
+	// 결재요청 눌렀을 때 사원정보로 본부장 정보가져오기
+	public MemberInfoForSalaryVO getMemberInfoForSignToBnum(MemberInfoForSalaryVO vo);
+	
+	// 결재요청 눌렀을 때 사원정보로 부서원 정보가져오기
+	public List<MemberInfoForSalaryVO> getMemberInfoForSignToDname(MemberInfoForSalaryVO vo);
+	
+	// 결재요청 시 급여내역리스트 상태(결재중) 변경
+	public void updateCalSalaryListForSigning(String sal_list_id);
+	
+	
+	
 }

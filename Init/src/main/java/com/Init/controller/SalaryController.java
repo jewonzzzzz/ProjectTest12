@@ -2,6 +2,8 @@ package com.Init.controller;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -102,8 +104,10 @@ public class SalaryController {
 	// 급여산출 페이지
 	// http://localhost:8088/salary/calSalary
 	@GetMapping(value = "/calSalary")
-	public String calSalary(Model model){
+	public String calSalary(Model model, HttpSession session){
 		logger.debug("calSalary(Model model) 실행");
+		
+		session.setAttribute("emp_id", "user31"); //테스트용 삭제해야됨
 		
 		// 급여내역리스트 가져오기
 		List<CalSalaryListVO> calSalaryList = sService.getCalSalaryList();
@@ -346,7 +350,7 @@ public class SalaryController {
 		@GetMapping(value = "salaryInquiryForEmployee")
 		public String salaryInquiryForEmployee(HttpSession session) {
 			// 임시 사번저장(로그인으로 대체)
-			session.setAttribute("emp_id", "user31");
+			session.setAttribute("emp_id", "user31"); //테스트용 삭제해야됨
 			
 			return "/salary/salaryInquiryForEmployee";
 		}
@@ -416,8 +420,54 @@ public class SalaryController {
 		return "/salary/calSalary";
 	}
 	
-	
-	
+	// 결재요청하기 눌렀을 때 왼쪽 직원관련 본부+부서, 직원정보 가져오기
+	@PostMapping(value = "getMemberInfoForSign")
+	@ResponseBody
+	public Map<String,Object> getMemberInfoForSign(HttpSession session){
+		// 사번저장
+		String emp_id = (String)session.getAttribute("emp_id");
+		logger.debug(emp_id);
+				
+		// 직원정보 가져오기 (본부, 부서)
+		MemberInfoForSalaryVO memberInfo = sService.getMemberInfoForSignToId(emp_id);
 		
+		MemberInfoForSalaryVO vo = new MemberInfoForSalaryVO();
+		String emp_bnum = memberInfo.getEmp_bnum();
+		String dname = memberInfo.getDname();
+		
+		vo.setEmp_bnum(emp_bnum); // 가져온 본부정보
+		vo.setDname(dname); // 가져온 부서정보
+		
+		// 본부명으로 본부장 정보 가져오기
+		MemberInfoForSalaryVO directorInfo = sService.getMemberInfoForSignToBnum(vo);
+		// 부장 및 팀장 정보 가져오기
+		List<MemberInfoForSalaryVO> deptInfo = sService.getMemberInfoForSignToDname(vo);
+		
+		Map<String, Object> memberInfoData = new HashMap<String, Object>();
+		memberInfoData.put("memberInfo", memberInfo);
+		memberInfoData.put("emp_bnum", emp_bnum);
+		memberInfoData.put("dname", dname);
+		memberInfoData.put("directorInfo", directorInfo);
+		memberInfoData.put("deptInfo", deptInfo);
+		
+		logger.debug(memberInfoData.toString());
+		
+		return memberInfoData;
+	}
+	
+	//결재요청 자료 확인용
+	@PostMapping(value = "insertSignInfo")
+	@ResponseBody
+	public void insertSignInfo(@RequestBody Map<String, String> signData) {
+		logger.debug("signData :"+signData.toString());
+		String sal_list_id = signData.get("sal_list_id");
+		
+		//급여내역리스트 상태를 결재중으로 변경
+		sService.updateCalSalaryListForSigning(sal_list_id);
+		
+		
+		//결재정보를 워크플로우 디비에 저장
+	}
+	
 	
 }

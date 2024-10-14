@@ -93,11 +93,7 @@
                     		<button type="submit" class="btn btn-primary" id="deleteBtn" disabled>삭제하기</button>
                     	</form>
                     	
-                   		<button
-	                        class="btn btn-primary"
-	                        id = "signBtn"
-	                        data-bs-toggle="modal"
-	                        data-bs-target="#addRowModal"
+                   		<button	class="btn btn-primary"	id ="signBtn" data-bs-toggle="modal" data-bs-target="#addRowModal" disabled
 	                      	>
 	                        결재요청
                         </button>
@@ -109,7 +105,7 @@
                     	
                     	<form id="excelSubmit" action="/salary/excelDownload" method="get" style="display: inline-block;">
                     		<input type="hidden" id="inputForExcel" name="sal_list_id">
-                    		<button type="submit" class="btn btn-primary" id="excelBtn">엑셀내려받기(은행용)</button>
+                    		<button type="submit" class="btn btn-primary" id="excelBtn" disabled>엑셀내려받기(은행용)</button>
                     	</form>
                     	
                   	</div>
@@ -145,7 +141,6 @@
                 </div>
               </div>
             </div>
-            
             <!-- 모달  -->
             <div
                       class="modal fade"
@@ -154,61 +149,43 @@
                       role="dialog"
                       aria-hidden="true"
                     >
-                      <div class="modal-dialog" role="document" style="max-width: 1000px; margin-top: 100px;">
-                        <div class="modal-content" style="width: 1000px;">
-                        <div style="display: flex;">
+                      <div class="modal-dialog" role="document" style="max-width: 1100px; margin-top: 100px;">
+                        <div class="modal-content" style="width: 1100px;">
+                        <div style="display: flex; justify-content: space-between;">
                         <div class="col-6">
                         <div class="modal-header border-0">
                             <h5 class="modal-title">
-                              <span class="fw-mediumbold"> New</span>
-                              <span class="fw-light"> Row </span>
+                              <span class="fw-mediumbold"> 직원정보</span>
                             </h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">×</span>
-                            </button>
                           </div>
                           <div class="modal-body">
                             <p class="small">
-                              Create a new row using this form, make sure you
-                              fill them all
+                              추가하기를 누르면 오른쪽 결재요청 페이지에 추가됩니다.
                             </p>
-                            <form>
-                              <div class="row">
-                                <div class="col-sm-12">
-                                  <div class="form-group form-group-default">
-                                    <label>Name</label>
-                                    <input id="addName" type="text" class="form-control" placeholder="fill name">
-                                  </div>
-                                </div>
-                                <div class="col-md-6 pe-0">
-                                  <div class="form-group form-group-default">
-                                    <label>Position</label>
-                                    <input id="addPosition" type="text" class="form-control" placeholder="fill position">
-                                  </div>
-                                </div>
-                                <div class="col-md-6">
-                                  <div class="form-group form-group-default">
-                                    <label>Office</label>
-                                    <input id="addOffice" type="text" class="form-control" placeholder="fill office">
-                                  </div>
-                                </div>
-                              </div>
-                            </form>
-                          </div>
-                          <div class="modal-footer border-0">
-                            <button type="button" id="addRowButton" class="btn btn-primary">
-                              Add
-                            </button>
-                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                              Close
-                            </button>
+                            <div id="modalNextContent">
+		                          <table class="table table-bordered" id="modalTable">
+				                      <thead>
+				                        <tr>
+				                          <th id="topText" colspan="5"></th>
+				                        </tr>
+				                        <tr>
+				                          <th>사번</th>
+				                          <th>직급</th>
+				                          <th>이름</th>
+				                          <th>선택</th>
+				                        </tr>
+				                      </thead>
+				                      <tbody>
+				                      </tbody>
+			                      </table>
+                    	  </div>
+                    	  
                           </div>
                         </div>
                         <div>
                         <div class="modal-header border-0">
                             <h5 class="modal-title">
-                              <span class="fw-mediumbold"> New</span>
-                              <span class="fw-light"> Row </span>
+                              <span class="fw-mediumbold"> 결재요청</span>
                             </h5>
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">×</span>
@@ -216,84 +193,202 @@
                           </div>
                           <div class="modal-body">
                             <p class="small">
-                              Create a new row using this form, make sure you
-                              fill them all
+                              결재자와 결재유형을 선택하여 결재요청을 할 수 있습니다.
                             </p>
-                            <form>
-                              <div class="row">
-                                <div class="col-sm-12">
-                                  <div class="form-group form-group-default">
-                                    <label>Name</label>
-                                    <input id="addName" type="text" class="form-control" placeholder="fill name">
-                                  </div>
-                                </div>
-                                <div class="col-md-6 pe-0">
-                                  <div class="form-group form-group-default">
-                                    <label>Position</label>
-                                    <input id="addPosition" type="text" class="form-control" placeholder="fill position">
-                                  </div>
-                                </div>
-                                <div class="col-md-6">
-                                  <div class="form-group form-group-default">
-                                    <label>Office</label>
-                                    <input id="addOffice" type="text" class="form-control" placeholder="fill office">
-                                  </div>
-                                </div>
-                              </div>
-                            </form>
+                            <table class="table table-bordered" id="signTable">
+				                      <thead>
+				                        <tr>
+				                          <th>직급</th>
+				                          <th>이름</th>
+				                          <th>결재유형</th>
+				                          <th>삭제</th>
+				                        </tr>
+				                      </thead>
+				                      <tbody>
+				                      </tbody>
+			                      </table>
                           </div>
-                          <div class="modal-footer border-0">
-                            <button type="button" id="addRowButton" class="btn btn-primary">
-                              Add
+                          <div class="modal-footer border-0" style="justify-content: center;">
+                            <button type="button" id="signRequestBtn" class="btn btn-primary">
+                              결재요청
                             </button>
                             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                              Close
+                              취소
                             </button>
                           </div>
                         </div>
                         </div>
-                        
-                        
-                        
-                          
                         </div>
                     </div>
            </div>
             
             <script>
         $(document).ready(function() {
-        	//데이터테이블 설정
-        	$("#basic-datatables").DataTable({
-        		pageLength: 8,
+        	
+        	// 결재요청 시 기본세팅(본부장, 관련부서 정보 업로드, 해당직원 정보 업로드)
+        	$('#addRowModal').on('show.bs.modal', function() {
+        		$('#modalTable tbody').empty();
+        		$('#signTable tbody').empty();
+        		
+        	    $.ajax({
+        	        url: '/salary/getMemberInfoForSign',
+        	        method: 'POST',
+        	        success: function(response) {
+        	        	console.log(response);
+        	        	$('#topText').text("소속 : "+response["emp_bnum"]+" "+response["dname"]);
+        	        	var row = "<tr>" +
+                        "<td style='text-align: center;'>" + response["directorInfo"].emp_id + "</td>" +
+                        "<td style='text-align: center;'>" + response["directorInfo"].emp_position + "</td>" +
+                        "<td style='text-align: center;'>" + response["directorInfo"].emp_name + "</td>" +
+                        "<td style='text-align: center;'><a href='#' class='move-row'>추가하기</a></td>" +
+                        "</tr>";
+                        $('#modalTable tbody').append(row);
+                        
+                        response["deptInfo"].forEach(function(data){
+                        	var row = "<tr>" +
+                        	"<td style='text-align: center;'>" + data.emp_id + "</td>" +
+                            "<td style='text-align: center;'>" + data.emp_position + "</td>" +
+                            "<td style='text-align: center;'>" + data.emp_name + "</td>" +
+                            "<td style='text-align: center;'><a href='#' class='move-row'>추가하기</a></td>" +
+                            "</tr>";
+                            $('#modalTable tbody').append(row);
+                        });
+                        
+                        var row_base = "<tr>" +
+                        "<td style='text-align: center;'>" + response["memberInfo"].emp_position + "</td>" +
+                        "<td style='text-align: center;'>" + response["memberInfo"].emp_name + "</td>" +
+                        "<td style='text-align: center;'> <select class='form-select input-fixed' name='sign_type'>" +
+                        "<option name='wf_receiver' value='결재요청자' disabled selected>결재요청자</option></select> </td>" +
+                        "<td style='text-align: center;'></td>" +
+                        "<input type='hidden' value='"+ response["memberInfo"].emp_id + "'>" +
+                        "</tr>";
+                        $('#signTable tbody').append(row_base);
+        	        },
+        	        error: function() {
+        	            alert('데이터를 불러오는 데 실패했습니다.');
+        	        }
+        	    });
         	});
         	
-        	// 체크박스 체크여부에 다른 동작 분리(삭제버튼 활성화, 다중체크방지)
-        	$('input[type="checkbox"]').click(function() {
+        	// 직원조회 테이블에서 추가하기 클릭 시 결재요청 테이블로 이동
+            $('#modalTable').on('click', '.move-row', function(event) {
+            	event.preventDefault();
+            	var row_move = "<tr>" +
+                "<td style='text-align: center;'>" + $(this).closest('tr').find('td').eq(1).text() + "</td>" +
+                "<td style='text-align: center;'>" + $(this).closest('tr').find('td').eq(2).text() + "</td>" +
+                "<td style='text-align: center;'> <select class='form-select input-fixed'" +
+                "name='sign_type'><option name='wf_receiver_1st' value='1차 결재자'>1차 결재자</option>" + 
+                "<option name='wf_receiver_2nd' value='2차 결재자'>2차 결재자</option>" +
+                "<option name='wf_receiver_3rd' value='3차 결재자'>3차 결재자</option></select> </td>" +
+                "<td style='text-align: center;'><button class='delete-btn' style='border:none;" +
+                "background:none'>X</button></td>" +
+                "<input type='hidden' value='"+$(this).closest('tr').find('td').eq(0).text() +"'></tr>";
+                $('#signTable tbody').prepend(row_move);
+            });
+        	
+        	// 결재요청 테이블 x 눌렀을 때 해당 행 삭제
+        	$('#signTable').on('click', '.delete-btn', function () {
+		        $(this).closest('tr').remove();
+		    });
+        	
+        	// 결재요청 시 급여내역리스트 업데이트 및 워크플로우에 INSERT 후 페이지 리로딩
+        	$('#signRequestBtn').click(function(){
+        		swal({
+     	              title: "결재요청 하시겠습니까?",
+     	              text: "결재취소 요청은 워크플로우 화면에서 가능합니다.",
+     	              type: "warning",
+     	              buttons: {
+     	                cancel: {
+     	                  visible: true,
+     	                  text: "취소하기",
+     	                  className: "btn btn-danger",
+     	                },
+     	                confirm: {
+     	                  text: "결재요청",
+     	                  className: "btn btn-success",
+     	                },
+     	              },
+     	            }).then(function(willDelete) {  // 일반 함수 문법으로 변경
+     	             if (willDelete) {
+     	            	//전달정보 (sal_list_id, 결재요청자 및 1~3차 결재자의 사번 )
+     	             	var signData = {
+   	             			sal_list_id: $('input[name="sal_list_id"]:checked').val(),
+   	             			wf_receiver: $('select option[name="wf_receiver"]:selected').closest('tr').find('input').val(),
+   	             			wf_receiver_1st: $('select option[name="wf_receiver_1st"]:selected').closest('tr').find('input').val(),
+   	             			wf_receiver_2nd: $('select option[name="wf_receiver_2nd"]:selected').closest('tr').find('input').val(),
+   	             			wf_receiver_3rd: $('select option[name="wf_receiver_3rd"]:selected').closest('tr').find('input').val()
+     	             	};
+     	             	$.ajax({
+     	            		url:'/salary/insertSignInfo',
+     	            		type: 'POST',
+     	            		data: JSON.stringify(signData),
+     	            		contentType: 'application/json',
+     	            		success: function(response) {
+     	            			swal({
+     	                            title: "Success!",
+     	                            text: "결재요청이 완료되었습니다!",
+     	                            icon: "success",
+     	                            button: "OK"
+     	                        }).then(function() {
+     	                            window.location.href = "/salary/calSalary";  // 페이지 이동
+     	                        });
+     	            		},
+     	            		error: function(xhr, status, error) {
+     	                        swal("Error!", "정보를 가져오는데 실패하였습니다.", "error");
+     	                    }
+     	             	});
+     	             }
+     	     	 });
+        	});
+        	
+        	//데이터테이블 설정
+        	$("#basic-datatables").DataTable({
+        		pageLength: 5,
+        		drawCallback: function() { //가운대 정렬
+        			$('#basic-datatables th, #basic-datatables td').css({
+        	            'text-align': 'center',
+        	            'vertical-align': 'middle'
+        	        });
+        		}
+        	});
+        	
+        	// 체크박스 체크여부에 다른 동작 분리(다중체크방지)
+        	$('#basic-datatables tbody').on('click', 'input[type="checkbox"]', function() {
                 if ($(this).is(':checked')) {
-                    // 체크박스가 체크되면 버튼 활성화
-                    $('#deleteBtn').prop('disabled', false);
                     // 하나만 체크할 수 있도록 하는 기능
                     $('input[type="checkbox"]').not(this).prop('checked', false);
-                } else {
-                    // 체크박스가 해제되면 버튼 비활성화
-                    $('#deleteBtn').prop('disabled', true);
                 }
             });
         	
-        	// 체크여부에 따라 최종확정 버튼 활성화
-        	$('input[type="checkbox"]').click(function() {
+        	// 체크여부에 따라 최종확정 버튼 활성화(체크버튼 클릭 + 결재완료)
+        	$('#basic-datatables tbody').on('click', 'input[type="checkbox"]', function() {
         		var tdText = $(this).closest('tr').find('td:eq(5)').text();
 	        	if($(this).is(':checked') && tdText === '결재완료') {
 	            	// 체크되고 '결재완료'일때만 활성화
 	                $('#confirmBtn').prop('disabled', false);
+	                $('#excelBtn').prop('disabled', false);
+	                $('#deleteBtn').prop('disabled', false);
 	        	} else {
                     // 체크박스가 해제되면 버튼 비활성화
                     $('#confirmBtn').prop('disabled', true);
+	                $('#excelBtn').prop('disabled', true);
+	                $('#deleteBtn').prop('disabled', true);
                 }
         	});
         	
-        	// 테이블 가운대 정렬
-        	$('table th, table td').css('text-align', 'center');
+        	// 체크여부에 따라 결재요청 버튼 활성화(체크버튼 클릭 + 임시저장)
+        	$('#basic-datatables tbody').on('click', 'input[type="checkbox"]', function() {
+        		var tdText = $(this).closest('tr').find('td:eq(5)').text();
+	        	if($(this).is(':checked') && tdText === '임시저장') {
+	            	// 체크되고 '결재완료'일때만 활성화
+	                $('#signBtn').prop('disabled', false);
+	                $('#deleteBtn').prop('disabled', false);
+	        	} else {
+                    // 체크박스가 해제되면 버튼 비활성화
+                    $('#signBtn').prop('disabled', true);
+                    $('#deleteBtn').prop('disabled', true);
+                }
+        	});
         	
         	// 삭제버튼 시 리스트id 가지고 이동하기
             $('#deleteBtn').click(function(event){
@@ -328,29 +423,52 @@
                     });
      	     	 });
         	
-        	
-        	 
-        	
         	// 결재요청 버튼 시 워크플로우 모달팝업 초기화
         	$('#signBtn').click(function(){
-        		$('#modalInputText').val('');
-         		$('#modalContent').show();     
-            	$('#modalNextContent').hide();   
         	});
         	
         	
          	// 최종확정버튼 시 리스트id 가지고 이동하기
         	$('#confirmBtn').click(function(event){
         		event.preventDefault();
-        		$('#inputForConfirm').val($('input[name="sal_list_id"]:checked').val());
         		swal({
-	            	    title: "Success!",
-	            	    text: "최종확정되었습니다.",
-	            	    icon: "success",
-	            	    buttons: "OK", 
-            	}).then(function() {
-            		$('#confirmSubmit').submit();
-                });
+   	              title: "최종확정 하시겠습니까?",
+   	              text: "최종확정 후에는 재작성할 수 없습니다.",
+   	              type: "warning",
+   	              buttons: {
+   	                cancel: {
+   	                  visible: true,
+   	                  text: "취소하기",
+   	                  className: "btn btn-danger",
+   	                },
+   	                confirm: {
+   	                  text: "최종확정",
+   	                  className: "btn btn-success",
+   	                },
+   	              },
+   	            }).then(function(willConfirm) {  // 일반 함수 문법으로 변경
+   	             if (willConfirm) {
+   	            	$('#inputForConfirm').val($('input[name="sal_list_id"]:checked').val());
+   	            	swal({
+   	            	    title: "Success!",
+   	            	    text: "최종확정 완료",
+   	            	    icon: "success",
+   	            	    buttons: "OK", 
+   	            	}).then(function() {
+   	            		$('#confirmSubmit').submit();
+                      });
+ 	             	}
+                  });
+        		
+//         		$('#inputForConfirm').val($('input[name="sal_list_id"]:checked').val());
+//         		swal({
+// 	            	    title: "Success!",
+// 	            	    text: "최종확정되었습니다.",
+// 	            	    icon: "success",
+// 	            	    buttons: "OK", 
+//             	}).then(function() {
+//             		$('#confirmSubmit').submit();
+//                 });
         	});
          	
         	// 엑셀내려받기 버튼 시 리스트id 가지고 이동하기

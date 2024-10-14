@@ -161,19 +161,35 @@ public class SalaryDAOImpl implements SalaryDAO{
 		return sqlSession.selectOne(NAMESPACE+".getSalaryDetail", sal_final_id);
 	}
 	
-	// 전체직원정보 가져오기(테스트)
+	// 엑셀내려받기 시 은행양식 정보 가져오기
 	@Override
 	public List<BankTransperVO> excelDownload(String sal_list_id) {
 		return sqlSession.selectList(NAMESPACE+".excelDownload", sal_list_id);
 	}
 	
+	// 결재요청 버튼 눌렀을 때 해당직원 정보 가져오기(본부+부서)
+	@Override
+	public MemberInfoForSalaryVO getMemberInfoForSignToId(String emp_id) {
+		return sqlSession.selectOne(NAMESPACE+".getMemberInfoForSignToId", emp_id);
+	}
 	
+	// 결재요청 눌렀을 때 사원정보로 본부장 및 부서원 정보가져오기
+	@Override
+	public MemberInfoForSalaryVO getMemberInfoForSignToBnum(MemberInfoForSalaryVO vo) {
+		return sqlSession.selectOne(NAMESPACE+".getMemberInfoForSignToBnum", vo);
+	}
 	
+	// 결재요청 눌렀을 때 사원정보로 부서원 정보가져오기
+	@Override
+	public List<MemberInfoForSalaryVO> getMemberInfoForSignToDname(MemberInfoForSalaryVO vo) {
+		return sqlSession.selectList(NAMESPACE+".getMemberInfoForSignToDname", vo);
+	}
 	
-	
-	
-	
-	
+	// 결재요청 시 급여내역리스트 상태(결재중) 변경
+	@Override
+	public void updateCalSalaryListForSigning(String sal_list_id) {
+		sqlSession.update(NAMESPACE+".updateCalSalaryListForSigning", sal_list_id);
+	}
 	
 	
 	
