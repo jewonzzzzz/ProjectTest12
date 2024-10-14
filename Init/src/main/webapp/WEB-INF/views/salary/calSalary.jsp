@@ -364,12 +364,10 @@
         	$('#basic-datatables tbody').on('click', 'input[type="checkbox"]', function() {
         		var tdText = $(this).closest('tr').find('td:eq(5)').text();
 	        	if($(this).is(':checked') && tdText === '결재완료') {
-	            	// 체크되고 '결재완료'일때만 활성화
 	                $('#confirmBtn').prop('disabled', false);
 	                $('#excelBtn').prop('disabled', false);
 	                $('#deleteBtn').prop('disabled', false);
 	        	} else {
-                    // 체크박스가 해제되면 버튼 비활성화
                     $('#confirmBtn').prop('disabled', true);
 	                $('#excelBtn').prop('disabled', true);
 	                $('#deleteBtn').prop('disabled', true);
@@ -380,11 +378,9 @@
         	$('#basic-datatables tbody').on('click', 'input[type="checkbox"]', function() {
         		var tdText = $(this).closest('tr').find('td:eq(5)').text();
 	        	if($(this).is(':checked') && tdText === '임시저장') {
-	            	// 체크되고 '결재완료'일때만 활성화
 	                $('#signBtn').prop('disabled', false);
 	                $('#deleteBtn').prop('disabled', false);
 	        	} else {
-                    // 체크박스가 해제되면 버튼 비활성화
                     $('#signBtn').prop('disabled', true);
                     $('#deleteBtn').prop('disabled', true);
                 }
@@ -423,11 +419,6 @@
                     });
      	     	 });
         	
-        	// 결재요청 버튼 시 워크플로우 모달팝업 초기화
-        	$('#signBtn').click(function(){
-        	});
-        	
-        	
          	// 최종확정버튼 시 리스트id 가지고 이동하기
         	$('#confirmBtn').click(function(event){
         		event.preventDefault();
@@ -459,16 +450,6 @@
                       });
  	             	}
                   });
-        		
-//         		$('#inputForConfirm').val($('input[name="sal_list_id"]:checked').val());
-//         		swal({
-// 	            	    title: "Success!",
-// 	            	    text: "최종확정되었습니다.",
-// 	            	    icon: "success",
-// 	            	    buttons: "OK", 
-//             	}).then(function() {
-//             		$('#confirmSubmit').submit();
-//                 });
         	});
          	
         	// 엑셀내려받기 버튼 시 리스트id 가지고 이동하기

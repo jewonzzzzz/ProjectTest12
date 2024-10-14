@@ -46,7 +46,7 @@ public class SalaryController {
 	
 	
 	//http://localhost:8088/salary/salaryBasicInfo
-	@GetMapping(value = "/salaryBasicInfo")
+	@GetMapping(value = "salaryBasicInfo")
 	public String salaryBasicInfoGet(Model model) {
 		logger.debug("salaryBasicInfoGet(Model model) 실행");
 		SalaryBasicInfoVO result = sService.getSalaryBasicInfo();
