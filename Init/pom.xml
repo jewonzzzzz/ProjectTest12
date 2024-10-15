@@ -191,7 +191,11 @@
 			<version>1.5</version>
 		</dependency>
 		
-		
+		<dependency>
+		    <groupId>commons-io</groupId>
+		    <artifactId>commons-io</artifactId>
+		    <version>2.11.0</version> <!-- commons-io는 파일 조작에 필요 -->
+		</dependency>
 				
 		<dependency>
 			<groupId>com.google.api-client</groupId>

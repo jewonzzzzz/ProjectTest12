@@ -230,7 +230,6 @@ public class SalaryController {
 		return "/salary/calSalaryStep3";
 	}
 	
-	
 	// 최종 급여산출내용을 테이블로 저장하기
 	@PostMapping(value = "/saveSalaryInfo")
 	@ResponseBody
@@ -464,7 +463,6 @@ public class SalaryController {
 		
 		//급여내역리스트 상태를 결재중으로 변경
 		sService.updateCalSalaryListForSigning(sal_list_id);
-		
 		
 		//결재정보를 워크플로우 디비에 저장
 	}

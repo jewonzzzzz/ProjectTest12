@@ -79,14 +79,14 @@
               </ul>
             </div>
             
-          <form id="eduCreateForm" action="/edu/eduCreate" method="post" enctype="multipart/form-data">
+          <form id="eduUpdateForm" action="/edu/eduUpdate" method="post" enctype="multipart/form-data">
             <div class="row">
               <div class="col-md-11">
                 <div class="card">
                   <div class="card-header" style="display: flex; justify-content:space-between; margin-right: 10px;">
                     <div class="card-title">교육생성</div>
                     <div>
-		              <button type="submit" id="eduCreatedBtn" class="btn btn-primary">저장하기</button>
+		              <button type="submit" id="eduUpdateBtn" class="btn btn-primary">수정하기</button>
 		              <button type="button" class="btn btn-primary" onclick="location.href='/edu/eduManage'">목록으로</button>
 		            </div>
                     </div>
@@ -97,28 +97,30 @@
                       <div class="form-group" style="display: flex; gap:10px;">
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육구분</b></label>
-                          <select class="form-select form-control" id="defaultSelect" name="edu_type">
+                          <select class="form-select form-control" id="defaultSelect" name="edu_type" value="${eduInfo.edu_type }">
                             <option>사내교육</option>
                             <option>외부교육</option>
                           </select>
                         </div>
                         <div style="flex:2;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육명</b></label>
-                          <input name="edu_name" type="text" class="form-control"  placeholder="교육명을 입력하세요">
+                          <input name="edu_name" type="text" class="form-control"  value="${eduInfo.edu_name }">
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>강사명</b></label>
-                          <input name="edu_teacher" type="text" class="form-control" placeholder="교육명을 입력하세요">
+                          <input name="edu_teacher" type="text" class="form-control" value="${eduInfo.edu_teacher }">
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육장소</b></label>
-                          <input name="edu_place" type="text" class="form-control" placeholder="교육명을 입력하세요">
+                          <input name="edu_place" type="text" class="form-control" value="${eduInfo.edu_place }">
                         </div>
                       </div>
                       
                         <div class="form-group">
                           <label class="mb-2" style="font-size:16px !important"><b>교육 상세내용</b></label>
-                          <textarea name="edu_content" class="form-control" id="comment" rows="8"> </textarea>
+                          <textarea name="edu_content" class="form-control" id="comment" rows="8"
+                          value="${eduInfo.edu_content }"
+                          > </textarea>
                         </div>
                         
                         <div style="display: flex; gap:10px; width:100%;">
@@ -126,33 +128,37 @@
                       <div class="form-group" style="display: flex; gap:10px; width:100%;">
                       <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육 시작일자</b></label>
-                          <input name="edu_start_date" type="date" class="form-control" placeholder="교육명을 입력하세요">
+                          <input name="edu_start_date" type="date" class="form-control" value="${eduInfo.edu_start_date }">
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육 종료일자</b></label>
-                          <input name="edu_end_date"type="date" class="form-control" placeholder="교육명을 입력하세요">
+                          <input name="edu_end_date"type="date" class="form-control" value="${eduInfo.edu_end_date }">
                         </div>
                       </div>
                       
                       <div class="form-group" style="display: flex; gap:10px; width:100%;">
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육접수 시작일자</b></label>
-                          <input name="edu_apply_start" type="date" class="form-control" >
+                          <input name="edu_apply_start" type="date" class="form-control" value="${eduInfo.edu_apply_start }">
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육접수 마감일자</b></label>
-                          <input name="edu_apply_end" type="date" class="form-control" >
+                          <input name="edu_apply_end" type="date" class="form-control" value="${eduInfo.edu_apply_end }">
                         </div>
                       </div>
                       </div>
                       
-                      <div style="flex:1;">
+                        <div style="flex:1;">
                         <div class="form-group" style="display: flex; gap:10px;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육 썸네일</b></label>
                           <input name="edu_thumbnail" type="file" class="form-control-file" id="edu_thumbnail">
-                          <div id="thumbnail_preView" style="width: 180px; height: 180px;" >
-                          </div>
+                          <input name="edu_thumbnail_src" type="hidden" id="edu_thumbnail_src">
+                          <input name="edu_id" type="hidden" id="edu_id" value="${eduInfo.edu_id }">
+                        <div id="thumbnail_preView" style="width: 180px; height: 180px; overflow: hidden; position: relative;">
+					        <img src="${eduInfo.edu_thumbnail_src }" id="thumbnail" style="width: 100%; height: auto; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" />
+					    </div>
                         </div>
+                      </div>
                       </div>
                       </div>
                   	</div>
@@ -160,7 +166,6 @@
                   </div>
                 </div>
               </div>
-            </div>
           </form>     
                  
         <script>
@@ -183,44 +188,55 @@
         	    }
         	});
         	
-        	//교육생성 버튼 클릭 시 submit하기
-            $('#eduCreatedBtn').click(function(event){
+        	//수정하기 버튼 클릭 시 submit하기(썸네일 없을 시 swal)
+            $('#eduUpdateBtn').click(function(event){
             	event.preventDefault();
             	
-            	if ($('#edu_thumbnail').val() === "") {
+            	if (!$('#thumbnail').attr('src') && !$('#edu_thumbnail').val()) {
             		swal("Error!", "교육 썸네일을 등록해주세요!", "error");
             	} else {
-            	swal({
-   	              title: "교육을 등록하시겠습니까?",
-   	              text: "임시저장되며 결재요청은 상세페이지에서 가능합니다.",
-   	              type: "warning",
-   	              buttons: {
-   	                cancel: {
-   	                  visible: true,
-   	                  text: "취소하기",
-   	                  className: "btn btn-danger",
-   	                },
-   	                confirm: {
-   	                  text: "교육생성",
-   	                  className: "btn btn-success",
-   	                },
-   	              },
-   	            }).then(function(willDelete) {  // 일반 함수 문법으로 변경
-   	             if (willDelete) {
-   	            	swal({
-   	            	    title: "Success!",
-   	            	    text: "저장완료",
-   	            	    icon: "success",
-   	            	    buttons: "OK", 
-   	            	}).then(function() {
-   	            		$('#eduCreateForm').submit();
-                      });
- 	             	}
-                  });
+            	   if($('#thumbnail').attr('src')){
+            		   console.log($('#thumbnail').attr('src'));
+            		   $('#edu_thumbnail_src').val($('#thumbnail').attr('src'));
+            		   console.log($('#edu_thumbnail_src').val());
+            		   updateSubmit();
+            	   } else{
+            		   //updateSubmit();
+            	   }
+            	}
+            	
+            	function updateSubmit(){
+	            	swal({
+	   	              title: "교육을 등록하시겠습니까?",
+	   	              text: "임시저장되며 결재요청은 상세페이지에서 가능합니다.",
+	   	              type: "warning",
+	   	              buttons: {
+	   	                cancel: {
+	   	                  visible: true,
+	   	                  text: "취소하기",
+	   	                  className: "btn btn-danger",
+	   	                },
+	   	                confirm: {
+	   	                  text: "교육생성",
+	   	                  className: "btn btn-success",
+	   	                },
+	   	              },
+	   	            }).then(function(willDelete) {  // 일반 함수 문법으로 변경
+	   	             if (willDelete) {
+	   	            	swal({
+	   	            	    title: "Success!",
+	   	            	    text: "저장완료",
+	   	            	    icon: "success",
+	   	            	    buttons: "OK", 
+	   	            	}).then(function() {
+	   	            		$('#eduUpdateForm').submit();
+	                      });
+	 	             	}
+	                  });
             	}
         	});
         
-        });//ready
+        }); //ready
         </script>
                  
 <!------------------------------------------------------------------------------------------------------------------>

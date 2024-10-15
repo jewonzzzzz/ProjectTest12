@@ -5,8 +5,32 @@
   
 <mapper namespace="com.Init.mapper.EduMapper">
 
+	<!-- 올해 첫 교육아이디가 있는지 확인하기 -->
+	<select id="checkEduId" resultType="String">
+		select edu_id from edu_list where edu_id =#{edu_id}  
+	</select>
+	
+	<!-- 가장 최근의 교육아이디 가져오기 -->
+	<select id="getEduId" resultType="String">
+		select edu_id from edu_list order by edu_id desc limit 1 
+	</select>
 
-
-
+	<!-- 교육정보 저장하기 -->
+	<select id="saveEduInfo">
+		insert into edu_list(edu_id, edu_type, edu_name, edu_teacher, edu_place, edu_content, 
+		edu_start_date, edu_end_date, edu_apply_start, edu_apply_end, edu_thumbnail_src, edu_list_status) 
+	    values(#{edu_id}, #{edu_type}, #{edu_name}, #{edu_teacher}, #{edu_place}, #{edu_content}, 
+	    #{edu_start_date}, #{edu_end_date}, #{edu_apply_start}, #{edu_apply_end}, #{edu_thumbnail_src}, '임시저장') 
+	</select>
+	
+	<!-- 교육등록내역 가져오기 -->
+	<select id="getEduList" resultType="EduListVO">
+		select * from edu_list 
+	</select>
+	
+	<!-- edu_id로 교육정보 가져오기 -->
+	<select id="getEduListToId" resultType="EduListVO">
+		select * from edu_list where edu_id = #{edu_id} 
+	</select>
 
 </mapper>

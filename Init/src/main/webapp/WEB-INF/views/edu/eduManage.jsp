@@ -56,9 +56,9 @@
         <div class="container">
           <div class="page-inner">
 <!------------------------------------------------------------------------------------------------------------------>
-
+<%-- ${eduListInfo } --%>
 <div class="page-header">
-              <h3 class="fw-bold mb-3">급여산출</h3>
+              <h3 class="fw-bold mb-3">교육</h3>
               <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
                   <a href="/salary/main">
@@ -69,25 +69,25 @@
                   <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                  <a href="/salary/salaryBasicInfo">급여관리</a>
+                  <a href="/salary/salaryBasicInfo">교육관리</a>
                 </li>
                 <li class="separator">
                   <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                  <a href="#">급여산출</a>
+                  <a href="#">교육생성</a>
                 </li>
               </ul>
             </div>
         <div class="row">
-              <div class="col-md-10">
+              <div class="col-md-11">
                 <div class="card">
                   <div class="card-header">
-                    <div class="card-title">급여산출내역</div>
+                    <div class="card-title">교육등록 내역</div>
                   </div>
                   	<div style="display: flex; justify-content: flex-end; margin-right: 30px;">
                   	<div style="margin-left: 15px; margin-bottom: 10px; padding-top: 10px;">
-                    	<a href="/salary/calSalaryStep1"><button class="btn btn-primary">신규생성</button></a>
+                    	<a href="/edu/eduCreate"><button class="btn btn-primary">교육등록</button></a>
                     	
                     	<form id="deleteSubmit" action="/salary/deleteSalaryInfo" method="post" style="display: inline-block;">
                     		<input type="hidden" id="inputForDelete" name="sal_list_id">
@@ -98,16 +98,6 @@
 	                      	>
 	                        결재요청
                         </button>
-                    	
-                    	<form id="confirmSubmit" action="/salary/confirmSalaryList" method="post" style="display: inline-block;">
-                    		<input type="hidden" id="inputForConfirm" name="sal_list_id">
-                    		<button type="submit" class="btn btn-primary" id="confirmBtn" disabled>최종확정</button>
-                    	</form>
-                    	
-                    	<form id="excelSubmit" action="/salary/excelDownload" method="get" style="display: inline-block;">
-                    		<input type="hidden" id="inputForExcel" name="sal_list_id">
-                    		<button type="submit" class="btn btn-primary" id="excelBtn" disabled>엑셀내려받기(은행용)</button>
-                    	</form>
                     	</div>
                   	</div>
                   <div class="card-body" style="padding-top: 10px;">
@@ -115,25 +105,25 @@
                         class="display table table-striped table-hover">
                       <thead>
                         <tr>
-                          <th scope="col">구분</th>
-                          <th scope="col">연도</th>
-                          <th scope="col">월</th>
-                          <th scope="col">급여형태</th>
-                          <th scope="col">제목</th>
+                          <th scope="col">선택</th>
+                          <th scope="col">교육구분</th>
+                          <th scope="col">교육명</th>
+                          <th scope="col">강사명</th>
+                          <th scope="col">교육시작일</th>
+                          <th scope="col">신청마감일</th>
                           <th scope="col">상태</th>
-                          <th scope="col">최종작성일</th>
                         </tr>
                       </thead>
                       <tbody>
-                      <c:forEach var="list" items="${calSalaryListInfo }">
+                      <c:forEach var="list" items="${eduListInfo }">
                       	<tr>
-                      		<td><input type="checkbox" data-id="sal_list_id" name="sal_list_id" value="${list.sal_list_id }"></td>
-                      		<td>${list.year }</td>
-                      		<td>${list.month }</td>
-                      		<td>${list.sal_type }</td>
-                      		<td><a href="/salary/calSalaryView?sal_list_id=${list.sal_list_id }">${list.sal_list_subject }</a></td>
-                      		<td>${list.sal_list_status }</td>
-                      		<td>${list.sal_list_date }</td>
+                      		<td><input type="checkbox" data-id="edu_id" name="edu_id" value="${list.edu_id }"></td>
+                      		<td>${list.edu_type }</td>
+                      		<td><a href="/edu/eduView?edu_id=${list.edu_id }">${list.edu_name }</a></td>
+                      		<td>${list.edu_teacher }</td>
+                      		<td>${list.edu_start_date }</td>
+                      		<td>${list.edu_apply_end }</td>
+                      		<td>${list.edu_list_status }</td>
                       	</tr>
                       </c:forEach>
                       </tbody>

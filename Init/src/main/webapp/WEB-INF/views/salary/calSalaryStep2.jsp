@@ -155,17 +155,16 @@
 	                        id = "modalOpenBtn"
 	                        data-bs-toggle="modal"
 	                        data-bs-target="#addRowModal"
-	                        style="margin-right: 5px;"
 	                      	>
 		                        직원조회
 	                      </button>
-                          <button type="button" id="selectAllMemberBtn" class="btn btn-primary" style="margin-right: 5px;">
+                          <button type="button" id="selectAllMemberBtn" class="btn btn-primary">
                             전직원 불러오기
                           </button>
-                          <button type="button" id="checkAllBtn" class="btn btn-primary" style="margin-right: 5px;">
+                          <button type="button" id="checkAllBtn" class="btn btn-primary">
                             전체선택
                           </button>
-                          <button type="button" id="deleteMemberBtn" class="btn btn-primary" style="margin-right: 5px;">
+                          <button type="button" id="deleteMemberBtn" class="btn btn-primary">
                             삭제하기
                           </button>
 	                      <form id="dataForm" action="/salary/calSalaryStep3" method="post" style="display:inline-block;">

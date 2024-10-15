@@ -103,12 +103,7 @@
                 <div class="collapse" id="maps">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="/edu/eduCreate">
-                        <span class="sub-item">교육생성(관리자)</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="/edu/eduCreate">
+                      <a href="/edu/eduManage">
                         <span class="sub-item">교육관리(관리자)</span>
                       </a>
                     </li>
