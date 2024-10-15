@@ -47,7 +47,11 @@ public class EduDAOImpl implements EduDAO{
 		return sqlsession.selectOne(NAMESPACE+".getEduListToId", edu_id);
 	}
 	
-	
+	// 교육정보 수정하기
+	@Override
+	public void updateEudInfo(EduListVO vo) {
+		sqlsession.update(NAMESPACE+".updateEudInfo", vo);
+	}
 	
 	
 	

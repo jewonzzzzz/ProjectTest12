@@ -139,7 +139,7 @@
                 </div>
               </div>
               
-              <div class="col-sm-6 col-md-4" >
+              <div class="col-sm-6 col-md-5" >
                 <div class="card card-stats card-round">
                   <div class="card-body">
                     <div class="row align-items-center" >
@@ -161,11 +161,11 @@
                 </div>
               </div>
               
-              <div class="col-md-10">
-              	<div style="margin-bottom: 10px; display: flex; justify-content: space-between;">
+              <div class="col-md-11">
+              	<div style="margin-bottom: 10px; display: flex; gap:5px; justify-content: space-between;">
              	 	<button type="button" class="btn btn-primary" onclick="history.back()">이전으로</button>
              	 	<div>
-              		<button type="button" id="saveBtn" class="btn btn-primary" style="margin-right:5px;">
+              		<button type="button" id="saveBtn" class="btn btn-primary">
                         저장하기
                  	</button>
               		<button type="button" class="btn btn-primary" onclick="location.href='/salary/calSalary';">
@@ -207,7 +207,7 @@
                 </div>
               </div>
               
-              	<div class="col-md-10">
+              	<div class="col-md-11">
               <div class="card">
                   <div class="card-header">
                     <div class="card-title">급여산출 상세내역</div>

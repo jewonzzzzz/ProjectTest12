@@ -210,8 +210,15 @@
 		where sal_list_id = #{sal_list_id} 
 	</select>
 	
+	<!-- 올해 첫 급여리스트번호가 있는지 확인하기 -->
+	<select id="checkSalListId" resultType="String">
+		select sal_list_id from salary_list where sal_list_id =#{sal_list_id}  
+	</select>
 	
-	
+	<!-- 가장 최근의 급여리스트번호 가져오기 -->
+	<select id="getSalListId" resultType="String">
+		select sal_list_id from salary_list order by sal_list_id desc limit 1 
+	</select>
 	
 	
 

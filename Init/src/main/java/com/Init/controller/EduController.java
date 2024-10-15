@@ -56,7 +56,6 @@ public class EduController {
 	public String eduCreatePOST(EduListVO vo) {
 		logger.debug("eduCreatePOST(EduListVO vo) 호출");
 		MultipartFile file = vo.getEdu_thumbnail();
-		
 		String uploadDir = servletContext.getRealPath("/uploads/");
 		logger.debug(uploadDir);
 		
@@ -118,9 +117,35 @@ public class EduController {
 		logger.debug("updateEdu(EduListVO vo) 실행");
 		logger.debug(vo.toString());
 		
+		if(vo.getEdu_thumbnail_src().equals("")) {
+			// 새로운 src 만들어서 저장
+			MultipartFile file = vo.getEdu_thumbnail();
+			String uploadDir = servletContext.getRealPath("/uploads/");
+			try {
+	            File dir = new File(uploadDir);
+	            if (!dir.exists()) {
+	                dir.mkdirs();
+	            }
+	            String uniqueFileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+	            File uploadFile = new File(uploadDir + uniqueFileName);
+	            String edu_thumbnail_src = "/uploads/" + uniqueFileName;
+	            vo.setEdu_thumbnail_src(edu_thumbnail_src);
+	            // 파일 저장
+	            file.transferTo(uploadFile);
+
+	            // 업데이트 서비스 실행
+	            eService.updateEudInfo(vo);
+	            
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+			
+		} else {
+			// 그대로 저장
+			eService.updateEudInfo(vo);
+		}
 		
-		
-		return "redirect:edu/eduView?edu_id="+123+"_"+456;
+		return "redirect:/edu/eduView?edu_id="+vo.getEdu_id();
 	}
 
 }

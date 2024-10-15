@@ -80,17 +80,16 @@
             </div>
             
             <div class="row">
-              <div class="col-md-10">
+              <div class="col-md-11">
               <div class="form">
-                      <div style="display: flex; margin-bottom: 10px;">
+                      <div style="display: flex; margin-bottom: 10px; gap:5px; justify-content: flex-end;">
                           <select
-                          	style="margin-right: 5px;"
                             class="form-select input-fixed"
                             id="yearSelect"
                             name="year"
                           >
                           </select>
-                          <div style="width: 200px; margin-right: 5px">
+                          <div style="width: 200px;">
                           <input
                               type="text"
                               class="form-control input-full"

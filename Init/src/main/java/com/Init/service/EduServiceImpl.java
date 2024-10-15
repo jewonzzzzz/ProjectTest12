@@ -45,7 +45,11 @@ public class EduServiceImpl implements EduService {
 		return edao.getEduListToId(edu_id);
 	}
 	
-	
+	// 교육정보 수정하기
+	@Override
+	public void updateEudInfo(EduListVO vo) {
+		edao.updateEudInfo(vo);
+	}
 	
 	
 	

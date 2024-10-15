@@ -25,12 +25,34 @@
 	
 	<!-- 교육등록내역 가져오기 -->
 	<select id="getEduList" resultType="EduListVO">
-		select * from edu_list 
+		select * from edu_list order by edu_start_date desc 
 	</select>
 	
 	<!-- edu_id로 교육정보 가져오기 -->
 	<select id="getEduListToId" resultType="EduListVO">
 		select * from edu_list where edu_id = #{edu_id} 
 	</select>
+	
+	<!-- 교육정보 수정하기 -->
+	<select id="updateEudInfo" >
+		update edu_list 
+		set edu_type=#{edu_type}, edu_name=#{edu_name}, edu_teacher=#{edu_teacher}, edu_place=#{edu_place}, 
+		edu_content=#{edu_content}, edu_start_date=#{edu_start_date}, edu_end_date=#{edu_end_date}, 
+		edu_apply_end=#{edu_apply_end}, edu_thumbnail_src=#{edu_thumbnail_src} 
+		where edu_id = #{edu_id} 
+	</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </mapper>

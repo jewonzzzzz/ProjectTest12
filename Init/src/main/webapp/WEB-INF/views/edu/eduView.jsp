@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     
 <!DOCTYPE html>
 <html lang="en">
@@ -57,7 +58,7 @@
 <!------------------------------------------------------------------------------------------------------------------>
 
 	      <div class="page-header" style="margin-bottom: 0px;">
-              <h3 class="fw-bold mb-3">교육생성</h3>
+              <h3 class="fw-bold mb-3">교육조회</h3>
               <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
                   <a href="/salary/main">
@@ -74,7 +75,7 @@
                   <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                  <a href="#">교육관리</a>
+                  <a href="#">교육조회</a>
                 </li>
               </ul>
             </div>
@@ -84,7 +85,7 @@
               <div class="col-md-11">
                 <div class="card">
                   <div class="card-header" style="display: flex; justify-content:space-between; margin-right: 10px;">
-                    <div class="card-title">교육생성</div>
+                    <div class="card-title">교육조회</div>
                     <div>
 		              <button type="submit" id="eduUpdateBtn" class="btn btn-primary">수정하기</button>
 		              <button type="button" class="btn btn-primary" onclick="location.href='/edu/eduManage'">목록으로</button>
@@ -97,9 +98,9 @@
                       <div class="form-group" style="display: flex; gap:10px;">
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육구분</b></label>
-                          <select class="form-select form-control" id="defaultSelect" name="edu_type" value="${eduInfo.edu_type }">
-                            <option>사내교육</option>
-                            <option>외부교육</option>
+                          <select class="form-select form-control" id="defaultSelect" name="edu_type">
+                            <option value="사내교육" <c:if test="${eduInfo.edu_type == '사내교육'}">selected</c:if>>사내교육</option>
+                            <option value="외부교육" <c:if test="${eduInfo.edu_type == '외부교육'}">selected</c:if>>외부교육</option>
                           </select>
                         </div>
                         <div style="flex:2;">
@@ -118,31 +119,30 @@
                       
                         <div class="form-group">
                           <label class="mb-2" style="font-size:16px !important"><b>교육 상세내용</b></label>
-                          <textarea name="edu_content" class="form-control" id="comment" rows="8"
-                          value="${eduInfo.edu_content }"
-                          > </textarea>
+                          <textarea name="edu_content" class="form-control" id="comment" rows="8" >${eduInfo.edu_content }
+                          </textarea>
                         </div>
                         
                         <div style="display: flex; gap:10px; width:100%;">
                         <div style="flex:1;">
                       <div class="form-group" style="display: flex; gap:10px; width:100%;">
                       <div style="flex:1;">
-                          <label class="mb-2" style="font-size:16px !important"><b>교육 시작일자</b></label>
+                          <label class="mb-2" style="font-size:16px !important"><b>교육 시작일</b></label>
                           <input name="edu_start_date" type="date" class="form-control" value="${eduInfo.edu_start_date }">
                         </div>
                         <div style="flex:1;">
-                          <label class="mb-2" style="font-size:16px !important"><b>교육 종료일자</b></label>
-                          <input name="edu_end_date"type="date" class="form-control" value="${eduInfo.edu_end_date }">
+                          <label class="mb-2" style="font-size:16px !important"><b>교육 접수시작일</b></label>
+                          <input name="edu_apply_start" type="date" class="form-control" value="${eduInfo.edu_apply_start }">
                         </div>
                       </div>
                       
                       <div class="form-group" style="display: flex; gap:10px; width:100%;">
                         <div style="flex:1;">
-                          <label class="mb-2" style="font-size:16px !important"><b>교육접수 시작일자</b></label>
-                          <input name="edu_apply_start" type="date" class="form-control" value="${eduInfo.edu_apply_start }">
+                          <label class="mb-2" style="font-size:16px !important"><b>교육 종료일</b></label>
+                          <input name="edu_end_date"type="date" class="form-control" value="${eduInfo.edu_end_date }">
                         </div>
                         <div style="flex:1;">
-                          <label class="mb-2" style="font-size:16px !important"><b>교육접수 마감일자</b></label>
+                          <label class="mb-2" style="font-size:16px !important"><b>교육 접수마감일</b></label>
                           <input name="edu_apply_end" type="date" class="form-control" value="${eduInfo.edu_apply_end }">
                         </div>
                       </div>
@@ -191,24 +191,25 @@
         	//수정하기 버튼 클릭 시 submit하기(썸네일 없을 시 swal)
             $('#eduUpdateBtn').click(function(event){
             	event.preventDefault();
-            	
+            	// 기존사진x, 신규사진x
             	if (!$('#thumbnail').attr('src') && !$('#edu_thumbnail').val()) {
             		swal("Error!", "교육 썸네일을 등록해주세요!", "error");
             	} else {
+            		// 기존사진o
             	   if($('#thumbnail').attr('src')){
-            		   console.log($('#thumbnail').attr('src'));
             		   $('#edu_thumbnail_src').val($('#thumbnail').attr('src'));
             		   console.log($('#edu_thumbnail_src').val());
             		   updateSubmit();
             	   } else{
-            		   //updateSubmit();
+            		   // 신규사진o
+            		   updateSubmit();
             	   }
             	}
             	
             	function updateSubmit(){
 	            	swal({
-	   	              title: "교육을 등록하시겠습니까?",
-	   	              text: "임시저장되며 결재요청은 상세페이지에서 가능합니다.",
+	   	              title: "교육정보를 수정하시겠습니까?",
+	   	              text: "교육정보 수정은 임시저장 상태에서만 가능합니다.",
 	   	              type: "warning",
 	   	              buttons: {
 	   	                cancel: {
@@ -217,15 +218,15 @@
 	   	                  className: "btn btn-danger",
 	   	                },
 	   	                confirm: {
-	   	                  text: "교육생성",
+	   	                  text: "교육수정",
 	   	                  className: "btn btn-success",
 	   	                },
 	   	              },
-	   	            }).then(function(willDelete) {  // 일반 함수 문법으로 변경
+	   	            }).then(function(willDelete) {
 	   	             if (willDelete) {
 	   	            	swal({
 	   	            	    title: "Success!",
-	   	            	    text: "저장완료",
+	   	            	    text: "수정완료",
 	   	            	    icon: "success",
 	   	            	    buttons: "OK", 
 	   	            	}).then(function() {

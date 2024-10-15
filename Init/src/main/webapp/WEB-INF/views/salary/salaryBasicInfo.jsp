@@ -82,7 +82,7 @@
             
             
             <div class="row">
-              <div class="col-md-10">
+              <div class="col-md-11">
                 <div class="card">
                 <form action="/salary/salaryBasicInfo" method="post">
                   <div class="card-header">

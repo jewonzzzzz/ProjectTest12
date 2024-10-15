@@ -21,4 +21,7 @@ public interface EduDAO {
 	// edu_id로 교육정보 가져오기
 	public EduListVO getEduListToId(String edu_id);
 	
+	// 교육정보 수정하기
+	public void updateEudInfo(EduListVO vo);
+	
 }

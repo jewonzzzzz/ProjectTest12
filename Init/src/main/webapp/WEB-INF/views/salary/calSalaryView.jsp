@@ -94,7 +94,7 @@
             </div>
             
             <div class="row">
-              <div class="col-md-10">
+              <div class="col-md-11">
               	<div style="margin-bottom: 10px; display: flex; justify-content: flex-end;;">
               		<a href="/salary/calSalary"><button type="button" class="btn btn-primary">
                             목록으로
@@ -134,7 +134,7 @@
                 </div>
               </div>
               
-              	<div class="col-md-10">
+              	<div class="col-md-11">
               <div class="card">
                   <div class="card-header">
                     <div class="card-title">급여산출 상세내역</div>

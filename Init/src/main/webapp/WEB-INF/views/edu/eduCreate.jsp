@@ -56,8 +56,8 @@
           <div class="page-inner">
 <!------------------------------------------------------------------------------------------------------------------>
 
-	      <div class="page-header" style="margin-bottom: 0px;">
-              <h3 class="fw-bold mb-3">교육생성</h3>
+	      <div class="page-header">
+              <h3 class="fw-bold mb-3">교육등록</h3>
               <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
                   <a href="/salary/main">
@@ -74,7 +74,7 @@
                   <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                  <a href="#">교육관리</a>
+                  <a href="#">교육등록</a>
                 </li>
               </ul>
             </div>
@@ -84,7 +84,7 @@
               <div class="col-md-11">
                 <div class="card">
                   <div class="card-header" style="display: flex; justify-content:space-between; margin-right: 10px;">
-                    <div class="card-title">교육생성</div>
+                    <div class="card-title">교육등록</div>
                     <div>
 		              <button type="submit" id="eduCreatedBtn" class="btn btn-primary">저장하기</button>
 		              <button type="button" class="btn btn-primary" onclick="location.href='/edu/eduManage'">목록으로</button>
@@ -125,22 +125,22 @@
                         <div style="flex:1;">
                       <div class="form-group" style="display: flex; gap:10px; width:100%;">
                       <div style="flex:1;">
-                          <label class="mb-2" style="font-size:16px !important"><b>교육 시작일자</b></label>
+                          <label class="mb-2" style="font-size:16px !important"><b>교육 시작일</b></label>
                           <input name="edu_start_date" type="date" class="form-control" placeholder="교육명을 입력하세요">
                         </div>
                         <div style="flex:1;">
-                          <label class="mb-2" style="font-size:16px !important"><b>교육 종료일자</b></label>
-                          <input name="edu_end_date"type="date" class="form-control" placeholder="교육명을 입력하세요">
+                          <label class="mb-2" style="font-size:16px !important"><b>교육 접수시작일</b></label>
+                          <input name="edu_apply_start" type="date" class="form-control" >
                         </div>
                       </div>
                       
                       <div class="form-group" style="display: flex; gap:10px; width:100%;">
                         <div style="flex:1;">
-                          <label class="mb-2" style="font-size:16px !important"><b>교육접수 시작일자</b></label>
-                          <input name="edu_apply_start" type="date" class="form-control" >
+                          <label class="mb-2" style="font-size:16px !important"><b>교육 종료일</b></label>
+                          <input name="edu_end_date"type="date" class="form-control" placeholder="교육명을 입력하세요">
                         </div>
                         <div style="flex:1;">
-                          <label class="mb-2" style="font-size:16px !important"><b>교육접수 마감일자</b></label>
+                          <label class="mb-2" style="font-size:16px !important"><b>교육 접수마감일</b></label>
                           <input name="edu_apply_end" type="date" class="form-control" >
                         </div>
                       </div>

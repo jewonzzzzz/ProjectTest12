@@ -80,7 +80,7 @@
               </ul>
             </div>
         <div class="row">
-              <div class="col-md-10">
+              <div class="col-md-11">
                 <div class="card">
                   <div class="card-header">
                     <div class="card-title">급여산출내역</div>

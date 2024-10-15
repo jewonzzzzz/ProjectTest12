@@ -110,7 +110,7 @@
                           <th scope="col">교육명</th>
                           <th scope="col">강사명</th>
                           <th scope="col">교육시작일</th>
-                          <th scope="col">신청마감일</th>
+                          <th scope="col">접수마감일</th>
                           <th scope="col">상태</th>
                         </tr>
                       </thead>

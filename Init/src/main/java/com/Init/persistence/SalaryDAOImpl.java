@@ -1,5 +1,6 @@
 package com.Init.persistence;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,8 +99,20 @@ public class SalaryDAOImpl implements SalaryDAO{
 	// 급여산출결과 급여내역 테이블에 저장
 	@Override
 	public void saveCalSalaryList(CalSalaryListVO vo) {
-		//salary_list_id 설정
-		String sal_list_id = "s"+vo.getYear()+vo.getMonth()+vo.getSal_type();
+		//salary_info_id 설정(s+연도+00001)
+        LocalDate today = LocalDate.now();
+        int year = today.getYear();
+        String sal_list_id = "sal" +year+"00001";
+        
+        // 올해 첫 급여리스트번호가 있는지 확인하기
+        String checkSalListId = sqlSession.selectOne(NAMESPACE+".checkSalListId", sal_list_id);
+        
+        if(checkSalListId != null) {
+        	//있으면 sal_list_id를 가장 최근에서 +1
+        	String getSalListId = sqlSession.selectOne(NAMESPACE+".getSalListId");
+        	sal_list_id = "sal"+(Integer.parseInt(getSalListId.substring(3))+1);
+        }
+        
 		//salary_list_subject 설정
 		String sal_list_subject = vo.getYear()+"년 "+vo.getMonth()+"월 "+vo.getSal_type()+"내역";
 		
@@ -214,8 +227,19 @@ public class SalaryDAOImpl implements SalaryDAO{
 				// 급여형태에 따른 분류(월급여/성과급/상여금)
 				String sal_type = vo.getSal_type();
 				
-				//salary_info_id 설정
-				String sal_list_id = "s"+vo.getYear()+vo.getMonth()+vo.getSal_type();
+				//salary_info_id 설정(s+연도+00001)
+	            LocalDate today = LocalDate.now();
+	            int year = today.getYear();
+	            String sal_list_id = "sal" +year+"00001";
+	            
+	            // 올해 첫 급여리스트번호가 있는지 확인하기
+	            String checkSalListId = sqlSession.selectOne(NAMESPACE+".checkSalListId", sal_list_id);
+	            
+	            if(checkSalListId != null) {
+	            	//있으면 sal_list_id를 가장 최근에서 +1
+	            	String getSalListId = sqlSession.selectOne(NAMESPACE+".getSalListId");
+	            	sal_list_id = "sal"+(Integer.parseInt(getSalListId.substring(3))+1);
+	            }
 				
 				switch (sal_type) {
 				case "월급여":

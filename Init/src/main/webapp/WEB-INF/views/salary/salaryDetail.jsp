@@ -97,7 +97,7 @@
             </div>
             
             <div class="row">
-                <div class="col-md-10">
+                <div class="col-md-11">
 					<div class="card">
 						<div class="card-header" style="display: flex; justify-content: space-between;">
 							<h3 class="card-title">급여조회 상세내역</h3>
