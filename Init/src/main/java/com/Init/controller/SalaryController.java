@@ -348,9 +348,6 @@ public class SalaryController {
 	// 급여조회(직원) 페이지 호출
 		@GetMapping(value = "salaryInquiryForEmployee")
 		public String salaryInquiryForEmployee(HttpSession session) {
-			// 임시 사번저장(로그인으로 대체)
-			session.setAttribute("emp_id", "user31"); //테스트용 삭제해야됨
-			
 			return "/salary/salaryInquiryForEmployee";
 		}
 	

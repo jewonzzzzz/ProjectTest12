@@ -89,8 +89,8 @@
                   	<div style="margin-left: 15px; margin-bottom: 10px; padding-top: 10px;">
                     	<a href="/edu/eduCreate"><button class="btn btn-primary">교육등록</button></a>
                     	
-                    	<form id="deleteSubmit" action="/salary/deleteSalaryInfo" method="post" style="display: inline-block;">
-                    		<input type="hidden" id="inputForDelete" name="sal_list_id">
+                    	<form id="deleteSubmit" action="/edu/deleteEduInfo" method="post" style="display: inline-block;">
+                    		<input type="hidden" id="inputForDelete" name="edu_id">
                     		<button type="submit" class="btn btn-primary" id="deleteBtn" disabled>삭제하기</button>
                     	</form>
                     	
@@ -112,6 +112,7 @@
                           <th scope="col">교육시작일</th>
                           <th scope="col">접수마감일</th>
                           <th scope="col">상태</th>
+                          <th scope="col">신청자명단</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -124,6 +125,7 @@
                       		<td>${list.edu_start_date }</td>
                       		<td>${list.edu_apply_end }</td>
                       		<td>${list.edu_list_status }</td>
+                      		<td><a href="#" class="open-modal" data-bs-toggle="modal" data-bs-target="#eduPersonnelModal" data-id="${list.edu_id }">신청자명단</a></td>
                       	</tr>
                       </c:forEach>
                       </tbody>
@@ -133,6 +135,50 @@
               </div>
             </div>
             <!-- 모달  -->
+            <div
+                      class="modal fade"
+                      id="eduPersonnelModal"
+                      tabindex="-1"
+                      role="dialog"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header border-0">
+                            <h5 class="modal-title">
+                              <span class="fw-mediumbold">교육신청자 명단</span>
+                            </h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">×</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <p class="small">
+                              추가하기를 누르면 오른쪽 결재요청 페이지에 추가됩니다.
+                            </p>
+                            <div id="modalNextContent">
+		                          <table class="table table-bordered" id="modalTable">
+				                      <thead>
+				                        <tr>
+				                          <th id="topText" colspan="5"></th>
+				                        </tr>
+				                        <tr>
+				                          <th>사번</th>
+				                          <th>본부</th>
+				                          <th>부서</th>
+				                          <th>이름</th>
+				                        </tr>
+				                      </thead>
+				                      <tbody>
+				                      </tbody>
+			                      </table>
+                    	  </div>
+                          </div>
+                        </div>
+                    </div>
+           </div>
+           
+           <!-- 결재요청 모달  -->
             <div
                       class="modal fade"
                       id="addRowModal"
@@ -215,6 +261,13 @@
             
             <script>
         $(document).ready(function() {
+        	
+        	// 신청자명단 클릭 시 모달
+        	 $('.open-modal').on('click', function () {
+       		    const dataId = $(this).data('id'); // data-id 값 추출
+       		    console.log($(this).data('id')); // 디버그용 출력
+        	 });
+        	
         	
         	// 결재요청 시 기본세팅(본부장, 관련부서 정보 업로드, 해당직원 정보 업로드)
         	$('#addRowModal').on('show.bs.modal', function() {
@@ -351,23 +404,9 @@
                 }
             });
         	
-        	// 체크여부에 따라 최종확정 버튼 활성화(체크버튼 클릭 + 결재완료)
-        	$('#basic-datatables tbody').on('click', 'input[type="checkbox"]', function() {
-        		var tdText = $(this).closest('tr').find('td:eq(5)').text();
-	        	if($(this).is(':checked') && tdText === '결재완료') {
-	                $('#confirmBtn').prop('disabled', false);
-	                $('#excelBtn').prop('disabled', false);
-	                $('#deleteBtn').prop('disabled', false);
-	        	} else {
-                    $('#confirmBtn').prop('disabled', true);
-	                $('#excelBtn').prop('disabled', true);
-	                $('#deleteBtn').prop('disabled', true);
-                }
-        	});
-        	
         	// 체크여부에 따라 결재요청 버튼 활성화(체크버튼 클릭 + 임시저장)
         	$('#basic-datatables tbody').on('click', 'input[type="checkbox"]', function() {
-        		var tdText = $(this).closest('tr').find('td:eq(5)').text();
+        		var tdText = $(this).closest('tr').find('td:eq(6)').text();
 	        	if($(this).is(':checked') && tdText === '임시저장') {
 	                $('#signBtn').prop('disabled', false);
 	                $('#deleteBtn').prop('disabled', false);
@@ -382,7 +421,7 @@
             	event.preventDefault();
             	swal({
      	              title: "삭제하시겠습니까?",
-     	              text: "삭제 후에는 신규작성을 통해 다시 작성하셔야 됩니다.",
+     	              text: "삭제 후에는 교육등록을 통해 재등록 가능합니다.",
      	              type: "warning",
      	              buttons: {
      	                cancel: {
@@ -397,7 +436,7 @@
      	              },
      	            }).then(function(willDelete) {  // 일반 함수 문법으로 변경
      	             if (willDelete) {
-     	            	$('#inputForDelete').val($('input[name="sal_list_id"]:checked').val());
+     	            	$('#inputForDelete').val($('input[name="edu_id"]:checked').val());
      	            	swal({
      	            	    title: "Success!",
      	            	    text: "삭제완료",
@@ -410,57 +449,6 @@
                     });
      	     	 });
         	
-         	// 최종확정버튼 시 리스트id 가지고 이동하기
-        	$('#confirmBtn').click(function(event){
-        		event.preventDefault();
-        		swal({
-   	              title: "최종확정 하시겠습니까?",
-   	              text: "최종확정 후에는 재작성할 수 없습니다.",
-   	              type: "warning",
-   	              buttons: {
-   	                cancel: {
-   	                  visible: true,
-   	                  text: "취소하기",
-   	                  className: "btn btn-danger",
-   	                },
-   	                confirm: {
-   	                  text: "최종확정",
-   	                  className: "btn btn-success",
-   	                },
-   	              },
-   	            }).then(function(willConfirm) {  // 일반 함수 문법으로 변경
-   	             if (willConfirm) {
-   	            	$('#inputForConfirm').val($('input[name="sal_list_id"]:checked').val());
-   	            	swal({
-   	            	    title: "Success!",
-   	            	    text: "최종확정 완료",
-   	            	    icon: "success",
-   	            	    buttons: "OK", 
-   	            	}).then(function() {
-   	            		$('#confirmSubmit').submit();
-                      });
- 	             	}
-                  });
-        	});
-         	
-        	// 엑셀내려받기 버튼 시 리스트id 가지고 이동하기
-        	$('#excelBtn').click(function(event){
-        		event.preventDefault();
-        		$('#inputForExcel').val($('input[name="sal_list_id"]:checked').val());
-        		swal({
-	            	    title: "Success!",
-	            	    text: "엑셀내려받기 완료.",
-	            	    icon: "success",
-	            	    buttons: "OK", 
-            	}).then(function() {
-            		$('#excelSubmit').submit();
-                });
-        	});
-         	
-         	
-         	
-         	
-         	
         });
     </script>
 <!------------------------------------------------------------------------------------------------------------------>

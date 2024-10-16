@@ -96,16 +96,16 @@
                       <div class="col">
                       
                       <div class="form-group" style="display: flex; gap:10px;">
+                        <div style="flex:4;">
+                          <label class="mb-2" style="font-size:16px !important"><b>교육명</b></label>
+                          <input name="edu_name" type="text" class="form-control"  value="${eduInfo.edu_name }">
+                        </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육구분</b></label>
                           <select class="form-select form-control" id="defaultSelect" name="edu_type">
                             <option value="사내교육" <c:if test="${eduInfo.edu_type == '사내교육'}">selected</c:if>>사내교육</option>
                             <option value="외부교육" <c:if test="${eduInfo.edu_type == '외부교육'}">selected</c:if>>외부교육</option>
                           </select>
-                        </div>
-                        <div style="flex:2;">
-                          <label class="mb-2" style="font-size:16px !important"><b>교육명</b></label>
-                          <input name="edu_name" type="text" class="form-control"  value="${eduInfo.edu_name }">
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>강사명</b></label>
@@ -114,6 +114,10 @@
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육장소</b></label>
                           <input name="edu_place" type="text" class="form-control" value="${eduInfo.edu_place }">
+                        </div>
+                        <div style="flex:1;">
+                          <label class="mb-2" style="font-size:16px !important"><b>교육인원</b></label>
+                          <input name="edu_personnel" type="number" class="form-control" value="${eduInfo.edu_personnel }">
                         </div>
                       </div>
                       

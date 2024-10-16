@@ -272,7 +272,7 @@
                     </div>
                   </div>
                   <div class="card-action">
-                    <button class="btn btn-success" type="submit">저장하기</button>
+                    <button class="btn btn-success" id="saveBtn" type="submit">저장하기</button>
                   </div>
                   </form>
                 </div>
@@ -298,7 +298,7 @@
                 }
             });
             
-            $("#alert_demo_3_1").click(function (event) {
+            $("#saveBtn").click(function (event) {
             	  event.preventDefault();  // 기본 동작 막기
             	  
             	  // 1. 모든 쉼표를 제거하는 함수

@@ -24,4 +24,39 @@ public interface EduDAO {
 	// 교육정보 수정하기
 	public void updateEudInfo(EduListVO vo);
 	
+	// 신청가능 교육 가져오기
+	public List<EduListVO> getEduApplyInfo();
+	
+	// 신청완료 시 교육이력테이블에 저장하기
+	public void saveEduApplyInfo(EduListVO vo);
+	
+	// 교육이력관리(직원) 페이지 이동시 교육이력정보 가져오기
+	public List<EduListVO> getEduHisInfoForEmp(String emp_id);
+	
+	// 교육이력관리(직원)에서 교육 취소하기
+	public void cancelEduApplyInfoForEmp(EduListVO vo);
+	
+	// 교육이력관리(관리자) 페이지 이동 시 기본정보(신청완료건) 보여주기
+	public List<EduListVO> getEduApplyInfoForManagerBase();
+	
+	// 교육이력관리(관리자)에서 조회(교육명)
+	public List<EduListVO> eduInquiryToEduName(String edu_name);
+	
+	// 교육이력관리(관리자)에서 조회(사번)
+	public List<EduListVO> eduInquiryToEmpId(String emp_id);
+	
+	// 교육이력관리(관리자)에서 조회(이름)
+	public List<EduListVO> eduInquiryToEmpName(String emp_name);
+	
+	// 교육등록관리에서 교육정보 삭제
+	public void deledteEduInfo(String edu_id);
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
