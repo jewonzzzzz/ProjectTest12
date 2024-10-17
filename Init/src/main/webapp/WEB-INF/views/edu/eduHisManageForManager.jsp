@@ -102,6 +102,19 @@
                             />
                            </div>
                           <button type="button" class="btn btn-primary" id="inquiryBtn"> 조회하기 </button>
+                    	 <button type="button" id="checkAllBtn" class="btn btn-primary">
+                            전체선택
+                          </button>
+                          
+                          <form id="completeEduSubmit" action="/edu/completeEduInfo" method="post" style="display: inline-block;">
+                    		<input type="hidden" id="inputForCompleteEdu" name="completeEudIds">
+                    		<button type="submit" class="btn btn-primary" id="completeEduBtn" disabled>이수처리</button>
+                    	</form>
+                    	
+                          <form id="nonCompleteEduSubmit" action="/edu/nonCompleteEduInfo" method="post" style="display: inline-block;">
+                    		<input type="hidden" id="inputForNonCompleteEdu" name="nonCompleteEudIds">
+                    		<button type="submit" class="btn btn-primary" id="nonCompleteEduBtn" disabled>미이수처리</button>
+                    	</form>
                     </div>
                 <div class="card">
                   <div class="card-header">
@@ -120,7 +133,6 @@
                           <th>사번</th>
                           <th>이름</th>
                           <th>교육명</th>
-                          <th>접수마감일</th>
                           <th>교육시작일</th>
                           <th>교육종료일</th>
                           <th>상태</th>
@@ -129,11 +141,10 @@
                         <tbody>
                         <c:forEach var="list" items="${eduHisListInfoBase }">
                         	<tr>
-                       		<td><input type="checkbox" data-id="edu_his_id" name="edu_his_id" value="${list.edu_his_id }"></td>
+                       		<td><input type="checkbox" data-id="${list.edu_his_id }" name="edu_his_id" value="${list.edu_his_id }"></td>
                       		<td>${list.emp_id }</td>
                       		<td>${list.emp_name }</td>
                       		<td>${list.edu_name }</td>
-                      		<td>${list.edu_apply_end }</td>
                       		<td>${list.edu_start_date }</td>
                       		<td>${list.edu_end_date }</td>
                       		<td>${list.edu_status }</td>
@@ -153,6 +164,111 @@
             <script>
         $(document).ready(function() {
             
+        	// 전체 선택하기 
+        	$('#checkAllBtn').click(function(){
+        		var checkStatus = $('input[type="checkbox"]').length === $('input[type="checkbox"]:checked').length;
+        		$('input[type="checkbox"]').prop('checked', !checkStatus);
+        		compareCheckStatus();
+        	});
+        	
+        	 // 개별 체크박스 클릭 이벤트
+            $('input[type="checkbox"]').on('change', function () {
+                compareCheckStatus(); // 체크 상태 비교
+            });
+        	
+        	// 체크박스 상태를 비교하는 함수 정의
+        	function compareCheckStatus() {
+                const checkedCount = $('tr').filter(function () {
+                    return $(this).find('td:eq(6)').text() === '교육확정' &&
+                           $(this).find('input[type="checkbox"]').is(':checked');
+                }).length;
+
+                const totalCheckedCount = $('input[type="checkbox"]:checked').length;
+
+                // 버튼 활성화/비활성화 로직
+                if (totalCheckedCount > 0 && checkedCount === totalCheckedCount) {
+                    $('#completeEduBtn').prop('disabled', false); // 버튼 활성화
+                    $('#nonCompleteEduBtn').prop('disabled', false); // 버튼 활성화
+                } else {
+                    $('#completeEduBtn').prop('disabled', true);  // 버튼 비활성화
+                    $('#nonCompleteEduBtn').prop('disabled', true);  // 버튼 비활성화
+                }
+            }
+        	
+        	// 이수처리 버튼 시 교육정보 가지고 이동하기
+            $('#completeEduBtn').click(function(event){
+            	event.preventDefault();
+            	const completeEudIds = [];
+            	$('input[type="checkbox"]:checked').each(function () {
+            		completeEudIds.push($(this).data('id'));
+                });
+            	swal({
+   	              title: "이수처리 하시겠습니까?",
+   	              text: "이수처리 후에는 재변경이 불가능합니다.",
+   	              type: "warning",
+   	              buttons: {
+   	                cancel: {
+   	                  visible: true,
+   	                  text: "취소하기",
+   	                  className: "btn btn-danger",
+   	                },
+   	                confirm: {
+   	                  text: "이수처리",
+   	                  className: "btn btn-success",
+   	                },
+   	              },
+   	            }).then(function(willDelete) {  // 일반 함수 문법으로 변경
+   	             if (willDelete) {
+            		$('#inputForCompleteEdu').val(completeEudIds);
+   	            	swal({
+   	            	    title: "Success!",
+   	            	    text: "교육이수 처리완료",
+   	            	    icon: "success",
+   	            	    buttons: "OK", 
+   	            	}).then(function() {
+            			$('#completeEduSubmit').submit(); 
+                      });
+ 	             	}
+                  });
+            });
+        	
+        	// 미이수처리 버튼 시 교육정보 가지고 이동하기
+            $('#nonCompleteEduBtn').click(function(event){
+            	event.preventDefault();
+            	const nonCompleteEudIds = [];
+            	$('input[type="checkbox"]:checked').each(function () {
+            		nonCompleteEudIds.push($(this).data('id'));
+                });
+            	swal({
+   	              title: "미이수처리 하시겠습니까?",
+   	              text: "미이수처리 후에는 재변경이 불가능합니다.",
+   	              type: "warning",
+   	              buttons: {
+   	                cancel: {
+   	                  visible: true,
+   	                  text: "취소하기",
+   	                  className: "btn btn-danger",
+   	                },
+   	                confirm: {
+   	                  text: "미이수처리",
+   	                  className: "btn btn-success",
+   	                },
+   	              },
+   	            }).then(function(willDelete) {  // 일반 함수 문법으로 변경
+   	             if (willDelete) {
+   	            	$('#inputForNonCompleteEdu').val(nonCompleteEudIds);
+   	            	swal({
+   	            	    title: "Success!",
+   	            	    text: "교육미이수 처리완료",
+   	            	    icon: "success",
+   	            	    buttons: "OK", 
+   	            	}).then(function() {
+   	            		$('#nonCompleteEduSubmit').submit(); 
+                      });
+ 	             	}
+                 });
+            });
+        	
          	// 조회 버튼 시 연/월/사번가지고 조회하기
             $('#inquiryBtn').click(function(event){
             	var checkSalaryInfo = [];
@@ -164,7 +280,7 @@
             		data: JSON.stringify(checkSalaryInfo),
             		contentType: 'application/json',
             		success: function(response) {
-            			swal("Success!", "직원 급여정보 조회완료", "success");
+            			swal("Success!", "직원 교육정보 조회완료", "success");
                         $('#basic-datatables tbody').empty();
             			response.forEach(function(data){
                         	var row = '<tr>' +
@@ -172,7 +288,6 @@
                             '<td style="text-align: center;">' + data.emp_id + '</td>' +
                             '<td style="text-align: center;">' + data.emp_name + '</td>' +
                             '<td style="text-align: center;">' + data.edu_name + '</td>' +
-                            '<td style="text-align: center;">' + data.edu_apply_end + '</td>' +
                             '<td style="text-align: center;">' + data.edu_start_date + '</td>' +
                             '<td style="text-align: center;">' + data.edu_end_date + '</td>' +
                             '<td style="text-align: center;">' + data.edu_status + '</td>' +
@@ -186,6 +301,7 @@
             	});
             });
             
+         	// 데이터테이블 설정
             $("#basic-datatables").DataTable({
             	pageLength: 7,
             	drawCallback: function() { //가운대 정렬

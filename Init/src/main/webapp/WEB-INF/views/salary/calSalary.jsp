@@ -180,7 +180,6 @@
 				                      </tbody>
 			                      </table>
                     	  </div>
-                    	  
                           </div>
                         </div>
                         <div>
@@ -208,6 +207,14 @@
 				                      <tbody>
 				                      </tbody>
 			                      </table>
+			                      <div class="form-group" style="padding:0px;">
+			                          <div class="input-group mb-3">
+			                            <span class="input-group-text">결재요청명</span>
+			                            <input id="signTitle" name="wf_title" type="text" class="form-control" placeholder="결재요청명을 작성하세요" aria-label="Username" aria-describedby="basic-addon1">
+			                          </div>
+			                          <textarea class="form-control" id="signContent" rows="3" name="wf_content"
+			                          	placeholder="결재요청 내용을 입력하세요"></textarea>
+			                        </div>
                           </div>
                           <div class="modal-footer border-0" style="justify-content: center;">
                             <button type="button" id="signRequestBtn" class="btn btn-primary">
@@ -230,6 +237,8 @@
         	$('#addRowModal').on('show.bs.modal', function() {
         		$('#modalTable tbody').empty();
         		$('#signTable tbody').empty();
+        		$('#signTitle').val('');
+        		$('#signContent').val('');
         		
         	    $.ajax({
         	        url: '/salary/getMemberInfoForSign',
@@ -274,17 +283,26 @@
         	// 직원조회 테이블에서 추가하기 클릭 시 결재요청 테이블로 이동
             $('#modalTable').on('click', '.move-row', function(event) {
             	event.preventDefault();
-            	var row_move = "<tr>" +
-                "<td style='text-align: center;'>" + $(this).closest('tr').find('td').eq(1).text() + "</td>" +
-                "<td style='text-align: center;'>" + $(this).closest('tr').find('td').eq(2).text() + "</td>" +
-                "<td style='text-align: center;'> <select class='form-select input-fixed'" +
-                "name='sign_type'><option name='wf_receiver_1st' value='1차 결재자'>1차 결재자</option>" + 
-                "<option name='wf_receiver_2nd' value='2차 결재자'>2차 결재자</option>" +
-                "<option name='wf_receiver_3rd' value='3차 결재자'>3차 결재자</option></select> </td>" +
-                "<td style='text-align: center;'><button class='delete-btn' style='border:none;" +
-                "background:none'>X</button></td>" +
-                "<input type='hidden' value='"+$(this).closest('tr').find('td').eq(0).text() +"'></tr>";
-                $('#signTable tbody').prepend(row_move);
+            	let signTableNames = [];
+            	$('select option:selected').each(function () {
+            		signTableNames.push($(this).closest('tr').find('td').eq(1).text());
+               });
+            	console.log(signTableNames);
+            	if(signTableNames.includes($(this).closest('tr').find('td').eq(2).text())){
+            		swal("Error!", "중복된 결재자가 존재합니다.", "error");
+            	} else{
+            		var row_move = "<tr>" +
+                   "<td style='text-align: center;'>" + $(this).closest('tr').find('td').eq(1).text() + "</td>" +
+                   "<td style='text-align: center;'>" + $(this).closest('tr').find('td').eq(2).text() + "</td>" +
+                   "<td style='text-align: center;'> <select class='form-select input-fixed'" +
+                   "name='sign_type'><option name='wf_receiver_1st' value='1차 결재자'>1차 결재자</option>" + 
+                   "<option name='wf_receiver_2nd' value='2차 결재자'>2차 결재자</option>" +
+                   "<option name='wf_receiver_3rd' value='3차 결재자'>3차 결재자</option></select> </td>" +
+                   "<td style='text-align: center;'><button class='delete-btn' style='border:none;" +
+                   "background:none'>X</button></td>" +
+                   "<input type='hidden' value='"+$(this).closest('tr').find('td').eq(0).text() +"'></tr>";
+                   $('#signTable tbody').prepend(row_move);
+            	}
             });
         	
         	// 결재요청 테이블 x 눌렀을 때 해당 행 삭제
@@ -311,13 +329,29 @@
      	              },
      	            }).then(function(willDelete) {  // 일반 함수 문법으로 변경
      	             if (willDelete) {
+ 	            		 let selectedValues = [];
+ 	                    $('select option:selected').each(function () {
+ 	                    	selectedValues.push($(this).val());
+ 	                    });
+     	            	 console.log(selectedValues);
+     	            	 // 1차 결재자가 포함이 안되었을때 
+     	            	 if($('select option[name="wf_receiver_1st"]:selected').val() == null){
+     	            		swal("Error!", "1차 결재자를 선택하여 주세요.", "error");
+     	            	 } else if($('#signTitle').val() == '' || $('#signContent').val() == '' ){
+     	            	 // 결재요청란과 결재요청내용을 작성하지 않았을때
+     	            		swal("Error!", "결재요청 정보를 입력해주세요", "error");
+     	            	 } else if(new Set(selectedValues).size !== selectedValues.length){
+   	                    	swal("Error!", "중복된 결재유형이 존재합니다.", "error");
+   	                     } else {
      	            	//전달정보 (sal_list_id, 결재요청자 및 1~3차 결재자의 사번 )
      	             	var signData = {
    	             			sal_list_id: $('input[name="sal_list_id"]:checked').val(),
-   	             			wf_receiver: $('select option[name="wf_receiver"]:selected').closest('tr').find('input').val(),
+   	             			wf_sender: $('select option[name="wf_receiver"]:selected').closest('tr').find('input').val(),
    	             			wf_receiver_1st: $('select option[name="wf_receiver_1st"]:selected').closest('tr').find('input').val(),
    	             			wf_receiver_2nd: $('select option[name="wf_receiver_2nd"]:selected').closest('tr').find('input').val(),
-   	             			wf_receiver_3rd: $('select option[name="wf_receiver_3rd"]:selected').closest('tr').find('input').val()
+   	             			wf_receiver_3rd: $('select option[name="wf_receiver_3rd"]:selected').closest('tr').find('input').val(),
+   	             			wf_title: $('input[name="wf_title"]').val(),
+   	             			wf_content: $('textarea[name="wf_content"]').val()
      	             	};
      	             	$.ajax({
      	            		url:'/salary/insertSignInfo',
@@ -337,7 +371,8 @@
      	            		error: function(xhr, status, error) {
      	                        swal("Error!", "정보를 가져오는데 실패하였습니다.", "error");
      	                    }
-     	             	});
+     	             		});
+     	            	 }
      	             }
      	     	 });
         	});

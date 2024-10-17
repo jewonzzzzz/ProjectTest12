@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
@@ -25,7 +26,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.Init.domain.EduListVO;
+import com.Init.domain.WorkflowVO;
 import com.Init.service.EduService;
+import com.Init.service.SalaryService;
 
 @Controller
 @RequestMapping(value = "edu/*")
@@ -35,6 +38,8 @@ public class EduController {
 	private EduService eService;
 	@Autowired
 	private ServletContext servletContext;
+	@Autowired
+	private SalaryService sService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EduController.class);
 	
@@ -151,11 +156,11 @@ public class EduController {
 	
 	// 교육신청하기 페이지 이동
 	@GetMapping(value = "eduApply")
-	public String eduView(Model model) {
+	public String eduView(HttpSession session ,Model model) {
 		logger.debug("eduView() 호출");
-		
+		String emp_id = (String)session.getAttribute("emp_id");
 		// 교육신청하기 페이지 이동 시 신청가능한 교육 보여주기
-		List<EduListVO> eduApplyInfo = eService.getEduApplyInfo();
+		List<EduListVO> eduApplyInfo = eService.getEduApplyInfo(emp_id);
 		model.addAttribute("eduApplyInfo", eduApplyInfo);
 		
 		return "edu/eduApply";
@@ -266,6 +271,95 @@ public class EduController {
 		
 		return "redirect:/edu/eduManage";
 	}
+	
+	// 교육관리에서 신청자명단 가져오기
+	@PostMapping(value = "getEduPersonInfo")
+	@ResponseBody
+	public List<EduListVO> getEduPersonInfo(@RequestBody String edu_id){
+		logger.debug(edu_id);
+		List<EduListVO> EduPersonInfos = eService.getEduPersonInfo(edu_id);
+		return EduPersonInfos;
+	}
+	
+	// 교육관리에서 교육확정 하기(=> 신청자 상태 교육확정으로 변경)
+	@PostMapping(value = "confirmEduInfo")
+	public String confirmEduInfo(EduListVO vo) {
+		logger.debug(vo.toString());
+		eService.confirmEduInfo(vo);
+		
+		return "redirect:/edu/eduManage";
+	}
+	
+	// 교육관리에서 교육종료 하기(교육리스트만 교육종료, 이수관리는 이력관리에서 실행)
+	@PostMapping(value = "endEduInfo")
+	public String endEduInfo(EduListVO vo) {
+		logger.debug("endEduInfo :"+ vo.toString());
+		eService.endEduInfo(vo);
+		
+		return "redirect:/edu/eduManage";
+	}
+	
+	// 교육이력관리에서 교육확정 -> 교육이수 변경
+	@PostMapping(value = "completeEduInfo")
+	public String completeEduInfo(@RequestParam("completeEudIds") List<String> completeEudIds) {
+		logger.debug("completeEudIds : " + completeEudIds.toString());
+		eService.completeEduInfo(completeEudIds);
+		
+		return "redirect:/edu/eduHisManageForManager";
+	}
+	
+	// 교육이력관리에서 교육확정 -> 교육미이수 변경
+	@PostMapping(value = "nonCompleteEduInfo")
+	public String nonCompleteEduInfo(@RequestParam("nonCompleteEudIds") List<String> nonCompleteEudIds) {
+		logger.debug("nonCompleteEudIds : " + nonCompleteEudIds.toString());
+		eService.nonCompleteEduInfo(nonCompleteEudIds);
+		
+		return "redirect:/edu/eduHisManageForManager";
+	}
+	
+	
+	//결재요청 시 워크플로우 테이블에 저장
+	@PostMapping(value = "insertSignInfo")
+	@ResponseBody
+	public void insertSignInfo(@RequestBody Map<String, String> signData) {
+		logger.debug("signData :"+signData.toString());
+		String edu_id = signData.get("edu_id");
+		
+		// wf_code 설정
+        LocalDate today = LocalDate.now();
+        int year = today.getYear();
+        String wf_code = "wf" +year+"00001";
+        
+        // 올해 첫 워크플로우번호가 있는지 확인하기
+        String checkWfCode = sService.checkWfCode(wf_code);
+        
+        if(checkWfCode != null) {
+        	//있으면 edu_id를 가장 최근 id에서 +1
+        	String getWfCode = sService.getWfCode();
+        	wf_code = "wf"+(Integer.parseInt(getWfCode.substring(2))+1);
+        }
+		
+		WorkflowVO vo = new WorkflowVO();
+		vo.setWf_code(wf_code);
+		vo.setWf_type("교육");
+		vo.setWf_sender(signData.get("wf_sender"));
+		vo.setWf_receiver_1st(signData.get("wf_receiver_1st"));
+		vo.setWf_receiver_2nd(signData.get("wf_receiver_2nd"));
+		vo.setWf_receiver_3rd(signData.get("wf_receiver_3rd"));
+		vo.setWf_target(edu_id);
+		vo.setWf_title(signData.get("wf_title"));
+		vo.setWf_content(signData.get("wf_content"));
+		
+		//결재정보를 워크플로우 디비에 저장
+		sService.insertSalarySignInfoToWorkFlow(vo);
+		
+		//교육리스트 상태를 결재중으로 변경
+		eService.updateEduListForSigning(edu_id);
+	}
+	
+	
+	
+	
 	
 	
 	

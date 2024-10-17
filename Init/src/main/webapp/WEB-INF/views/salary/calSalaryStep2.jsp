@@ -433,6 +433,7 @@
             		contentType: 'application/json',
             		success: function(response) {
                         $('#modalTable tbody').empty();
+                        if(response.length > 0){
                         response.forEach(function(data){
                         	var row = "<tr>" +
                             "<td><input class='check-radio' type='radio' name='checkGroup' data-id='"+ data.emp_id +"' </td>" +
@@ -445,6 +446,14 @@
                         });
                         $('#modalNextContent').show();
                         $('#modalContent').hide();
+                        } else {
+           		    		var row = "<tr>" +
+                            "<td style='text-align:center;' colspan='5'>해당 직원정보가 없습니다.</td>" +
+                            "</tr>";
+                            $('#modalNextContent tbody').append(row);
+                            $('#modalNextContent').show();
+                            $('#modalContent').hide();
+           		    	}
                     },
                     error: function(xhr, status, error) {
                         $('#modalContent').show();

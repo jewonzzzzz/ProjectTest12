@@ -14,6 +14,7 @@ import com.Init.domain.CalSalaryListVO;
 import com.Init.domain.MemberInfoForSalaryVO;
 import com.Init.domain.SalaryBasicInfoVO;
 import com.Init.domain.SalaryPositionJobVO;
+import com.Init.domain.WorkflowVO;
 
 @Repository
 public class SalaryDAOImpl implements SalaryDAO{
@@ -203,6 +204,26 @@ public class SalaryDAOImpl implements SalaryDAO{
 	public void updateCalSalaryListForSigning(String sal_list_id) {
 		sqlSession.update(NAMESPACE+".updateCalSalaryListForSigning", sal_list_id);
 	}
+	
+	// 결재요청 시 워크플로우에 신규 내용 추가
+	@Override
+	public void insertSalarySignInfoToWorkFlow(WorkflowVO vo) {
+		sqlSession.insert(NAMESPACE+".insertSalarySignInfoToWorkFlow", vo);
+	}
+	
+	// 올해 첫 워크플로우 번호가 있는지 확인
+	@Override
+	public String checkWfCode(String wf_code) {
+		return sqlSession.selectOne(NAMESPACE+".checkWfCode", wf_code);
+	}
+	
+	// 가장 최근의 워크플로우 번호 가져오기
+	@Override
+	public String getWfCode() {
+		return sqlSession.selectOne(NAMESPACE+".getWfCode");
+	}
+	
+	
 	
 	
 	

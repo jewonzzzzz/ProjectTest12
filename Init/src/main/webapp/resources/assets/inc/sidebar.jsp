@@ -104,7 +104,7 @@
                   <ul class="nav nav-collapse">
                     <li>
                       <a href="/edu/eduManage">
-                        <span class="sub-item">교육등록관리(관리자)</span>
+                        <span class="sub-item">교육관리(관리자)</span>
                       </a>
                     </li>
                     <li>

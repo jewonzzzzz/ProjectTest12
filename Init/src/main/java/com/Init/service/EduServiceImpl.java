@@ -53,8 +53,8 @@ public class EduServiceImpl implements EduService {
 	
 	// 신청가능 교육 가져오기
 	@Override
-	public List<EduListVO> getEduApplyInfo() {
-		return edao.getEduApplyInfo();
+	public List<EduListVO> getEduApplyInfo(String emp_id) {
+		return edao.getEduApplyInfo(emp_id);
 	}
 	
 	// 신청완료 시 교육이력테이블에 저장하기
@@ -104,6 +104,46 @@ public class EduServiceImpl implements EduService {
 	public void deledteEduInfo(String edu_id) {
 		edao.deledteEduInfo(edu_id);
 	}
+	
+	// 교육관리에서 신청자명단 클릭 시 신청자명단 가져오기
+	@Override
+	public List<EduListVO> getEduPersonInfo(String edu_id) {
+		return edao.getEduPersonInfo(edu_id);
+	}
+	
+	// 교육관리에서 교육확정하기(교육리스트 + 교육이력리스트)
+	@Override
+	public void confirmEduInfo(EduListVO vo) {
+		// 교육리스트 교육확정
+		edao.confirmEduInfo(vo);
+		// 교육이력리스트 교육확정
+		edao.confirmEduApplyInfo(vo);
+	}
+	
+	// 교육관리에서 교육종료하기
+	@Override
+	public void endEduInfo(EduListVO vo) {
+		edao.endEduInfo(vo);
+	}
+	
+	// 이수처리 버튼 시 직원정보리스트 받아와서 교육이수로 변경하기
+	@Override
+	public void completeEduInfo(List<String> completeEudIds) {
+		edao.completeEduInfo(completeEudIds);
+	}
+	
+	// 미이수처리 버튼 시 직원정보리스트 받아와서 교육미이수로 변경하기
+	@Override
+	public void nonCompleteEduInfo(List<String> nonCompleteEudIds) {
+		edao.nonCompleteEduInfo(nonCompleteEudIds);
+	}
+	
+	// 결재요청 시 교육리스트 상태를 결재중으로 변경
+	@Override
+	public void updateEduListForSigning(String edu_id) {
+		edao.updateEduListForSigning(edu_id);
+	}
+	
 	
 	
 	

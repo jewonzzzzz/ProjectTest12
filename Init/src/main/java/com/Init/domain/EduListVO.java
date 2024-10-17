@@ -10,6 +10,8 @@ public class EduListVO {
 	private String edu_id;
 	private String emp_id;
 	private String emp_name;
+	private String emp_bnum;
+	private String dname;
 	private String edu_type;
 	private String edu_name;
 	private String edu_teacher;

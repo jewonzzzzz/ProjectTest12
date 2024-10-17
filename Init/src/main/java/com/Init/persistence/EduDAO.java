@@ -25,7 +25,7 @@ public interface EduDAO {
 	public void updateEudInfo(EduListVO vo);
 	
 	// 신청가능 교육 가져오기
-	public List<EduListVO> getEduApplyInfo();
+	public List<EduListVO> getEduApplyInfo(String emp_id);
 	
 	// 신청완료 시 교육이력테이블에 저장하기
 	public void saveEduApplyInfo(EduListVO vo);
@@ -51,10 +51,26 @@ public interface EduDAO {
 	// 교육등록관리에서 교육정보 삭제
 	public void deledteEduInfo(String edu_id);
 	
+	// 교육관리에서 신청자명단 클릭 시 신청자명단 가져오기
+	public List<EduListVO> getEduPersonInfo(String edu_id);
 	
+	// 교육관리에서 교육확정 시 교육리스트 확정
+	public void confirmEduInfo(EduListVO vo);
 	
+	// 교육관리에서 교육확정 시 교육이력리스트 확정
+	public void confirmEduApplyInfo(EduListVO vo);
 	
+	// 교육관리에서 교육종료하기
+	public void endEduInfo(EduListVO vo);
 	
+	// 이수처리 버튼 시 직원정보리스트 받아와서 교육이수로 변경하기
+	public void completeEduInfo(List<String> completeEudIds);
+	
+	// 미이수처리 버튼 시 직원정보리스트 받아와서 교육미이수로 변경하기
+	public void nonCompleteEduInfo(List<String> nonCompleteEudIds);
+	
+	// 결재요청 시 교육리스트 상태를 결재중으로 변경
+	public void updateEduListForSigning(String edu_id);
 	
 	
 	

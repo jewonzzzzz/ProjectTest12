@@ -44,9 +44,9 @@
 
 	<!-- 신청가능 교육 가져오기 -->
 	<select id="getEduApplyInfo" resultType="EduListVO">
-		select edu_id, edu_type, edu_name, edu_teacher, edu_start_date, edu_end_date, edu_apply_end, edu_personnel 
-		from edu_list 
-		where edu_list_status = '결재완료' and edu_apply_end > now() 
+		select e.edu_id, edu_type, edu_name, edu_teacher, edu_start_date, edu_end_date, edu_apply_end, edu_personnel 
+		from edu_list e left join his_edu h on e.edu_id = h.edu_id and emp_id = #{emp_id} and edu_status = '신청완료' 
+		where edu_list_status = '결재완료' and edu_apply_end > now() and emp_id is null 
 		order by edu_start_date 
 	</select>
 	
@@ -60,7 +60,7 @@
 	<select id="getEduHisInfoForEmp" resultType="EduListVO">
 		select edu_his_id, e.edu_id, edu_type, edu_name, edu_start_date, edu_end_date, edu_status 
 		from edu_list e, his_edu h 
-		where e.edu_id = h.edu_id and emp_id = #{emp_id} 
+		where e.edu_id = h.edu_id and emp_id = #{emp_id} and edu_status not in ('교육취소') 
 		order by edu_start_date desc 
 	</select>
 
@@ -73,14 +73,15 @@
 	
 	<!-- 교육이력관리(관리자) 페이지 이동 시 기본정보 나열 -->
 	<select id="getEduApplyInfoForManagerBase" resultType="EduListVO">
-		select edu_his_id emp_id, emp_name, edu_name, edu_apply_end, edu_start_date, edu_end_date, edu_status 
+		select edu_his_id, h.emp_id, emp_name, edu_name, edu_apply_end, edu_start_date, edu_end_date, edu_status 
 		from his_edu h, edu_list l, employee e 
-		where h.edu_id = l.edu_id and h.emp_id = e.emp_id and edu_status = '신청완료' and edu_apply_end &lt; now() 
+		where h.edu_id = l.edu_id and h.emp_id = e.emp_id and edu_status != '교육취소' 
+		order by edu_start_date 
 	</select>
 	
 	<!-- 교육이력관리(관리자)에서 조회(교육명) -->
 	<select id="eduInquiryToEduName" resultType="EduListVO">
-		select edu_his_id emp_id, emp_name, edu_name, edu_apply_end, edu_start_date, edu_end_date, edu_status 
+		select edu_his_id, h.emp_id, emp_name, edu_name, edu_apply_end, edu_start_date, edu_end_date, edu_status 
 		from his_edu h, edu_list l, employee e 
 		where h.edu_id = l.edu_id and h.emp_id = e.emp_id and edu_name like #{edu_name} 
 	</select>
@@ -103,7 +104,57 @@
 	<select id="deledteEduInfo">
 		delete from edu_list where edu_id = #{edu_id} 
 	</select>
+	
+	<!-- 교육관리에서 신청자명단 가져오기 -->
+	<select id="getEduPersonInfo" resultType="EduListVO">
+		select emp_bnum, dname, h.emp_id, emp_name 
+		from his_edu h 
+		join employee e on h.emp_id = e.emp_id 
+		join dept d on e.emp_dnum = d.dnum 
+		where edu_id = #{edu_id} and edu_status not in ('교육취소') 
+	</select>
+	
+	<!-- 교육관리에서 교육확정 시 교육리스트 교육확정-->
+	<select id="confirmEduInfo">
+		update edu_list 
+		set edu_list_status = '교육확정' 
+		where edu_id = #{edu_id} 
+	</select>
+	
+	<!-- 교육관리에서 교육확정 시 교육이력리스트 교육확정-->
+	<select id="confirmEduApplyInfo">
+		update his_edu 
+		set edu_status = '교육확정' 
+		where edu_id = #{edu_id} and edu_status = '신청완료' 
+	</select>
+	
+	<!-- 교육관리에서 교육종료 시 교육리스트 교육종료 -->
+	<select id="endEduInfo">
+		update edu_list 
+		set edu_list_status = '교육종료' 
+		where edu_id = #{edu_id} and edu_list_status = '교육확정' 
+	</select>
+	
+	<!-- 교육이력관리에서 교육상태 교육이수로 변경 -->
+	<select id="completeEduInfo">
+		update his_edu 
+		set edu_status = '교육이수' 
+		where edu_his_id = #{edu_his_id} 
+	</select>
+	
+	<!-- 교육이력관리에서 교육상태 교육이수로 변경 -->
+	<select id="nonCompleteEduInfo">
+		update his_edu 
+		set edu_status = '교육미이수' 
+		where edu_his_id = #{edu_his_id} 
+	</select>
 
+	<!-- 교육관리에서 교육종료 시 교육리스트 교육종료 -->
+	<select id="updateEduListForSigning">
+		update edu_list 
+		set edu_list_status = '결재중' 
+		where edu_id = #{edu_id} 
+	</select>
 
 
 
