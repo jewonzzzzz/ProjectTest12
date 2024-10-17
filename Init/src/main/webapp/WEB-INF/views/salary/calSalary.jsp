@@ -91,7 +91,7 @@
                     	
                     	<form id="deleteSubmit" action="/salary/deleteSalaryInfo" method="post" style="display: inline-block;">
                     		<input type="hidden" id="inputForDelete" name="sal_list_id">
-                    		<button type="submit" class="btn btn-primary" id="deleteBtn" disabled>삭제하기</button>
+                    		<button type="submit" class="btn btn-danger" id="deleteBtn" disabled>삭제하기</button>
                     	</form>
                     	
                    		<button	class="btn btn-primary"	id ="signBtn" data-bs-toggle="modal" data-bs-target="#addRowModal" disabled
@@ -106,7 +106,7 @@
                     	
                     	<form id="excelSubmit" action="/salary/excelDownload" method="get" style="display: inline-block;">
                     		<input type="hidden" id="inputForExcel" name="sal_list_id">
-                    		<button type="submit" class="btn btn-primary" id="excelBtn" disabled>엑셀내려받기(은행용)</button>
+                    		<button type="submit" class="btn btn-success" id="excelBtn" disabled>이체자료 내려받기</button>
                     	</form>
                     	</div>
                   	</div>
@@ -334,14 +334,15 @@
  	                    	selectedValues.push($(this).val());
  	                    });
      	            	 console.log(selectedValues);
-     	            	 // 1차 결재자가 포함이 안되었을때 
-     	            	 if($('select option[name="wf_receiver_1st"]:selected').val() == null){
+     	            	 if($('option[name="wf_receiver_1st"]:selected').val() == null){
      	            		swal("Error!", "1차 결재자를 선택하여 주세요.", "error");
      	            	 } else if($('#signTitle').val() == '' || $('#signContent').val() == '' ){
-     	            	 // 결재요청란과 결재요청내용을 작성하지 않았을때
      	            		swal("Error!", "결재요청 정보를 입력해주세요", "error");
      	            	 } else if(new Set(selectedValues).size !== selectedValues.length){
    	                    	swal("Error!", "중복된 결재유형이 존재합니다.", "error");
+   	                     } else if(selectedValues.includes($('option[name="wf_receiver_3rd"]:selected').val())
+   	                    		 && !selectedValues.includes($('option[name="wf_receiver_2nd"]:selected').val())){
+   	                    	swal("Error!", "2차 결재자가 존재하지 않습니다.", "error");
    	                     } else {
      	            	//전달정보 (sal_list_id, 결재요청자 및 1~3차 결재자의 사번 )
      	             	var signData = {

@@ -91,7 +91,7 @@
                     	
                     	<form id="deleteSubmit" action="/edu/deleteEduInfo" method="post" style="display: inline-block;">
                     		<input type="hidden" id="inputForDelete" name="edu_id">
-                    		<button type="submit" class="btn btn-primary" id="deleteBtn" disabled>삭제하기</button>
+                    		<button type="submit" class="btn btn-danger" id="deleteBtn" disabled>삭제하기</button>
                     	</form>
                     	
                    		<button	class="btn btn-primary"	id ="signBtn" data-bs-toggle="modal" data-bs-target="#addRowModal" disabled>
@@ -145,7 +145,7 @@
                 </div>
               </div>
             </div>
-            <!-- 모달  -->
+            <!-- 교육신청자 모달  -->
             <div
                       class="modal fade"
                       id="eduPersonnelModal"
@@ -164,9 +164,12 @@
                             </button>
                           </div>
                           <div class="modal-body">
-                            <p class="small">
+                            <div style="display: flex; justify-content:space-between; margin-bottom: 5px;">
+                            <p class="small" style="margin-bottom: 0px;">
                               현시간 기준 교육신청자 명단입니다.
                             </p>
+                            <button class="btn btn-success btn-sm" id="downloadEduPersonnelBtn">엑셀 내려받기</button>
+                            </div>
                             <div id="modalNextContent">
 		                          <table class="table table-bordered" id="eduPersonnelModalTable">
 				                      <thead>
@@ -277,10 +280,9 @@
             <script>
         $(document).ready(function() {
         	
-        	// 신청자명단 클릭 시 모달
+        	// 신청자명단 클릭 시 모달띄우기
         	 $('.open-modal').on('click', function () {
         		 $('#eduPersonnelModalTable tbody').empty();
-       		 //eduPersonnelModalTable
        		 $.ajax({
      	        url: '/edu/getEduPersonInfo',
      	        method: 'POST',
@@ -412,16 +414,17 @@
   	                    	selectedValues.push($(this).val());
   	                    });
       	            	 console.log(selectedValues);
-      	            	 // 1차 결재자가 포함이 안되었을때 
-      	            	 if($('select option[name="wf_receiver_1st"]:selected').val() == null){
-      	            		swal("Error!", "1차 결재자를 선택하여 주세요.", "error");
-      	            	 } else if($('#signTitle').val() == '' || $('#signContent').val() == '' ){
-      	            	 // 결재요청란과 결재요청내용을 작성하지 않았을때
-      	            		swal("Error!", "결재요청 정보를 입력해주세요", "error");
-      	            	 } else if(new Set(selectedValues).size !== selectedValues.length){
-    	                    	swal("Error!", "중복된 결재유형이 존재합니다.", "error");
-    	                 } else {
-      	            	//전달정보 (sal_list_id, 결재요청자 및 1~3차 결재자의 사번 )
+      	            	if($('option[name="wf_receiver_1st"]:selected').val() == null){
+     	            		swal("Error!", "1차 결재자를 선택하여 주세요.", "error");
+     	            	 } else if($('#signTitle').val() == '' || $('#signContent').val() == '' ){
+     	            		swal("Error!", "결재요청 정보를 입력해주세요", "error");
+     	            	 } else if(new Set(selectedValues).size !== selectedValues.length){
+   	                    	swal("Error!", "중복된 결재유형이 존재합니다.", "error");
+   	                     } else if(selectedValues.includes($('option[name="wf_receiver_3rd"]:selected').val())
+   	                    		 && !selectedValues.includes($('option[name="wf_receiver_2nd"]:selected').val())){
+   	                    	swal("Error!", "2차 결재자가 존재하지 않습니다.", "error");
+   	                     } else {
+      	            	//전달정보 (edu_id, 결재요청자 및 1~3차 결재자의 사번 )
       	             	var signData = {
     	             			edu_id: $('input[name="edu_id"]:checked').val(),
     	             			wf_sender: $('select option[name="wf_receiver"]:selected').closest('tr').find('input').val(),
@@ -496,7 +499,7 @@
                 }
         	});
         	
-        	// 체크여부에 따라 교육확정 버튼 활성화(체크버튼 클릭 + 결재완료)
+        	// 체크여부에 따라 교육종료 버튼 활성화(체크버튼 클릭 + 교육확정)
         	$('#basic-datatables tbody').on('click', 'input[type="checkbox"]', function() {
         		var tdText = $(this).closest('tr').find('td:eq(6)').text();
 	        	if($(this).is(':checked') && tdText === '교육확정') {

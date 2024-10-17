@@ -88,7 +88,7 @@
                   	<div style="margin-right: 10px;">
                     	<form id="cancelSubmit" action="/edu/cancelEduApplyInfo" method="post" style="display: inline-block;">
                     		<input type="hidden" id="inputForCancel" name="edu_his_id">
-                    		<button type="submit" class="btn btn-primary" id="cancelBtn" disabled>교육취소</button>
+                    		<button type="submit" class="btn btn-danger" id="cancelBtn" disabled>교육취소</button>
                     	</form>
                    	</div>
                   	</div>

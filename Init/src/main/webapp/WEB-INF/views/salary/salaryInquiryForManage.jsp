@@ -155,9 +155,11 @@
             		data: JSON.stringify(checkSalaryInfo),
             		contentType: 'application/json',
             		success: function(response) {
-            			swal("Success!", "직원 급여정보 조회완료", "success");
-                        $('#basic-datatables tbody').empty();
-            			response.forEach(function(data){
+            			
+            			if(response.length > 0){
+            				swal("Success!", "직원 급여정보 조회완료", "success");
+	                        $('#basic-datatables tbody').empty();
+	            			response.forEach(function(data){
                         	var row = '<tr>' +
                             '<td style="text-align: center;">' + data.emp_id + '</td>' +
                             '<td style="text-align: center;">' + data.sal_type + '</td>' +
@@ -170,6 +172,9 @@
                             '</tr>';
                             $('#basic-datatables tbody').append(row);
                         });
+            			} else {
+            				swal("정보없음!", "검색하신 결과가 없습니다", "warning");
+            			}
             		},
             		error: function(xhr, status, error) {
                         swal("Error!", "실패", "error");
@@ -178,7 +183,13 @@
             });
             
             $("#basic-datatables").DataTable({
-            	pageLength: 5,
+            	pageLength: 6,
+            	drawCallback: function() { //가운대 정렬
+        			$('#basic-datatables th, #basic-datatables td').css({
+        	            'text-align': 'center',
+        	            'vertical-align': 'middle'
+        	        });
+        		}
             });
         });
     </script>

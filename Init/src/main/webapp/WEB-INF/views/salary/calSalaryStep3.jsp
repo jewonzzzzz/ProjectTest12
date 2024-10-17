@@ -11,6 +11,7 @@
       content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
       name="viewport"
     />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
     <link
       rel="icon"
       href="${pageContext.request.contextPath }/resources/assets/img/kaiadmin/favicon.ico"
@@ -96,14 +97,14 @@
             
             <div class="row">
             <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round">
+                <div class="card card-stats card-round" style="background-color:#eee;">
                   <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col-icon">
                         <div
-                          class="icon-big text-center icon-primary bubble-shadow-small"
+                          class="icon-big text-center icon-success bubble-shadow-small"
                         >
-                          <i class="fas fa-users"></i>
+                          <i class="fa-solid fa-calendar-days"></i>
                         </div>
                       </div>
                       <div class="col col-stats ms-3 ms-sm-0">
@@ -118,7 +119,7 @@
               </div>
               
               <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round">
+                <div class="card card-stats card-round" style="background-color:#eee;">
                   <div class="card-body" id="second_card">
                     <div class="row align-items-center">
                       <div class="col-icon">
@@ -145,9 +146,9 @@
                     <div class="row align-items-center" >
                       <div class="col-icon">
                         <div
-                          class="icon-big text-center icon-primary bubble-shadow-small"
+                          class="icon-big text-center icon-danger bubble-shadow-small"
                         >
-                          <i class="fas fa-users"></i>
+                          <i class="fa-solid fa-calculator"></i>
                         </div>
                       </div>
                       <div class="col col-stats ms-3 ms-sm-0" >

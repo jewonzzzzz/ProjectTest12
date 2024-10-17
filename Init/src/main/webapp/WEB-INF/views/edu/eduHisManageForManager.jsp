@@ -280,6 +280,7 @@
             		data: JSON.stringify(checkSalaryInfo),
             		contentType: 'application/json',
             		success: function(response) {
+            			if(response.length > 0){
             			swal("Success!", "직원 교육정보 조회완료", "success");
                         $('#basic-datatables tbody').empty();
             			response.forEach(function(data){
@@ -294,6 +295,9 @@
                             '</tr>';
                             $('#basic-datatables tbody').append(row);
                         });
+            			} else {
+            				swal("정보없음!", "검색하신 결과가 없습니다.", "warning");
+            			}
             		},
             		error: function(xhr, status, error) {
                         swal("Error!", "실패", "error");
@@ -303,7 +307,7 @@
             
          	// 데이터테이블 설정
             $("#basic-datatables").DataTable({
-            	pageLength: 7,
+            	pageLength: 6,
             	drawCallback: function() { //가운대 정렬
         			$('#basic-datatables th, #basic-datatables td').css({
         	            'text-align': 'center',
