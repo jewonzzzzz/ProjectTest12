@@ -97,7 +97,7 @@
             
             <div class="row">
             <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round" style="background-color:#eee;">
+                <div class="card card-stats card-round" style="background-color:#e9ecef;">
                   <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col-icon">
@@ -119,7 +119,7 @@
               </div>
               
               <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round" style="background-color:#eee;">
+                <div class="card card-stats card-round" style="background-color:#e9ecef;">
                   <div class="card-body" id="second_card">
                     <div class="row align-items-center">
                       <div class="col-icon">
@@ -195,7 +195,7 @@
                       <tbody>
                       	<tr>
                       	  <td>${calSalaryInfo.sal_type }</td>
-                      	  <td>${calSalaryInfo.year }</td>
+                      	  <td class="year">${calSalaryInfo.year }</td>
                       	  <td>${calSalaryInfo.month }</td>
                       	  <td id="sumMember"></td>
                       	  <td id="sumSalBasic"></td>
@@ -347,6 +347,22 @@
             
             // 대상인원 출력
             $('#sumMember').text($('#calSalaryTable tbody tr').length);
+            
+            function addCommasToNumber(num) {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            const filteredTds = $('td').not('.year');
+            
+            filteredTds.each(function() {
+                // 현재 <td>의 텍스트 가져오기
+                const currentText = $(this).text();
+                
+                // 숫자인 경우에만 쉼표 추가
+                if ($.isNumeric(currentText)) {
+                    const formattedNumber = addCommasToNumber(currentText);
+                    $(this).text(formattedNumber);  // 쉼표가 추가된 값으로 텍스트 업데이트
+                }
+            });
             
         });
     </script>

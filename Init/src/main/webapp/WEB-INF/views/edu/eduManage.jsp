@@ -168,10 +168,14 @@
                             <p class="small" style="margin-bottom: 0px;">
                               현시간 기준 교육신청자 명단입니다.
                             </p>
-                            <button class="btn btn-success btn-sm" id="downloadEduPersonnelBtn">엑셀 내려받기</button>
+                            <form action="/edu/downloadEduPersonInfo" method="post" id="EduPersonnelForm">
+	                            <input type="hidden" id="InputForEduPersonnel" name="eduPersonInfos">
+	                            <button class="btn btn-success btn-sm" id="downloadEduPersonnelBtn">엑셀 내려받기</button>
+                            </form>
                             </div>
-                            <div id="modalNextContent">
-		                          <table class="table table-bordered" id="eduPersonnelModalTable">
+                            <div id="modalNextContent" style="height: 400px; overflow-y: auto;">
+		                          <table class="table table-bordered" id="eduPersonnelModalTable"
+		                          style="width: 100%; border-collapse: collapse;">
 				                      <thead>
 				                        <tr>
 				                          <th style="text-align:center;">본부</th>
@@ -189,96 +193,27 @@
                     </div>
            </div>
            
-           <!-- 모달  -->
-            <div
-                      class="modal fade"
-                      id="addRowModal"
-                      tabindex="-1"
-                      role="dialog"
-                      aria-hidden="true"
-                    >
-                      <div class="modal-dialog" role="document" style="max-width: 1100px; margin-top: 100px;">
-                        <div class="modal-content" style="width: 1100px;">
-                        <div style="display: flex; justify-content: space-between;">
-                        <div class="col-6">
-                        <div class="modal-header border-0">
-                            <h5 class="modal-title">
-                              <span class="fw-mediumbold"> 직원정보</span>
-                            </h5>
-                          </div>
-                          <div class="modal-body">
-                            <p class="small">
-                              추가하기를 누르면 오른쪽 결재요청 페이지에 추가됩니다.
-                            </p>
-                            <div id="modalNextContent">
-		                          <table class="table table-bordered" id="modalTable">
-				                      <thead>
-				                        <tr>
-				                          <th id="topText" colspan="5"></th>
-				                        </tr>
-				                        <tr>
-				                          <th>사번</th>
-				                          <th>직급</th>
-				                          <th>이름</th>
-				                          <th>선택</th>
-				                        </tr>
-				                      </thead>
-				                      <tbody>
-				                      </tbody>
-			                      </table>
-                    	  </div>
-                          </div>
-                        </div>
-                        <div>
-                        <div class="modal-header border-0">
-                            <h5 class="modal-title">
-                              <span class="fw-mediumbold"> 결재요청</span>
-                            </h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">×</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <p class="small">
-                              결재자와 결재유형을 선택하여 결재요청을 할 수 있습니다.
-                            </p>
-                            <table class="table table-bordered" id="signTable">
-				                      <thead>
-				                        <tr>
-				                          <th>직급</th>
-				                          <th>이름</th>
-				                          <th>결재유형</th>
-				                          <th>삭제</th>
-				                        </tr>
-				                      </thead>
-				                      <tbody>
-				                      </tbody>
-			                      </table>
-			                      <div class="form-group" style="padding:0px;">
-			                          <div class="input-group mb-3">
-			                            <span class="input-group-text">결재요청명</span>
-			                            <input id="signTitle" name="wf_title" type="text" class="form-control" placeholder="결재요청명을 작성하세요" aria-label="Username" aria-describedby="basic-addon1">
-			                          </div>
-			                          <textarea class="form-control" id="signContent" rows="3" name="wf_content"
-			                          	placeholder="결재요청 내용을 입력하세요"></textarea>
-			                        </div>
-                          </div>
-                          <div class="modal-footer border-0" style="justify-content: center;">
-                            <button type="button" id="signRequestBtn" class="btn btn-primary">
-                              결재요청
-                            </button>
-                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                              취소
-                            </button>
-                          </div>
-                        </div>
-                        </div>
-                        </div>
-                    </div>
-           </div>
+           <%@ include file="../inc/signModal.jsp" %> <!-- 결재요청용 모달 -->
             
-            <script>
+        <script>
         $(document).ready(function() {
+        	
+        	// 엑셀내려받기 버튼 시 emp_id 가지고 이동하기
+        	$('#downloadEduPersonnelBtn').click(function(event){
+        		event.preventDefault();
+        		var empIds = $('#eduPersonnelModalTable .emp_id').map(function() {
+      		         return $(this).text().trim();  // 각 `<td>`의 텍스트 값을 가져와서 배열에 추가
+      			  	 }).get();
+        		$('#InputForEduPersonnel').val(empIds);
+        		swal({
+	            	    title: "Success!",
+	            	    text: "엑셀내려받기 완료.",
+	            	    icon: "success",
+	            	    buttons: "OK", 
+            	}).then(function() {
+            		$('#EduPersonnelForm').submit();
+                });
+        	});
         	
         	// 신청자명단 클릭 시 모달띄우기
         	 $('.open-modal').on('click', function () {
@@ -291,11 +226,12 @@
      	        success: function(response) {
        		    	console.log(response);
        		    	if(response.length > 0){
-       		    	response.forEach(function(data){
+       		    		$('#downloadEduPersonnelBtn').prop('disabled', false);
+       		    		response.forEach(function(data){
        		    		var row = "<tr>" +
                         "<td style='text-align:center;'>" + data.emp_bnum + "</td>" +
                         "<td style='text-align:center;'>" + data.dname + "</td>" +
-                        "<td style='text-align:center;'>" + data.emp_id + "</td>" +
+                        "<td class='emp_id' style='text-align:center;'>" + data.emp_id + "</td>" +
                         "<td style='text-align:center;'>" + data.emp_name + "</td>" +
                         "</tr>";
                         $('#eduPersonnelModalTable tbody').append(row);
@@ -305,6 +241,7 @@
                         "<td style='text-align:center;' colspan='4'>해당교육 신청자가 없습니다.</td>" +
                         "</tr>";
                         $('#eduPersonnelModalTable tbody').append(row);
+                        $('#downloadEduPersonnelBtn').prop('disabled', true);
        		    	}
      	        },
      	       error: function(xhr, status, error) {
@@ -607,6 +544,7 @@
    	             	}
                   });
    	     	 });
+        	
         	
         });
     </script>

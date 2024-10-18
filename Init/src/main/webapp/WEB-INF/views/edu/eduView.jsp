@@ -100,12 +100,12 @@
                       <div class="form-group" style="display: flex; gap:10px;">
                         <div style="flex:4;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육명</b></label>
-                          <input name="edu_name" type="text" class="form-control"  value="${eduInfo.edu_name }" 
+                          <input name="edu_name" type="text" class="form-control"  value="${eduInfo.edu_name }" required
                           <c:if test="${eduInfo.edu_list_status != '임시저장'}">readonly</c:if>>
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육구분</b></label>
-                          <select class="form-select form-control" id="defaultSelect" name="edu_type"
+                          <select class="form-select form-control" id="defaultSelect" name="edu_type" required
                           <c:if test="${eduInfo.edu_list_status != '임시저장'}">readonly</c:if>>
                             <option value="사내교육" <c:if test="${eduInfo.edu_type == '사내교육'}">selected</c:if>>사내교육</option>
                             <option value="외부교육" <c:if test="${eduInfo.edu_type == '외부교육'}">selected</c:if>>외부교육</option>
@@ -113,26 +113,26 @@
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>강사명</b></label>
-                          <input name="edu_teacher" type="text" class="form-control" value="${eduInfo.edu_teacher }" 
+                          <input name="edu_teacher" type="text" class="form-control" value="${eduInfo.edu_teacher }" required
                           <c:if test="${eduInfo.edu_list_status != '임시저장'}">readonly</c:if>>
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육장소</b></label>
-                          <input name="edu_place" type="text" class="form-control" value="${eduInfo.edu_place }" 
+                          <input name="edu_place" type="text" class="form-control" value="${eduInfo.edu_place }" required
                           <c:if test="${eduInfo.edu_list_status != '임시저장'}">readonly</c:if>>
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육인원</b></label>
-                          <input name="edu_personnel" type="number" class="form-control" value="${eduInfo.edu_personnel }"
+                          <input name="edu_personnel" type="number" class="form-control" value="${eduInfo.edu_personnel }" required
                           <c:if test="${eduInfo.edu_list_status != '임시저장'}">readonly</c:if>>
                         </div>
                       </div>
                       
                         <div class="form-group">
                           <label class="mb-2" style="font-size:16px !important"><b>교육 상세내용</b></label>
-                          <textarea name="edu_content" class="form-control" id="comment" rows="8" 
-                          <c:if test="${eduInfo.edu_list_status != '임시저장'}">readonly</c:if>>${eduInfo.edu_content }
-                          </textarea>
+                          <textarea name="edu_content" class="form-control" id="comment" rows="8" required
+                          <c:if test="${eduInfo.edu_list_status != '임시저장'}">readonly</c:if>
+                          >${eduInfo.edu_content }</textarea>
                         </div>
                         
                         <div style="display: flex; gap:10px; width:100%;">
@@ -140,12 +140,12 @@
                       <div class="form-group" style="display: flex; gap:10px; width:100%;">
                       <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육 시작일</b></label>
-                          <input name="edu_start_date" type="date" class="form-control" value="${eduInfo.edu_start_date }"
+                          <input name="edu_start_date" type="date" class="form-control" value="${eduInfo.edu_start_date }" required
                           <c:if test="${eduInfo.edu_list_status != '임시저장'}">readonly</c:if>>
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육 접수시작일</b></label>
-                          <input name="edu_apply_start" type="date" class="form-control" value="${eduInfo.edu_apply_start }"
+                          <input name="edu_apply_start" type="date" class="form-control" value="${eduInfo.edu_apply_start }" required
                           <c:if test="${eduInfo.edu_list_status != '임시저장'}">readonly</c:if>>
                         </div>
                       </div>
@@ -153,12 +153,12 @@
                       <div class="form-group" style="display: flex; gap:10px; width:100%;">
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육 종료일</b></label>
-                          <input name="edu_end_date"type="date" class="form-control" value="${eduInfo.edu_end_date }"
+                          <input name="edu_end_date"type="date" class="form-control" value="${eduInfo.edu_end_date }" required
                           <c:if test="${eduInfo.edu_list_status != '임시저장'}">readonly</c:if>>
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육 접수마감일</b></label>
-                          <input name="edu_apply_end" type="date" class="form-control" value="${eduInfo.edu_apply_end }"
+                          <input name="edu_apply_end" type="date" class="form-control" value="${eduInfo.edu_apply_end }" required
                           <c:if test="${eduInfo.edu_list_status != '임시저장'}">readonly</c:if>>
                         </div>
                       </div>
@@ -206,7 +206,7 @@
         	});
         	
         	//수정하기 버튼 클릭 시 submit하기(썸네일 없을 시 swal)
-            $('#eduUpdateBtn').click(function(event){
+            $('#eduUpdateForm').on('submit', function(event){
             	event.preventDefault();
             	// 기존사진x, 신규사진x
             	if (!$('#thumbnail').attr('src') && !$('#edu_thumbnail').val()) {
@@ -247,7 +247,7 @@
 	   	            	    icon: "success",
 	   	            	    buttons: "OK", 
 	   	            	}).then(function() {
-	   	            		$('#eduUpdateForm').submit();
+	   	            		$('#eduUpdateForm').off('submit').submit();
 	                      });
 	 	             	}
 	                  });

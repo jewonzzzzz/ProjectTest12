@@ -9,8 +9,14 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.Init.domain.BankTransperVO;
 import com.Init.domain.EduListVO;
 import com.Init.domain.WorkflowVO;
 import com.Init.service.EduService;
@@ -357,9 +364,43 @@ public class EduController {
 		eService.updateEduListForSigning(edu_id);
 	}
 	
-	
-	
-	
+	// 신청자명단 클릭 후 엑셀내려받기 클릭 시
+	@PostMapping(value = "downloadEduPersonInfo")
+	public String downloadEduPersonInfo(@RequestParam("eduPersonInfos") List<String> empIds, 
+			HttpServletResponse response) throws IOException {
+		logger.debug(empIds.toString());
+		
+		Workbook workbook = new XSSFWorkbook();
+		Sheet sheet = workbook.createSheet("EduPersonInfo");
+		
+		// 교육신청자 명단 가져오기
+		List<EduListVO> eduPersonInfos = eService.downloadEduPersonInfo(empIds);
+		
+		 // 2. 헤더 생성 (첫 번째 행)
+        String[] headers = { "본부", "부서", "사원번호", "사원이름"};
+        Row headerRow = sheet.createRow(0);
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+        }
+        
+        int rowNum = 1; // 두 번째 행부터 데이터 시작
+        for (EduListVO dto : eduPersonInfos) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(dto.getEmp_bnum());
+            row.createCell(1).setCellValue(dto.getDname());
+            row.createCell(2).setCellValue(dto.getEmp_id());
+            row.createCell(3).setCellValue(dto.getEmp_name());
+        }
+		
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=\"data.xlsx\"");
+        
+        workbook.write(response.getOutputStream());
+        workbook.close();
+		
+		return "/edu/eduManage";
+	}
 	
 	
 	

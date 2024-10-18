@@ -171,8 +171,8 @@
         		compareCheckStatus();
         	});
         	
-        	 // 개별 체크박스 클릭 이벤트
-            $('input[type="checkbox"]').on('change', function () {
+        	// 개별 체크박스 클릭 이벤트
+            $('#basic-datatables tbody').on('change', 'input[type="checkbox"]', function () {
                 compareCheckStatus(); // 체크 상태 비교
             });
         	
@@ -282,19 +282,19 @@
             		success: function(response) {
             			if(response.length > 0){
             			swal("Success!", "직원 교육정보 조회완료", "success");
-                        $('#basic-datatables tbody').empty();
+            			dataTable.clear();
             			response.forEach(function(data){
-                        	var row = '<tr>' +
-                            '<td style="text-align: center;"><input type="checkbox" data-id="edu_his_id" name="edu_his_id" value="' + data.edu_his_id + '"></td>' +
-                            '<td style="text-align: center;">' + data.emp_id + '</td>' +
-                            '<td style="text-align: center;">' + data.emp_name + '</td>' +
-                            '<td style="text-align: center;">' + data.edu_name + '</td>' +
-                            '<td style="text-align: center;">' + data.edu_start_date + '</td>' +
-                            '<td style="text-align: center;">' + data.edu_end_date + '</td>' +
-                            '<td style="text-align: center;">' + data.edu_status + '</td>' +
-                            '</tr>';
-                            $('#basic-datatables tbody').append(row);
+                            dataTable.row.add([
+	                            '<input type="checkbox" data-id="edu_his_id" name="edu_his_id" value="' + data.edu_his_id + '">',
+	                            data.emp_id,
+	                            data.emp_name,
+	                            data.edu_name,
+	                            data.edu_start_date,
+	                            data.edu_end_date,
+	                            data.edu_status
+                            ]);
                         });
+            				dataTable.draw();
             			} else {
             				swal("정보없음!", "검색하신 결과가 없습니다.", "warning");
             			}
@@ -306,14 +306,17 @@
             });
             
          	// 데이터테이블 설정
-            $("#basic-datatables").DataTable({
+            let dataTable = $("#basic-datatables").DataTable({
             	pageLength: 6,
+            	destroy: true,
             	drawCallback: function() { //가운대 정렬
         			$('#basic-datatables th, #basic-datatables td').css({
         	            'text-align': 'center',
         	            'vertical-align': 'middle'
         	        });
-        		}
+	                $('input[type="checkbox"]').prop('checked', false);
+	                compareCheckStatus();
+        		},
             });
         });
     </script>

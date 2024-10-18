@@ -69,8 +69,13 @@ public interface EduService {
 	// 결재요청 시 교육리스트 상태를 결재중으로 변경
 	public void updateEduListForSigning(String edu_id);
 	
+	// 결재완료 시 교육리스트 상태를 결재완료로 변경
+	public void whenEduSignComplete(String edu_id);
 	
+	// 결재반려 시 교육리스트 상태를 반려로 변경
+	public void whenEduSignReject(String edu_id);
 	
-	
+	// 교육신청명단에서 엑셀 내려받기 시 직원정보 가져오기
+	public List<EduListVO> downloadEduPersonInfo(List<String> empIds);
 	
 }

@@ -223,11 +223,17 @@ public class SalaryDAOImpl implements SalaryDAO{
 		return sqlSession.selectOne(NAMESPACE+".getWfCode");
 	}
 	
+	// 결재완료 시 급여내역리스트 상태를 결재완료로 변경
+	@Override
+	public void whenSalarySignComplete(String sal_list_id) {
+		sqlSession.update(NAMESPACE+".whenSalarySignComplete", sal_list_id);
+	}
 	
-	
-	
-	
-	
+	// 결재반려 시 급여내역리스트 상태를 반려로 변경
+	@Override
+	public void whenSalarySignReject(String sal_list_id) {
+		sqlSession.update(NAMESPACE+".whenSalarySignReject", sal_list_id);
+	}
 	
 	
 	

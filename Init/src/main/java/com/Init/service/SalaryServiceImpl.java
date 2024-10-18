@@ -200,11 +200,17 @@ public class SalaryServiceImpl implements SalaryService{
 		return sdao.getWfCode();
 	}
 	
+	// 결재완료 시 급여내역리스트 상태를 결재완료로 변경
+	@Override
+	public void whenSalarySignComplete(String sal_list_id) {
+		sdao.whenSalarySignComplete(sal_list_id);
+	}
 	
-	
-	
-	
-	
+	// 결재반려 시 급여내역리스트 상태를 반려로 변경
+	@Override
+	public void whenSalarySignReject(String sal_list_id) {
+		sdao.whenSalarySignReject(sal_list_id);
+	}
 	
 	
 }

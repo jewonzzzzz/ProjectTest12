@@ -121,7 +121,7 @@
                       <tbody>
                       	<tr>
                       	  <td>${calSalaryListInfo.sal_type }</td>
-                      	  <td>${calSalaryListInfo.year }</td>
+                      	  <td class="year">${calSalaryListInfo.year }</td>
                       	  <td>${calSalaryListInfo.month }</td>
                       	  <td id="sumMember"></td>
                       	  <td id="sumSalBasic"></td>
@@ -230,6 +230,31 @@
             
             // 대상인원 출력
             $('#sumMember').text($('#calSalaryTable tbody tr').length);
+            
+            function addCommasToNumber(num) {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            const filteredTds = $('td').not('.year');
+            
+            filteredTds.each(function() {
+                // 현재 <td>의 텍스트 가져오기
+                const currentText = $(this).text();
+                
+                // 숫자인 경우에만 쉼표 추가
+                if ($.isNumeric(currentText)) {
+                    const formattedNumber = addCommasToNumber(currentText);
+                    $(this).text(formattedNumber);  // 쉼표가 추가된 값으로 텍스트 업데이트
+                }
+            });
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
         });
     </script>

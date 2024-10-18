@@ -102,9 +102,11 @@ public interface SalaryDAO {
 	// 가장 최근의 워크플로우 번호 가져오기
 	public String getWfCode();
 	
+	// 결재완료 시 급여내역리스트 상태를 결재완료로 변경
+	public void whenSalarySignComplete(String sal_list_id);
 	
-	
-	
+	// 결재반려 시 급여내역리스트 상태를 반려로 변경
+	public void whenSalarySignReject(String sal_list_id);
 	
 	
 	

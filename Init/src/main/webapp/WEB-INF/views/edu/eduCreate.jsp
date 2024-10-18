@@ -97,32 +97,32 @@
                       <div class="form-group" style="display: flex; gap:10px;">
                         <div style="flex:4;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육명</b></label>
-                          <input name="edu_name" type="text" class="form-control"  placeholder="교육명을 입력하세요">
+                          <input name="edu_name" type="text" class="form-control" required placeholder="교육명을 입력하세요">
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육구분</b></label>
-                          <select class="form-select form-control" id="defaultSelect" name="edu_type">
+                          <select class="form-select form-control" id="defaultSelect" name="edu_type" required>
                             <option>사내교육</option>
                             <option>외부교육</option>
                           </select>
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>강사명</b></label>
-                          <input name="edu_teacher" type="text" class="form-control" placeholder="강사명 입력">
+                          <input name="edu_teacher" type="text" class="form-control" placeholder="강사명 입력" required>
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육장소</b></label>
-                          <input name="edu_place" type="text" class="form-control" placeholder="교육장소 입력">
+                          <input name="edu_place" type="text" class="form-control" placeholder="교육장소 입력" required>
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육인원</b></label>
-                          <input name="edu_personnel" type="number" class="form-control" placeholder="교육인원 입력">
+                          <input name="edu_personnel" type="number" class="form-control" placeholder="교육인원 입력" required>
                         </div>
                       </div>
                       
                         <div class="form-group">
                           <label class="mb-2" style="font-size:16px !important"><b>교육 상세내용</b></label>
-                          <textarea name="edu_content" class="form-control" id="comment" rows="8"> </textarea>
+                          <textarea name="edu_content" class="form-control" id="comment" rows="8" required> </textarea>
                         </div>
                         
                         <div style="display: flex; gap:10px; width:100%;">
@@ -130,22 +130,22 @@
                       <div class="form-group" style="display: flex; gap:10px; width:100%;">
                       <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육 시작일</b></label>
-                          <input name="edu_start_date" type="date" class="form-control">
+                          <input name="edu_start_date" type="date" class="form-control" required>
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육 접수시작일</b></label>
-                          <input name="edu_apply_start" type="date" class="form-control" >
+                          <input name="edu_apply_start" type="date" class="form-control" required>
                         </div>
                       </div>
                       
                       <div class="form-group" style="display: flex; gap:10px; width:100%;">
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육 종료일</b></label>
-                          <input name="edu_end_date"type="date" class="form-control">
+                          <input name="edu_end_date"type="date" class="form-control" required>
                         </div>
                         <div style="flex:1;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육 접수마감일</b></label>
-                          <input name="edu_apply_end" type="date" class="form-control" >
+                          <input name="edu_apply_end" type="date" class="form-control" required>
                         </div>
                       </div>
                       </div>
@@ -153,7 +153,7 @@
                       <div style="flex:1;">
                         <div class="form-group" style="display: flex; gap:10px;">
                           <label class="mb-2" style="font-size:16px !important"><b>교육 썸네일</b></label>
-                          <input name="edu_thumbnail" type="file" class="form-control-file" id="edu_thumbnail">
+                          <input name="edu_thumbnail" type="file" class="form-control-file" id="edu_thumbnail" required>
                           <div id="thumbnail_preView" style="width: 180px; height: 180px;" >
                           </div>
                         </div>
@@ -188,12 +188,8 @@
         	});
         	
         	//교육생성 버튼 클릭 시 submit하기
-            $('#eduCreatedBtn').click(function(event){
+            $('#eduCreateForm').on('submit', function(event){
             	event.preventDefault();
-            	
-            	if ($('#edu_thumbnail').val() === "") {
-            		swal("Error!", "교육 썸네일을 등록해주세요!", "error");
-            	} else {
             	swal({
    	              title: "교육을 등록하시겠습니까?",
    	              text: "임시저장되며 결재요청은 상세페이지에서 가능합니다.",
@@ -217,13 +213,19 @@
    	            	    icon: "success",
    	            	    buttons: "OK", 
    	            	}).then(function() {
-   	            		$('#eduCreateForm').submit();
+   	            		$('#eduCreateForm').off('submit').submit();
                       });
  	             	}
                   });
-            	}
         	});
-        
+        	
+        	
+        	
+        	
+        	
+        	
+        	
+        	
         });//ready
         </script>
                  

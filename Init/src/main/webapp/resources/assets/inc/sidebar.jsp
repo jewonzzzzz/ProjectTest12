@@ -97,7 +97,7 @@
               <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#maps">
                   <i class="fas fa-map-marker-alt"></i>
-                  <p>교육</p>
+                  <p>교육관리</p>
                   <span class="caret"></span>
                 </a>
                 <div class="collapse" id="maps">
@@ -128,19 +128,29 @@
               <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#charts">
                   <i class="far fa-chart-bar"></i>
-                  <p>Charts</p>
+                  <p>성과관리</p>
                   <span class="caret"></span>
                 </a>
                 <div class="collapse" id="charts">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="charts/charts.html">
-                        <span class="sub-item">Chart Js</span>
+                      <a href="/eval/evalManage">
+                        <span class="sub-item">성과관리(관리자)</span>
                       </a>
                     </li>
                     <li>
                       <a href="charts/sparkline.html">
-                        <span class="sub-item">Sparkline</span>
+                        <span class="sub-item">성과이력관리(관리자)</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="charts/charts.html">
+                        <span class="sub-item">성과보고</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="charts/sparkline.html">
+                        <span class="sub-item">성과평가</span>
                       </a>
                     </li>
                   </ul>

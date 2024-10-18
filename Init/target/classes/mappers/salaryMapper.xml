@@ -64,7 +64,7 @@
 	<!-- 급여생성 중복방지 체크 -->
 	<select id="checkCreateSalary" resultType="CalSalaryListVO">
 		select * from salary_list where sal_type = #{sal_type} and year= #{year} and month=#{month} 
-		limit 1  
+		and sal_list_status not in ('반려') limit 1   
 	</select>
 	
 	<!-- 사번으로 직원정보 가져오기 -->
@@ -236,6 +236,20 @@
 	<!-- 가장 최근의 워크플로우 번호 가져오기 -->
 	<select id="getWfCode" resultType="String">
 		select wf_code from workflow order by wf_code desc limit 1 
+	</select>
+	
+	<!-- 결재완료 시 급여내역리스트 상태를 결재완료로 변경 -->
+	<select id="whenSalarySignComplete">
+		update salary_list 
+		set sal_list_status = '결재완료' 
+		where sal_list_id = #{sal_list_id} 
+	</select>
+	
+	<!-- 결재반려 시 급여내역리스트 상태를 반려로 변경 -->
+	<select id="whenSalarySignReject">
+		update salary_list 
+		set sal_list_status = '반려' 
+		where sal_list_id = #{sal_list_id} 
 	</select>
 
 </mapper>

@@ -82,7 +82,7 @@
             
             <div class="row">
             <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round" style="background-color:#eee;">
+                <div class="card card-stats card-round" style="background-color:#e9ecef;">
                   <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col-icon">
@@ -126,7 +126,7 @@
               </div>
               
               <div class="col-sm-6 col-md-3">
-                <div class="card card-stats card-round" style="background-color:#eee;">
+                <div class="card card-stats card-round" style="background-color:#e9ecef;">
                   <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col-icon">

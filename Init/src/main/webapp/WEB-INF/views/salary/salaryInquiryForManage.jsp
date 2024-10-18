@@ -158,20 +158,20 @@
             			
             			if(response.length > 0){
             				swal("Success!", "직원 급여정보 조회완료", "success");
-	                        $('#basic-datatables tbody').empty();
+            				dataTable.clear();
 	            			response.forEach(function(data){
-                        	var row = '<tr>' +
-                            '<td style="text-align: center;">' + data.emp_id + '</td>' +
-                            '<td style="text-align: center;">' + data.sal_type + '</td>' +
-                            '<td style="text-align: center;">' + data.year + '</td>' +
-                            '<td style="text-align: center;">' + data.month + '</td>' +
-                            '<td style="text-align: center;">' + data.sal_total_before + '</td>' +
-                            '<td style="text-align: center;">' + data.sal_total_deduct + '</td>' +
-                            '<td style="text-align: center;">' + data.sal_total_after + '</td>' +
-                            '<td style="text-align: center;"><a href="/salary/salaryDetail?sal_final_id=' + data.sal_final_id + '">상세보기</a></td>' +
-                            '</tr>';
-                            $('#basic-datatables tbody').append(row);
+                            dataTable.row.add([
+	                            data.emp_id,
+	                            data.sal_type,
+	                            '<span class="year">' + data.year + '</span>',
+	                            data.month,
+	                            data.sal_total_before,
+	                            data.sal_total_deduct,
+	                            data.sal_total_after,
+	                            '<a href="/salary/salaryDetail?sal_final_id=' + data.sal_final_id + '">상세보기</a>'
+                            ]);
                         });
+	            			dataTable.draw();
             			} else {
             				swal("정보없음!", "검색하신 결과가 없습니다", "warning");
             			}
@@ -182,15 +182,40 @@
             	});
             });
             
-            $("#basic-datatables").DataTable({
+            let dataTable = $("#basic-datatables").DataTable({
             	pageLength: 6,
             	drawCallback: function() { //가운대 정렬
         			$('#basic-datatables th, #basic-datatables td').css({
         	            'text-align': 'center',
         	            'vertical-align': 'middle'
         	        });
+        			addCommasToNumbersInTable();
         		}
             });
+            
+            function addCommasToNumber(num) {
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            function addCommasToNumbersInTable() {
+                const filteredTds = $('#basic-datatables tbody td').not(':has(.year)');
+
+                filteredTds.each(function() {
+                    const currentText = $(this).text();
+
+                    // 숫자인 경우에만 쉼표 추가
+                    if ($.isNumeric(currentText)) {
+                        const formattedNumber = addCommasToNumber(currentText);
+                        $(this).text(formattedNumber);  // 쉼표가 추가된 값으로 텍스트 업데이트
+                    }
+                });
+            }
+            
+            
+            
+            
+            
+            
+            
         });
     </script>
 <!------------------------------------------------------------------------------------------------------------------>

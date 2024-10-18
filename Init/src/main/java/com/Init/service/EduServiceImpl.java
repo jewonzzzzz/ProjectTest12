@@ -144,11 +144,23 @@ public class EduServiceImpl implements EduService {
 		edao.updateEduListForSigning(edu_id);
 	}
 	
+	// 결재완료 시 교육리스트 상태를 결재완료로 변경
+	@Override
+	public void whenEduSignComplete(String edu_id) {
+		edao.whenEduSignComplete(edu_id);
+	}
 	
+	// 결재반려 시 교육리스트 상태를 반려로 변경
+	@Override
+	public void whenEduSignReject(String edu_id) {
+		edao.whenEduSignReject(edu_id);
+	}
 	
-	
-	
-	
+	// 교육신청명단에서 엑셀 내려받기 시 직원정보 가져오기
+	@Override
+	public List<EduListVO> downloadEduPersonInfo(List<String> empIds) {
+		return edao.downloadEduPersonInfo(empIds);
+	}
 	
 	
 }
