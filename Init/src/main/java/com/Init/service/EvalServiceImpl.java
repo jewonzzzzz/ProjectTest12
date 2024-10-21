@@ -80,7 +80,11 @@ public class EvalServiceImpl implements EvalService{
 		return evdao.getHisEvaReport(vo);
 	}
 	 
-	 
+	// 성과보고 내용 수정하기
+	@Override
+	public void updateEvalReport(EvalVO vo) {
+		evdao.updateEvalReport(vo);
+	}
 	 
 	 
 	

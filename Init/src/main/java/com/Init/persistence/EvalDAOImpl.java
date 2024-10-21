@@ -83,7 +83,11 @@ public class EvalDAOImpl implements EvalDAO {
 		return sqlSession.selectOne(NAMESPACE+".getHisEvaReport", vo);
 	}
 	
-	
+	// 성과보고 내용 수정하기
+	@Override
+	public void updateEvalReport(EvalVO vo) {
+		sqlSession.update(NAMESPACE+".updateEvalReport", vo);
+	}
 	
 	
 }

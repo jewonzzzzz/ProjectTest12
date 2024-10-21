@@ -24,4 +24,5 @@ public class EvalVO {
 	private String score_total;
 	private String eval_grade;
 	private String comment;
+	private String eval_his_status;
 }

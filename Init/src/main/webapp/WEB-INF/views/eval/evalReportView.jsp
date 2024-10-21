@@ -57,7 +57,8 @@
           <div class="page-inner">
 <!------------------------------------------------------------------------------------------------------------------>
 <%-- ${evalReportInfo }
-${evalHisReportInfo } --%>
+${evalHisReportInfo }
+${checkHisInfo } --%>
 	      <div class="page-header">
               <h3 class="fw-bold mb-3">성과보고</h3>
               <ul class="breadcrumbs mb-3">
@@ -89,6 +90,7 @@ ${evalHisReportInfo } --%>
                     <div class="card-title">성과보고</div>
                     <div>
 		              <button type="submit" id="saveEvalBtn" class="btn btn-primary">저장하기</button>
+		              <button type="button" id="updateEvalBtn" class="btn btn-primary">수정하기</button>
 		              <button type="button" class="btn btn-primary" onclick="location.href='/eval/reportEval'">목록으로</button>
 		            </div>
                     </div>
@@ -105,7 +107,7 @@ ${evalHisReportInfo } --%>
                         <div class="form-group">
                           <label class="mb-2" style="font-size:16px !important"><b>업무성과 상세보고</b></label>
                           <textarea name="content" class="form-control" id="comment" rows="9" required
-                          ><c:choose><c:when test="${evalHisReportInfo.eval_his_id != null}">${evalHisReportInfo.content }</c:when
+                          ><c:choose><c:when test="${checkHisInfo == 'yes'}">${evalHisReportInfo.content }</c:when
                           ><c:otherwise>[0월 업무성과]&#10;1.업무명&#10;:업무성과&#10;&#10;&#10;&#10;[최대 2000자]
 						    </c:otherwise></c:choose></textarea>
                           <div style="display: flex; justify-content: flex-end;">
@@ -125,17 +127,27 @@ ${evalHisReportInfo } --%>
             </div>
             <input type="hidden" name="eval_id" value="${evalReportInfo.eval_id }">
             <input type="hidden" name="emp_id" value="${emp_id }">
-            
-            
-            
-          </form>     
+          </form>
+          <form id="updateEvalForm" action="/eval/updateEvalReport" method="post">
+          </form>
                  
         <script>
         $(document).ready(function (){
         	
+        	// 작성한 내역이 있는지 없는지에 따른 저장/수정 버튼 토글
+        	var checkHisReportEval = "${checkHisInfo}";
+        	if(checkHisReportEval === 'yes'){
+        		$('#saveEvalBtn').css('display', 'none');
+        	} else {
+        		$('#updateEvalBtn').css('display', 'none');
+        	}
+        	
+        	
         	// 실시간 글자 수 및 최대글자 초과 방지
         	const maxChars = 2000;
-
+        	const initialLength = $('#comment').val().length;
+            $('#charCount').text(initialLength + " / " + maxChars + "자");
+        	
             $('#comment').on('input', function() {
                 const length = $(this).val().length;
                 $('#charCount').text(length + " / " + maxChars + "자");
@@ -151,7 +163,7 @@ ${evalHisReportInfo } --%>
             $('#saveEvalForm').on('submit', function(event){
             	event.preventDefault();
             	swal({
-   	              title: "성과보고를 저장하시겠습니까?",
+   	              title: "성과보고 내용을 저장하시겠습니까?",
    	              text: "성과보고 기간중에는 수정이 가능합니다.",
    	              type: "warning",
    	              buttons: {
@@ -179,9 +191,35 @@ ${evalHisReportInfo } --%>
                   });
         	});
         	
-        	
-        	
-        	
+        	// 수정버튼 클릭 시 수정form 수행
+        	$('#updateEvalBtn').click(function(){
+        		var updateEvalInfo = {
+        				eval_id: $('input[name="eval_id"]').val(),
+        				emp_id:$('input[name="emp_id"]').val(),
+        				content:$('#comment').val()
+        		}
+        		
+        		$.ajax({
+        			url:'/eval/updateEvalReport',
+            		type: 'POST',
+            		data: JSON.stringify(updateEvalInfo),
+            		contentType: 'application/json',
+            		success: function(response) {
+            			swal({
+       	            	    title: "Success!",
+       	            	    text: "수정완료",
+       	            	    icon: "success",
+       	            	    buttons: "OK", 
+       	            	}).then(function() {
+       	            		window.location.href = '/eval/evalReportView?eval_id=${evalReportInfo.eval_id}';
+                          });
+            		},
+            		error: function(xhr, status, error) {
+                        swal("Error!", "실패", "error");
+                    }
+            	});
+       		});
+        		
         	
         	
         	

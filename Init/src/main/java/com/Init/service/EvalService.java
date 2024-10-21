@@ -39,8 +39,8 @@ public interface EvalService {
 	// 성과보고 작성내역 확인용 가져오기
 	public EvalVO getHisEvaReport(EvalVO vo);
 	
-	
-	
+	// 성과보고 내용 수정하기
+	public void updateEvalReport(EvalVO vo);
 	
 	
 	

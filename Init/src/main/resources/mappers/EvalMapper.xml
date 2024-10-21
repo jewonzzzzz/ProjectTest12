@@ -57,8 +57,8 @@
 	
 	<!-- 성과보고 내용 성과이력테이블에 저장하기 -->
 	<select id="saveEvalReport">
-		insert into eval_his_list(eval_id, emp_id, content) 
-		values(#{eval_id}, #{emp_id}, #{content} ) 
+		insert into eval_his_list(eval_id, emp_id, content, eval_his_status) 
+		values(#{eval_id}, #{emp_id}, #{content}, '작성완료' ) 
 	</select>
 
 	<!-- 성과보고 작성내역 확인용 가져오기 -->
@@ -66,6 +66,17 @@
 		select * from eval_his_list where eval_id = #{eval_id} and emp_id = #{emp_id} 
 	</select>
 
-
-
+	<!-- 성과보고 내용 수정하기 -->
+	<select id="updateEvalReport" >
+		update eval_his_list 
+		set content = #{content} 
+		where eval_id = #{eval_id} and emp_id=#{emp_id} 
+	</select>
+	
+	
+	
+	
+	
+	
+	
 </mapper>

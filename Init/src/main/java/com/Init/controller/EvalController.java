@@ -129,6 +129,11 @@ public class EvalController {
 		vo.setEmp_id((String)session.getAttribute("emp_id"));
 		
 		EvalVO evalHisReportInfo = evService.getHisEvaReport(vo);
+		if(evalHisReportInfo == null) {
+			model.addAttribute("checkHisInfo", "no");
+		} else {
+			model.addAttribute("checkHisInfo", "yes");
+		}
 		
 		model.addAttribute("evalReportInfo", evalReportInfo);
 		model.addAttribute("evalHisReportInfo", evalHisReportInfo);
@@ -146,7 +151,15 @@ public class EvalController {
 		return "redirect:/eval/evalReportView?eval_id="+vo.getEval_id();
 	}
 	
-	
+	// 성과보고 내용 수정하기
+	@PostMapping(value = "updateEvalReport")
+	@ResponseBody
+	public String updateEvalReport(@RequestBody EvalVO vo) {
+		logger.debug(vo.toString());
+		evService.updateEvalReport(vo);
+		
+		return "ok";
+	}
 	
 	
 }
