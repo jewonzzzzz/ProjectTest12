@@ -79,7 +79,7 @@
                 </li>
               </ul>
             </div>
-		<form id="submitForm" action="/eval/evalCreate" method="post">
+		<form id="submitEvalForm" action="/eval/evalCreate" method="post">
             <div class="row">
               <div class="col-md-11">
                 <div class="col-md-12">
@@ -102,8 +102,8 @@
                             id="notify_placement_from"
                             name="eval_type"
                           >
-                            <option value="정기성과">정기평가</option>
-                            <option value="특별성과">특별평가</option>
+                            <option value="직원평가">직원평가</option>
+                            <option value="부서평가">부서평가</option>
                           </select>
                         </div>
                       </div>
@@ -123,7 +123,7 @@
                       </div>
                       <div class="form-group form-show-notify row" id="branchSelect">
                         <div class="col-lg-3 col-md-3 col-sm-4 text-end">
-                          <label>분기 :</label>
+                          <label>반기 :</label>
                         </div>
                         <div class="col-lg-4 col-md-9 col-sm-8">
                           <select
@@ -131,11 +131,55 @@
                             id="branch"
                             name="branch"
                           >
-                          <option value="1분기">1분기</option>
-                          <option value="2분기">2분기</option>
-                          <option value="3분기">3분기</option>
-                          <option value="4분기">4분기</option>
+                          <option value="상반기">상반기</option>
+                          <option value="하반기">하반기</option>
                           </select>
+                        </div>
+                      </div>
+                      
+                      <div class="form-group form-show-notify row">
+                        <div class="col-lg-3 col-md-3 col-sm-4 text-end">
+                          <label>보고시작일 :</label>
+                        </div>
+                        <div class="col-lg-2 col-md-9 col-sm-8">
+                          <input type="date" 
+				           class="form-control input-fixed" 
+				           name="eval_report_start"
+				           required
+				           style="margin-bottom: 0px; padding: 5px 14px; border-bottom-width: 1px;">
+                        </div>
+                        <div class="col-lg-1 col-md-3 col-sm-4 text-end">
+                          <label>보고종료일 :</label>
+                        </div>
+                        <div class="col-lg-4 col-md-9 col-sm-8">
+                          <input type="date" 
+				           class="form-control input-fixed" 
+				           name="eval_report_end"
+				           required
+				           style="margin-bottom: 0px; padding: 5px 14px; border-bottom-width: 1px;">
+                        </div>
+                      </div>
+                      
+                      <div class="form-group form-show-notify row">
+                        <div class="col-lg-3 col-md-3 col-sm-4 text-end">
+                          <label>평가시작일 :</label>
+                        </div>
+                        <div class="col-lg-2 col-md-9 col-sm-8">
+                          <input type="date" 
+				           class="form-control input-fixed" 
+				           name="eval_start_date"
+				           required
+				           style="margin-bottom: 0px; padding: 5px 14px; border-bottom-width: 1px;">
+                        </div>
+                        <div class="col-lg-1 col-md-3 col-sm-4 text-end">
+                          <label>평가종료일 :</label>
+                        </div>
+                        <div class="col-lg-4 col-md-9 col-sm-8">
+                          <input type="date" 
+				           class="form-control input-fixed" 
+				           name="eval_end_date"
+				           required
+				           style="margin-bottom: 0px; padding: 5px 14px; border-bottom-width: 1px;">
                         </div>
                       </div>
                       
@@ -147,7 +191,7 @@
                           <input type="text" 
 				           class="form-control input-fixed" 
 				           name="eval_name"
-				           placeholder="0000년 0분기 정기성과" 
+				           placeholder="0000년 0분기 직원평가" 
 				           required
 				           style="width:300px; margin-bottom: 0px; padding: 5px 14px; border-bottom-width: 1px;">
                         </div>
@@ -162,7 +206,7 @@
                           <button type="button" class="btn btn-primary" onclick="history.back()">목록으로</button>
                         </div>
                         <div class="col-lg-4 col-md-9 col-sm-12">
-                          <button id="nextBtn" class="btn btn-primary">
+                          <button id="regBtn" class="btn btn-primary">
                             등록하기
                           </button>
                         </div>
@@ -186,16 +230,42 @@
                 $('#yearSelect').append(new Option(year, year));  // Option 생성 및 추가
             }
             
-         	// 특별성과 선택 시 평가분기 셀렉트 가리기
-            $('select[name="eval_type"]').change(function() {
-		        if ($(this).val() === '특별성과') {
-		          $('#branchSelect').hide();  // div 보이기
-		        } else {
-		          $('#branchSelect').show();  // div 숨기기
-		        }
-	      	});
-            
-            
+         	
+            // 등록 전 동일한 내역이 있는지 확인
+            $('#submitEvalForm').on('submit', function(event){
+            	event.preventDefault();
+
+				var checkEvalInfo ={
+						eval_type: $('select[name="eval_type"]').val(),
+						year: $('select[name="year"]').val(),
+						branch: $('select[name="branch"]').val()
+				}
+				
+            	$.ajax({
+            		url:'/eval/checkCreateEval',
+            		type: 'POST',
+            		data: JSON.stringify(checkEvalInfo),
+            		contentType: 'application/json',
+            		success: function(response) {
+            			//중복여부 체크
+            			if(response === 'ok'){
+            				swal({
+ 	                            title: "Success!",
+ 	                            text: "생성이 완료되었습니다!",
+ 	                            icon: "success",
+ 	                            button: "OK"
+ 	                        }).then(function() {
+ 	                        	$('#submitEvalForm').off('submit').submit();
+ 	                        });
+            			} else {
+                        	swal("Error!", "중복된 입력정보가 있습니다." , "error");
+            			}
+            		},
+            		error: function(xhr, status, error) {
+                        swal("Error!", "실패", "error");
+                    }
+            	});
+            });
             
          	
          	

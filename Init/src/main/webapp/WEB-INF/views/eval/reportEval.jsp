@@ -56,7 +56,7 @@
         <div class="container">
           <div class="page-inner">
 <!------------------------------------------------------------------------------------------------------------------>
-<%-- ${evalListInfo } --%>
+<%-- ${evalReportInfo } --%>
 <div class="page-header">
               <h3 class="fw-bold mb-3">성과관리</h3>
               <ul class="breadcrumbs mb-3">
@@ -84,26 +84,7 @@
                 <div class="card">
                   <div class="card-header">
                     <div style="display: flex; justify-content:space-between;">
-	                    <div class="card-title">성과관리(관리자)</div>
-	                  	<div style="margin-right: 10px;">
-	                    	<a href="/eval/evalCreate"><button class="btn btn-primary">신규등록</button></a>
-	                   	<form id="deleteSubmit" action="/eval/deleteEvalInfo" method="post" style="display: inline-block;">
-                    		<input type="hidden" id="inputForDelete" name="eval_id">
-                    		<button type="submit" class="btn btn-danger" id="deleteBtn" disabled>삭제하기</button>
-                    	</form>
-                    	<form id="reportEvalSubmit" action="/eval/updateEvalInfoToReport" method="post" style="display: inline-block;">
-                    		<input type="hidden" id="inputReportEval" name="eval_id">
-                    		<button type="submit" class="btn btn-primary" id="reportEvalBtn" disabled>성과보고</button>
-                    	</form>
-                    	<form id="startEvalSubmit" action="/eval/startEval" method="post" style="display: inline-block;">
-                    		<input type="hidden" id="inputStartEval" name="eval_id">
-                    		<button type="submit" class="btn btn-primary" id="startEvalBtn" disabled>평가시작</button>
-                    	</form>
-                    	<form id="endEvalSubmit" action="/eval/endEval" method="post" style="display: inline-block;">
-                    		<input type="hidden" id="inputEndEval" name="eval_id">
-                    		<button type="submit" class="btn btn-primary" id="endEvalBtn" disabled>평가종료</button>
-                    	</form>
-	                   	</div>
+	                    <div class="card-title">성과보고</div>
                   	</div>
                   </div>
                   <div class="card-body" style="padding-top: 10px;">
@@ -111,29 +92,23 @@
                         class="display table table-striped table-hover">
                       <thead>
                         <tr>
-                          <th scope="col">선택</th>
                           <th scope="col">연도</th>
                           <th scope="col">반기</th>
                           <th scope="col">평가유형</th>
                           <th scope="col">성과평가명</th>
-                          <th scope="col">평가시작일</th>
-                          <th scope="col">평가종료일</th>
-                          <th scope="col">상태</th>
+                          <th scope="col">보고시작일</th>
+                          <th scope="col">보고종료일</th>
                         </tr>
                       </thead>
                       <tbody>
-                      <c:forEach var="list" items="${evalListInfo }">
                       	<tr>
-                      		<td><input type="checkbox" data-id="eval_id" name="eval_id" value="${list.eval_id }"></td>
-                      		<td>${list.year }</td>
-                      		<td>${list.branch }</td>
-                      		<td>${list.eval_type }</td>
-                      		<td>${list.eval_name }</td>
-                      		<td>${list.eval_start_date }</td>
-                      		<td>${list.eval_end_date }</td>
-                      		<td>${list.eval_status }</td>
+                      		<td>${evalReportInfo.year }</td>
+                      		<td>${evalReportInfo.branch }</td>
+                      		<td>${evalReportInfo.eval_type }</td>
+                      		<td><a href="/eval/evalReportView?eval_id=${evalReportInfo.eval_id }">${evalReportInfo.eval_name }</a></td>
+                      		<td>${evalReportInfo.eval_report_start }</td>
+                      		<td>${evalReportInfo.eval_report_end }</td>
                       	</tr>
-                      </c:forEach>
                       </tbody>
                     </table>
                   </div>
@@ -155,122 +130,6 @@
         	        });
         		}
         	});
-        	
-        	// 체크박스 체크여부에 다른 동작 분리(다중체크방지)
-        	$('#basic-datatables tbody').on('click', 'input[type="checkbox"]', function() {
-                if ($(this).is(':checked')) {
-                    // 하나만 체크할 수 있도록 하는 기능
-                    $('input[type="checkbox"]').not(this).prop('checked', false);
-                }
-            });
-        	
-        	// 체크여부에 따라 결재요청 버튼 활성화(체크버튼 클릭 + 평가준비)
-        	$('#basic-datatables tbody').on('click', 'input[type="checkbox"]', function() {
-        		var tdText = $(this).closest('tr').find('td:eq(7)').text();
-	        	if($(this).is(':checked') && tdText === '평가준비') {
-	                $('#deleteBtn').prop('disabled', false);
-	                $('#reportEvalBtn').prop('disabled', false);
-	        	} else {
-                    $('#deleteBtn').prop('disabled', true);
-                    $('#reportEvalBtn').prop('disabled', true);
-                }
-        	});
-        	
-        	// 체크여부에 따라 결재요청 버튼 활성화(체크버튼 클릭 + 성과보고)
-        	$('#basic-datatables tbody').on('click', 'input[type="checkbox"]', function() {
-        		var tdText = $(this).closest('tr').find('td:eq(7)').text();
-	        	if($(this).is(':checked') && tdText === '성과보고') {
-	                $('#startEvalBtn').prop('disabled', false);
-	        	} else {
-                    $('#startEvalBtn').prop('disabled', true);
-                }
-        	});
-        	
-        	// 체크여부에 따라 결재요청 버튼 활성화(체크버튼 클릭 + 평가시작)
-        	$('#basic-datatables tbody').on('click', 'input[type="checkbox"]', function() {
-        		var tdText = $(this).closest('tr').find('td:eq(7)').text();
-	        	if($(this).is(':checked') && tdText === '평가시작') {
-	                $('#endEvalBtn').prop('disabled', false);
-	        	} else {
-                    $('#endEvalBtn').prop('disabled', true);
-                }
-        	});
-        	
-        	// 삭제버튼 시 리스트id 가지고 이동하기
-            $('#deleteBtn').click(function(event){
-            	event.preventDefault();
-            	swal({
-     	              title: "삭제하시겠습니까?",
-     	              text: "삭제 후에는 신규등록을 통해 재등록 가능합니다.",
-     	              type: "warning",
-     	              buttons: {
-     	                cancel: {
-     	                  visible: true,
-     	                  text: "취소하기",
-     	                  className: "btn btn-danger",
-     	                },
-     	                confirm: {
-     	                  text: "삭제하기",
-     	                  className: "btn btn-success",
-     	                },
-     	              },
-     	            }).then(function(willDelete) {  // 일반 함수 문법으로 변경
-     	             if (willDelete) {
-     	            	$('#inputForDelete').val($('input[name="eval_id"]:checked').val());
-     	            	swal({
-     	            	    title: "Success!",
-     	            	    text: "삭제완료",
-     	            	    icon: "success",
-     	            	    buttons: "OK", 
-     	            	}).then(function() {
-     	            		$('#deleteSubmit').submit();
-                        });
-   	             	}
-                    });
-   	     	 });
-        	
-         // 성과보고 클릭 시 리스트id 가지고 이동하기
-            $('#reportEvalBtn').click(function(event){
-            	event.preventDefault();
-            	swal({
-     	              title: "성과보고를 시작하시겠습니까?",
-     	              text: "성과보고 후에는 삭제가 불가능합니다.",
-     	              type: "warning",
-     	              buttons: {
-     	                cancel: {
-     	                  visible: true,
-     	                  text: "취소하기",
-     	                  className: "btn btn-danger",
-     	                },
-     	                confirm: {
-     	                  text: "성과보고",
-     	                  className: "btn btn-success",
-     	                },
-     	              },
-     	            }).then(function(willDelete) {  // 일반 함수 문법으로 변경
-     	             if (willDelete) {
-     	            	$('#inputReportEval').val($('input[name="eval_id"]:checked').val());
-     	            	swal({
-     	            	    title: "Success!",
-     	            	    text: "변경완료",
-     	            	    icon: "success",
-     	            	    buttons: "OK", 
-     	            	}).then(function() {
-     	            		$('#reportEvalSubmit').submit();
-                        });
-   	             	}
-                    });
-   	     	 });
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
-        	
         	
          	
         });

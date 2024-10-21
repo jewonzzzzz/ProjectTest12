@@ -144,7 +144,7 @@
                       </a>
                     </li>
                     <li>
-                      <a href="charts/charts.html">
+                      <a href="/eval/reportEval">
                         <span class="sub-item">성과보고</span>
                       </a>
                     </li>

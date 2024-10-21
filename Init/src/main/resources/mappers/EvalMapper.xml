@@ -5,13 +5,66 @@
   
 <mapper namespace="com.Init.mapper.EvalMapper">
 
+	<!-- 성과평가 신규등록 하기 -->
 	<select id="evalCreate">
-		insert into eval_list(eval_id, eval_type, eval_name, year, branch, eval_status) 
-		values(#{eval_id}, #{eval_type}, #{eval_name}, #{year}, #{branch}, #{eval_status}) 
-		
+		insert into eval_list(eval_id, eval_type, eval_name, year, branch, eval_report_start, eval_report_end, 
+		eval_start_date, eval_end_date, eval_status) 
+		values(#{eval_id}, #{eval_type}, #{eval_name}, #{year}, #{branch}, #{eval_report_start}, #{eval_report_end}, 
+		#{eval_start_date}, #{eval_end_date}, '평가준비') 
+	</select>
+	
+	<!-- 올해 첫 평가번호가 있는지 확인하기 -->
+	<select id="checkEvalId" resultType="String">
+		select eval_id from eval_list where eval_id = #{eval_id} 
 	</select>
 
+	<!-- 가장 최근의 eval_id 가져오기  -->
+	<select id="getEvalId" resultType="String">
+		select eval_id from eval_list order by eval_id desc limit 1
+	</select>
+	
+	<!-- 가장 최근의 eval_id 가져오기  -->
+	<select id="getEvalList" resultType="EvalVO">
+		select * from eval_list order by year desc, branch desc 
+	</select>
 
+	<!-- 유형/연도/반기로 중복여부 확인 -->
+	<select id="checkCreateEval" resultType="EvalVO">
+		select * from eval_list where year=#{year} and branch=#{branch} and eval_type=#{eval_type} 
+	</select>
+	
+	<!-- 성과평가 리스트 삭제 -->
+	<select id="deleteEvalInfo">
+		delete from eval_list where eval_id=#{eval_id} 
+	</select>
+	
+	<!-- 성과보고를 위한 성과평가리스트 가져오기 -->
+	<select id="getEvalReportList" resultType="EvalVO">
+		select * from eval_list where eval_status = '성과보고' 
+	</select>
+	
+	<!-- 성과보고 클릭 시 평가준비에서 성과보고로 변경 -->
+	<select id="updateEvalInfoToReport">
+		update eval_list 
+		set eval_status = '성과보고' 
+		where eval_id=#{eval_id} 
+	</select>
+
+	<!-- 성과보고 페이지 업무성과 보고대상용 리스트 정보 가져오기 -->
+	<select id="getEvalInfoForView" resultType="EvalVO">
+		select * from eval_list where eval_id = #{eval_id}  
+	</select>
+	
+	<!-- 성과보고 내용 성과이력테이블에 저장하기 -->
+	<select id="saveEvalReport">
+		insert into eval_his_list(eval_id, emp_id, content) 
+		values(#{eval_id}, #{emp_id}, #{content} ) 
+	</select>
+
+	<!-- 성과보고 작성내역 확인용 가져오기 -->
+	<select id="getHisEvaReport" resultType="EvalVO">
+		select * from eval_his_list where eval_id = #{eval_id} and emp_id = #{emp_id} 
+	</select>
 
 
 
