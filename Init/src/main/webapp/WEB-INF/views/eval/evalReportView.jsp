@@ -137,9 +137,9 @@ ${checkHisInfo } --%>
         	// 작성한 내역이 있는지 없는지에 따른 저장/수정 버튼 토글
         	var checkHisReportEval = "${checkHisInfo}";
         	if(checkHisReportEval === 'yes'){
-        		$('#saveEvalBtn').css('display', 'none');
+        		$('#saveEvalBtn').prop('disabled',true);
         	} else {
-        		$('#updateEvalBtn').css('display', 'none');
+        		$('#updateEvalBtn').prop('disabled',true);
         	}
         	
         	

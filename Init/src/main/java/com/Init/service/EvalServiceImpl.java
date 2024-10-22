@@ -86,6 +86,55 @@ public class EvalServiceImpl implements EvalService{
 		evdao.updateEvalReport(vo);
 	}
 	 
-	 
+	// 성과관리페이지에서 평가시작으로 변경
+	@Override
+	public void startEval(EvalVO vo) {
+		evdao.startEval(vo);
+	}
+	
+	// 성과보고페이지 접근 시 이전 모든 이력 가져오기
+	@Override
+	public List<EvalVO> getHisEvalReportAll(String emp_id) {
+		return evdao.getHisEvalReportAll(emp_id);
+	}
+	
+	// 성과평가 페이지 접근자 부서정보 가져오기
+	@Override
+	public EvalVO getEvaluatorInfo(String emp_id) {
+		return evdao.getEvaluatorInfo(emp_id);
+	}
+	
+	// 평가시작된 eval_id와 부서 하위직원 내역 가져오기
+	@Override
+	public List<EvalVO> getResultInfoForEval(EvalVO vo) {
+		return evdao.getResultInfoForEval(vo);
+	}
+	
+	// 성과평가 상세페이지에서 보여줄 정보가져오기(his_id별)
+	@Override
+	public EvalVO getReportInfoForEval(String eval_his_id) {
+		return evdao.getReportInfoForEval(eval_his_id);
+	}
+	
+	// 성과평가 저장하기
+	@Override
+	public void saveResultEval(EvalVO vo) {
+		evdao.saveResultEval(vo);
+	}
+	
+	// 성과관리페이지에서 평가종료로 변경
+	@Override
+	public void endEval(EvalVO vo) {
+		evdao.endEval(vo);
+	}
+	
+	// 성과이력조회 이동 후 데이터 가져오기
+	@Override
+	public List<EvalVO> getEvalHisInquiry(String emp_id) {
+		return evdao.getEvalHisInquiry(emp_id);
+	}
+	
+	
+	
 	
 }

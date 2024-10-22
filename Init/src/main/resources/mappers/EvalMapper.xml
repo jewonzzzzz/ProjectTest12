@@ -73,6 +73,86 @@
 		where eval_id = #{eval_id} and emp_id=#{emp_id} 
 	</select>
 	
+	<!-- 성과관리페이지에서 평가시작으로 변경(성과테이블 평가시작으로 변경) -->
+	<select id="startEval" >
+		update eval_list 
+		set eval_status = '평가시작' 
+		where eval_id = #{eval_id} 
+	</select>
+	
+	<!-- 성과관리페이지에서 평가시작으로 변경(성과테이블 평가시작으로 변경) -->
+	<select id="startEvalForHis" >
+		update eval_his_list 
+		set eval_his_status = '평가미완료' 
+		where eval_id = #{eval_id} 
+	</select>
+	
+	<!-- 성과보고페이지 접근 시 이전 모든 이력 가져오기 -->
+	<select id="getHisEvalReportAll" resultType="EvalVO">
+		select * from eval_his_list where emp_id = #{emp_id} and eval_his_status not in ('작성완료') 
+	</select>
+	
+	<!-- 성과보고페이지 접근 시 이전 모든 이력 가져오기 -->
+	<select id="getEvaluatorInfo" resultType="EvalVO">
+		select emp_dnum, emp_id, emp_name, emp_position from employee where emp_id = #{emp_id} 
+	</select>
+	
+	<!-- 평가시작된 eval_id와 부서 하위직원 내역 가져오기 -->
+	<select id="getResultInfoForEval" resultType="EvalVO">
+		select h.emp_id, emp_name,emp_position, eval_his_id, h.eval_id, year, branch, eval_type, eval_name, 
+		eval_start_date, eval_end_date, eval_his_status  
+		from eval_his_list h, eval_list l, employee e 
+		where h.eval_id = l.eval_id and h.emp_id = e.emp_id 
+		and eval_status = '평가시작' 
+		and emp_dnum = #{emp_dnum} 
+		and emp_position in ('팀장','과장','대리','사원') 
+	</select>
+	
+	<!-- 성과평과 상세페이지에서 보여줄 정보 가져오기 -->
+	<select id="getReportInfoForEval" resultType="EvalVO">
+		select h.emp_id, emp_name, emp_position, eval_his_id, h.eval_id, year, branch, eval_type, eval_name, 
+		eval_start_date, eval_end_date, eval_his_status, content, score_perform, score_attendance, 
+		score_develop, score_total, eval_grade, eval_comment  
+		from eval_his_list h, eval_list l, employee e 
+		where h.eval_id = l.eval_id and h.emp_id = e.emp_id 
+		and eval_his_id = #{eval_his_id} 
+	</select>
+	
+	<!-- 성과평가 저장하기 -->
+	<select id="saveResultEval" >
+		update eval_his_list 
+		set evaluator=#{evaluator}, score_perform=#{score_perform}, score_attendance=#{score_attendance}, 
+		score_develop=#{score_develop}, score_total=#{score_total}, eval_grade=#{eval_grade}, 
+		eval_comment=#{eval_comment}, eval_his_status = '평가완료' 
+		where eval_his_id = #{eval_his_id} 
+	</select>
+	
+	<!-- 성과관리페이지에서 평가종료로 변경 -->
+	<select id="endEval" >
+		update eval_list 
+		set eval_status = '평가종료' 
+		where eval_id = #{eval_id} 
+	</select>
+	
+	<!-- 성과관리페이지에서 평가종료로 변경(이력 평가종료로 변경) -->
+	<select id="endEvalForHis" >
+		update eval_his_list 
+		set eval_his_status = '평가종료' 
+		where eval_id = #{eval_id} 
+	</select>
+	
+	<!-- 성과이력조회 이동 후 데이터 가져오기  -->
+	<select id="getEvalHisInquiry" resultType="EvalVO">
+		select eval_his_id, h.eval_id, year, branch, eval_type, eval_name, score_total, eval_grade   
+		from eval_his_list h, eval_list l 
+		where h.eval_id = l.eval_id and emp_id = #{emp_id} and eval_his_status = '평가종료' 
+		order by year desc, branch desc 
+	</select>
+	
+	
+	
+	
+	
 	
 	
 	

@@ -97,11 +97,14 @@ public class EvalController {
 	
 	// 성과보고 페이지 이동
 	@GetMapping(value = "reportEval")
-	public String reportEval(Model model) {
+	public String reportEval(HttpSession session, Model model) {
 		
 		// 성과보고를 위한 성과평가리스트 가져오기
 		EvalVO evalReportInfo = evService.getEvalReportList();
 		model.addAttribute("evalReportInfo", evalReportInfo);
+		
+		// 평가완료된 내역들 보여주기(성과평가 이후 구현)
+		//List<EvalVO> evalReportInfoList = evService.getHisEvalReportAll((String)session.getAttribute("emp_id"));
 		
 		return "eval/reportEval";
 	}
@@ -160,6 +163,92 @@ public class EvalController {
 		
 		return "ok";
 	}
+	
+	// 성과관리페이지에서 평가시작 클릭 시 상태 변경
+	@PostMapping(value = "startEval")
+	public String startEval(EvalVO vo) {
+		logger.debug(vo.toString());
+		evService.startEval(vo);
+		
+		return "redirect:/eval/evalManage";
+	}
+	
+	// 성과평가 페이지 이동(현재 평가시작이 되고 부서장만 접근할 수 있어야됨)
+	@GetMapping(value = "resultEval")
+	public String resultEval(HttpSession session, Model model) {
+		
+		// 부서장이 아닐 시 접근 막기 => 사이드메뉴에서 안보이기
+		
+		String emp_id = (String)session.getAttribute("emp_id");
+		EvalVO vo = evService.getEvaluatorInfo(emp_id);
+		
+		// 평가시작된 eval_id와 부서 하위직원 내역 가져오기
+		List<EvalVO> resultInfoForEval = evService.getResultInfoForEval(vo);
+		model.addAttribute("resultInfoForEval", resultInfoForEval);
+		
+		return "eval/resultEval";
+	}
+	
+	// 성과평가에서 직원별 상세 페이지로 이동
+	@GetMapping(value = "resultEvalDetail")
+	public String resultEvalDetail(@RequestParam("eval_his_id") String eval_his_id,
+			HttpSession session, Model model) {
+		
+		// 평가자 정보 가져오기
+		String emp_id = (String)session.getAttribute("emp_id");
+		EvalVO evaluatorInfo = evService.getEvaluatorInfo(emp_id);
+		
+		// 피평가자 정보 가져오기
+		EvalVO reportInfoForEval = evService.getReportInfoForEval(eval_his_id);
+		model.addAttribute("reportInfoForEval", reportInfoForEval);
+		model.addAttribute("evaluatorInfo", evaluatorInfo);
+		
+		return "eval/resultEvalDetail";
+	}
+	
+	// 성과평가 내용 저장하기
+	@PostMapping(value = "saveResultEval")
+	public String saveResultEval(EvalVO vo) {
+		logger.debug(vo.toString());
+		evService.saveResultEval(vo);
+		
+		return "redirect:/eval/resultEvalDetail?eval_his_id="+vo.getEval_his_id();
+	}
+	
+	// 성과평가 내용 수정하기
+	@PostMapping(value = "updateResultEval")
+	public String updateResultEval(EvalVO vo) {
+		logger.debug(vo.toString());
+		evService.saveResultEval(vo);
+		return "redirect:/eval/resultEvalDetail?eval_his_id="+vo.getEval_his_id();
+	}
+	
+	// 성과관리에서 평가종료로 변경하기
+	@PostMapping(value = "endEval")
+	public String endEval(EvalVO vo) {
+		logger.debug(vo.toString());
+		evService.endEval(vo);
+		
+		return "redirect:/eval/evalManage"; 
+	}
+	
+	// 성과이력조회 페이지 이동
+	@GetMapping(value = "evalHisInquiry")
+	public String evalHisInquiry() {
+		
+		return "eval/evalHisInquiry";
+	}
+	
+	// 성과이력조회 페이지 이동 후 비동기로 데이터 가져오기
+	@PostMapping(value = "getEvalHisInquiry")
+	@ResponseBody
+	public List<EvalVO> getEvalHisInquiry(HttpSession session){
+		String emp_id = (String)session.getAttribute("emp_id");
+		List<EvalVO> evalHisInquiryInfo = evService.getEvalHisInquiry(emp_id);
+		
+		return evalHisInquiryInfo;
+	}
+	
 	
 	
 }

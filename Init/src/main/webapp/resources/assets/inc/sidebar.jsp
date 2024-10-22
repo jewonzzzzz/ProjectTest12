@@ -139,18 +139,18 @@
                       </a>
                     </li>
                     <li>
-                      <a href="charts/sparkline.html">
-                        <span class="sub-item">성과이력관리(관리자)</span>
+                      <a href="/eval/evalHisInquiry">
+                        <span class="sub-item">성과이력조회</span>
                       </a>
                     </li>
                     <li>
                       <a href="/eval/reportEval">
-                        <span class="sub-item">성과보고</span>
+                        <span class="sub-item">성과보고(피평가자)</span>
                       </a>
                     </li>
                     <li>
-                      <a href="charts/sparkline.html">
-                        <span class="sub-item">성과평가</span>
+                      <a href="/eval/resultEval">
+                        <span class="sub-item">성과평가(평가자)</span>
                       </a>
                     </li>
                   </ul>

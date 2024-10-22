@@ -262,9 +262,71 @@
                     });
    	     	 });
         	
+         // 평가시작 클릭 시 리스트id 가지고 이동하기
+            $('#startEvalBtn').click(function(event){
+            	event.preventDefault();
+            	swal({
+     	              title: "성과평가를 시작하시겠습니까?",
+     	              text: "성과 미보고자가 없는지 확인하시기 바랍니다.",
+     	              type: "warning",
+     	              buttons: {
+     	                cancel: {
+     	                  visible: true,
+     	                  text: "취소하기",
+     	                  className: "btn btn-danger",
+     	                },
+     	                confirm: {
+     	                  text: "평가시작",
+     	                  className: "btn btn-success",
+     	                },
+     	              },
+     	            }).then(function(willDelete) {  // 일반 함수 문법으로 변경
+     	             if (willDelete) {
+     	            	$('#inputStartEval').val($('input[name="eval_id"]:checked').val());
+     	            	swal({
+     	            	    title: "Success!",
+     	            	    text: "변경완료",
+     	            	    icon: "success",
+     	            	    buttons: "OK", 
+     	            	}).then(function() {
+     	            		$('#startEvalSubmit').submit();
+                        });
+   	             	}
+                    });
+   	     	 });
         	
-        	
-        	
+         // 평가종료 클릭 시 리스트id 가지고 이동하기
+            $('#endEvalBtn').click(function(event){
+            	event.preventDefault();
+            	swal({
+     	              title: "성과평가를 종료하시겠습니까?",
+     	              text: "평가 미완료자가 없는지 확인하시기 바랍니다.",
+     	              type: "warning",
+     	              buttons: {
+     	                cancel: {
+     	                  visible: true,
+     	                  text: "취소하기",
+     	                  className: "btn btn-danger",
+     	                },
+     	                confirm: {
+     	                  text: "평가종료",
+     	                  className: "btn btn-success",
+     	                },
+     	              },
+     	            }).then(function(willDelete) {  // 일반 함수 문법으로 변경
+     	             if (willDelete) {
+     	            	$('#inputEndEval').val($('input[name="eval_id"]:checked').val());
+     	            	swal({
+     	            	    title: "Success!",
+     	            	    text: "변경완료",
+     	            	    icon: "success",
+     	            	    buttons: "OK", 
+     	            	}).then(function() {
+     	            		$('#endEvalSubmit').submit();
+                        });
+   	             	}
+                    });
+   	     	 });
         	
         	
         	

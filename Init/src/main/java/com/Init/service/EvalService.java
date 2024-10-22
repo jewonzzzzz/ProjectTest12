@@ -42,6 +42,32 @@ public interface EvalService {
 	// 성과보고 내용 수정하기
 	public void updateEvalReport(EvalVO vo);
 	
+	// 성과관리페이지에서 평가시작으로 변경
+	public void startEval(EvalVO vo);
+	
+	// 성과보고페이지 접근 시 이전 모든 이력 가져오기
+	public List<EvalVO> getHisEvalReportAll(String emp_id);
+	
+	// 성과평가 페이지 접근자 부서정보 가져오기
+	public EvalVO getEvaluatorInfo(String emp_id);
+	
+	// 평가시작된 eval_id와 부서 하위직원 내역 가져오기
+	public List<EvalVO> getResultInfoForEval(EvalVO vo);
+	
+	// 성과평가 상세페이지에서 보여줄 정보가져오기(his_id별)
+	public EvalVO getReportInfoForEval(String eval_his_id);
+	
+	// 성과평가 저장하기
+	public void saveResultEval(EvalVO vo);
+	
+	// 성과관리페이지에서 평가종료로 변경
+	public void endEval(EvalVO vo);
+	
+	// 성과이력조회 이동 후 데이터 가져오기
+	public List<EvalVO> getEvalHisInquiry(String emp_id);
+	
+	
+	
 	
 	
 	

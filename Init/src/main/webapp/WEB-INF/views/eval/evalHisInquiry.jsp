@@ -56,9 +56,9 @@
         <div class="container">
           <div class="page-inner">
 <!------------------------------------------------------------------------------------------------------------------>
-<%-- ${evalReportInfo } --%>
-<div class="page-header">
-              <h3 class="fw-bold mb-3">성과관리</h3>
+
+			<div class="page-header">
+              <h3 class="fw-bold mb-3">성과이력 조회</h3>
               <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
                   <a href="/salary/main">
@@ -75,71 +75,89 @@
                   <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                  <a href="#">성과관리(관리자)</a>
+                  <a href="#">성과이력 조회</a>
                 </li>
               </ul>
             </div>
-        <div class="row">
+            
+            <div class="row">
               <div class="col-md-11">
+              <div class="form">
                 <div class="card">
                   <div class="card-header">
-                    <div style="display: flex; justify-content:space-between;">
-	                    <div class="card-title">성과보고</div>
-                  	</div>
+                    <div class="card-title">성과이력 조회</div>
                   </div>
-                  <div class="card-body" style="padding-top: 10px;">
-                    <table id="basic-datatables"
-                        class="display table table-striped table-hover">
-                      <thead>
-                        <tr>
-                          <th scope="col">연도</th>
-                          <th scope="col">반기</th>
-                          <th scope="col">평가유형</th>
-                          <th scope="col">성과평가명</th>
-                          <th scope="col">보고시작일</th>
-                          <th scope="col">보고종료일</th>
-                          <th scope="col">상태</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                      <c:choose>
-                      	<c:when test="${evalReportInfo != null }">
-                      		<tr>
-                      		<td>${evalReportInfo.year }</td>
-                      		<td>${evalReportInfo.branch }</td>
-                      		<td>${evalReportInfo.eval_type }</td>
-                      		<td><a href="/eval/evalReportView?eval_id=${evalReportInfo.eval_id }">${evalReportInfo.eval_name }</a></td>
-                      		<td>${evalReportInfo.eval_report_start }</td>
-                      		<td>${evalReportInfo.eval_report_end }</td>
-                      		<td>${evalReportInfo.eval_status }</td>
-                      	</tr></c:when>
-                      	<c:otherwise>
-                      	<tr><td colspan="7" style="text-align: center;">현재 진행중인 성과평가가 없습니다.</td></tr>
-                      	</c:otherwise></c:choose>
-                      </tbody>
-                    </table>
+                  
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table
+                        id="basic-datatables"
+                        class="display table table-striped table-hover"
+                      >
+                        <thead>
+                          <tr>
+                          <th>연도</th>
+                          <th>반기</th>
+                          <th>평가유형</th>
+                          <th>성과평가명</th>
+                          <th>평가점수</th>
+                          <th>평가등급</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
+              
+              	
             </div>
-            
+            </div>
             
             <script>
         $(document).ready(function() {
-        	
-        	//데이터테이블 설정
-        	$("#basic-datatables").DataTable({
-        		pageLength: 5,
-        		drawCallback: function() { //가운대 정렬
+            
+            // 첫화면 로드 시 평가정보 가져오기
+            	$.ajax({
+            		url:'/eval/getEvalHisInquiry',
+            		type: 'POST',
+            		contentType: 'application/json',
+            		success: function(response) {
+            			dataTable.clear();
+            			response.forEach(function(data){
+            				dataTable.row.add([
+                            data.year,
+                            data.branch,
+                            data.eval_type,
+                            '<a href="/eval/resultEvalDetail?eval_his_id='+data.eval_his_id+'">'+data.eval_name+'</a>',
+                            data.score_total,
+                            data.eval_grade,
+                            ]);
+            			});
+            			dataTable.draw();
+            		},
+            		error: function(xhr, status, error) {
+                        swal("Error!", "실패", "error");
+                    }
+            	});
+            
+            
+         	
+            // 테이블 설정
+            let dataTable = $("#basic-datatables").DataTable({
+            	pageLength: 6,
+            	drawCallback: function() { //가운대 정렬
         			$('#basic-datatables th, #basic-datatables td').css({
         	            'text-align': 'center',
         	            'vertical-align': 'middle'
         	        });
-        		}
-        	});
-        	
-         	
-        });
+            	 }
+            });
+        
+        
+        });//ready
     </script>
 <!------------------------------------------------------------------------------------------------------------------>
           </div>
@@ -150,8 +168,8 @@
       </div>
       <!-- main-panel -->
     </div>
-    <!-- main-wrapper -->
-
+    <!-- main-wrapper -->   
+    
     <!--   Core JS Files   -->
     <script src="${pageContext.request.contextPath }/resources/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="${pageContext.request.contextPath }/resources/assets/js/core/popper.min.js"></script>

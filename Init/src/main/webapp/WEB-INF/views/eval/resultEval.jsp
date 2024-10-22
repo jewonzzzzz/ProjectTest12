@@ -56,7 +56,7 @@
         <div class="container">
           <div class="page-inner">
 <!------------------------------------------------------------------------------------------------------------------>
-<%-- ${evalReportInfo } --%>
+<%-- ${resultInfoForEval } --%>
 <div class="page-header">
               <h3 class="fw-bold mb-3">성과관리</h3>
               <ul class="breadcrumbs mb-3">
@@ -95,27 +95,28 @@
                           <th scope="col">연도</th>
                           <th scope="col">반기</th>
                           <th scope="col">평가유형</th>
+                          <th scope="col">사원번호</th>
+                          <th scope="col">직급</th>
+                          <th scope="col">사원명</th>
                           <th scope="col">성과평가명</th>
-                          <th scope="col">보고시작일</th>
-                          <th scope="col">보고종료일</th>
+                          <th scope="col">평가종료일</th>
                           <th scope="col">상태</th>
                         </tr>
                       </thead>
                       <tbody>
-                      <c:choose>
-                      	<c:when test="${evalReportInfo != null }">
+                      	<c:forEach var="list" items="${resultInfoForEval }">
                       		<tr>
-                      		<td>${evalReportInfo.year }</td>
-                      		<td>${evalReportInfo.branch }</td>
-                      		<td>${evalReportInfo.eval_type }</td>
-                      		<td><a href="/eval/evalReportView?eval_id=${evalReportInfo.eval_id }">${evalReportInfo.eval_name }</a></td>
-                      		<td>${evalReportInfo.eval_report_start }</td>
-                      		<td>${evalReportInfo.eval_report_end }</td>
-                      		<td>${evalReportInfo.eval_status }</td>
-                      	</tr></c:when>
-                      	<c:otherwise>
-                      	<tr><td colspan="7" style="text-align: center;">현재 진행중인 성과평가가 없습니다.</td></tr>
-                      	</c:otherwise></c:choose>
+                      			<td>${list.year }</td>
+                      			<td>${list.branch }</td>
+                      			<td>${list.eval_type }</td>
+                      			<td>${list.emp_id }</td>
+                      			<td>${list.emp_position }</td>
+                      			<td><a href="/eval/resultEvalDetail?eval_his_id=${list.eval_his_id }">${list.emp_name }(평가하기)</a></td>
+                      			<td>${list.eval_name }</td>
+                      			<td>${list.eval_end_date }</td>
+                      			<td>${list.eval_his_status }</td>
+                      		</tr>
+                      	</c:forEach>
                       </tbody>
                     </table>
                   </div>
