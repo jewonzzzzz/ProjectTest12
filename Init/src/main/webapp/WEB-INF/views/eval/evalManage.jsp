@@ -128,7 +128,7 @@
                       		<td>${list.year }</td>
                       		<td>${list.branch }</td>
                       		<td>${list.eval_type }</td>
-                      		<td>${list.eval_name }</td>
+                      		<td><a href="/eval/evalDetail?eval_id=${list.eval_id }">${list.eval_name }</a></td>
                       		<td>${list.eval_start_date }</td>
                       		<td>${list.eval_end_date }</td>
                       		<td>${list.eval_status }</td>

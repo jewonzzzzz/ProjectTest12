@@ -139,5 +139,18 @@ public class EvalDAOImpl implements EvalDAO {
 		return sqlSession.selectList(NAMESPACE+".getEvalHisInquiry", emp_id);
 	}
 	
+	// 성과관리 상세페이지에서 수정하기
+	@Override
+	public void evalUpdate(EvalVO vo) {
+		sqlSession.update(NAMESPACE+".evalUpdate", vo);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

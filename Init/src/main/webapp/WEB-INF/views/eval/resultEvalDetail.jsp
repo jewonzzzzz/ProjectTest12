@@ -90,9 +90,9 @@
                     <div>
 		              <button type="submit" id="saveResultEvalBtn" class="btn btn-primary">저장하기</button>
 		              <button type="button" id="updateResultEvalBtn" class="btn btn-primary">수정하기</button>
-		              <button type="button" class="btn btn-primary" onclick="location.href='/eval/resultEval'">목록으로</button>
+		              <button type="button" id="backBtn" class="btn btn-primary" onclick="history.back()">목록으로</button>
 		            </div>
-                    </div>
+                   </div>
                   <div class="card-body">
                     <div class="row"> 
                       <div class="col">
@@ -119,21 +119,21 @@
                           <div class="d-flex" style="justify-content: center;">
                           <c:forEach var="i" begin="1" end="10">
                             <div class="form-check" style="display: flex; flex-direction: column; padding-right: 1px;">
-                              <input class="form-check-input" type="radio" name="score_perform" value="${i }" required">
+                              <input class="form-check-input" type="radio" name="score_perform" value="${i }" required>
                               <label class="form-check-label" for="flexRadioDefault1">${i }</label>
                             </div></c:forEach>
                           </div></td>
                           <td style="padding: 0px 24px !important; height: 30px;"><div class="d-flex" style="justify-content: center;">
                           <c:forEach var="i" begin="1" end="10">
                             <div class="form-check" style="display: flex; flex-direction: column; padding-right: 1px;">
-                              <input class="form-check-input" type="radio" name="score_attendance" value="${i }" required">
+                              <input class="form-check-input" type="radio" name="score_attendance" value="${i }" required>
                               <label class="form-check-label" for="flexRadioDefault1">${i }</label>
                             </div></c:forEach>
                           </div></td>
                           <td style="padding: 0px 24px !important; height: 30px;"><div class="d-flex" style="justify-content: center;">
                           <c:forEach var="i" begin="1" end="10">
                             <div class="form-check" style="display: flex; flex-direction: column; padding-right: 1px;">
-                              <input class="form-check-input" type="radio" name="score_develop" value="${i }" required">
+                              <input class="form-check-input" type="radio" name="score_develop" value="${i }" required>
                               <label class="form-check-label" for="flexRadioDefault1">${i }</label>
                             </div></c:forEach>
                           </div></td>
@@ -156,13 +156,14 @@
 	                            value="${reportInfoForEval.eval_grade }">
 	                          </div>
 	                          <div class="input-group mb-3" style="flex: 2">
-	                            <span class="input-group-text">성과결과평</span>
+	                            <span class="input-group-text">평과결과평</span>
 	                            <input type="text" class="form-control" name="eval_comment" required
 	                            value="${reportInfoForEval.eval_comment }">
 	                          </div>
                           </div>
+                          </div>
                           
-                        <div class="form-group">
+                        <div class="form-group" >
                           <label class="mb-2" style="font-size:16px !important"><b>업무성과 상세보고</b></label>
                           <textarea name="content" class="form-control" rows="9" readonly
                           >${reportInfoForEval.content }</textarea>
@@ -176,6 +177,7 @@
                     </div>
             <input type="hidden" name="eval_his_id" value="${reportInfoForEval.eval_his_id }">
             <input type="hidden" name="evaluator" value="${evaluatorInfo.emp_id }">
+             </div>
           </form>
                  
         <script>
@@ -183,13 +185,25 @@
         	
         	// 작성한 내역이 있는지 없는지에 따른 저장/수정 및 불러온 값 지정하기
         	var checkHisReportEval = "${reportInfoForEval.eval_his_status}";
-        	if(checkHisReportEval === '평가완료'){
+        	if(checkHisReportEval === '평가미완료'){
+        		$('#updateResultEvalBtn').prop('disabled',true);
+        		$('#backBtn').attr('onclick',"location.href='/eval/resultEval'")
+        	} else if(checkHisReportEval === '평가완료') {
         		$('#saveResultEvalBtn').prop('disabled',true);
+        		$('#backBtn').attr('onclick',"location.href='/eval/resultEval'")
         		$('input[name="score_perform"][value="' + '${reportInfoForEval.score_perform}' + '"]').prop('checked', true);
         		$('input[name="score_attendance"][value="' + '${reportInfoForEval.score_attendance}' + '"]').prop('checked', true);
         		$('input[name="score_develop"][value="' + '${reportInfoForEval.score_develop}' + '"]').prop('checked', true);
         	} else {
-        		$('#updateResultEvalBtn').prop('disabled',true);
+        		$('#updateResultEvalBtn').hide();
+        		$('#saveResultEvalBtn').hide();
+        		$('input[name="score_perform"][value="' + '${reportInfoForEval.score_perform}' + '"]').prop('checked', true);
+        		$('input[name="score_attendance"][value="' + '${reportInfoForEval.score_attendance}' + '"]').prop('checked', true);
+        		$('input[name="score_develop"][value="' + '${reportInfoForEval.score_develop}' + '"]').prop('checked', true);
+        		$('input[name="score_perform"]').prop('disabled', true);
+        		$('input[name="score_attendance"]').prop('disabled', true);
+        		$('input[name="score_develop"]').prop('disabled', true);
+        		$('input[name="eval_comment"]').prop('disabled', true);
         	}
         	
         	 // 모든 라디오 버튼의 클릭 이벤트에 대해 처리
@@ -238,7 +252,7 @@
         	
         	
         	//평가완료 버튼 클릭 시 성과이력테이블에 저장하기
-            $('#saveResultEvalForm').on('submit', function(event){
+            $('#resultEvalForm').on('submit', function(event){
             	event.preventDefault();
             	swal({
    	              title: "성과평가 내용을 저장하시겠습니까?",
@@ -263,7 +277,7 @@
    	            	    icon: "success",
    	            	    buttons: "OK", 
    	            	}).then(function() {
-   	            		$('#saveResultEvalForm').off('submit').submit();
+   	            		$('#resultEvalForm').off('submit').submit();
                       });
  	             	}
                   });
@@ -271,6 +285,7 @@
         	
         	// 수정버튼 클릭 시 수정form 수행
         	$('#updateResultEvalBtn').click(function(){
+        		event.preventDefault();
         		$('#resultEvalForm').attr('action','/eval/updateResultEval');
         		swal({
      	              title: "성과평가 내용을 수정하시겠습니까?",
@@ -295,7 +310,7 @@
      	            	    icon: "success",
      	            	    buttons: "OK", 
      	            	}).then(function() {
-     	            		$('#resultEvalForm').submit();
+     	            		$('#resultEvalForm').off('submit').submit();
                         });
    	             	}
                     });

@@ -134,7 +134,11 @@ public class EvalServiceImpl implements EvalService{
 		return evdao.getEvalHisInquiry(emp_id);
 	}
 	
-	
+	// 성과관리 상세페이지에서 수정하기
+	@Override
+	public void evalUpdate(EvalVO vo) {
+		evdao.evalUpdate(vo);
+	}
 	
 	
 }

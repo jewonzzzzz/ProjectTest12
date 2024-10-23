@@ -214,7 +214,7 @@
                     <div class="card-title">급여산출 상세내역</div>
                   </div>
                   <div class="card-body">
-                    <div class="table-responsive">
+                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                       <table class="table table-bordered" id="calSalaryTable">
                         <thead>
                           <tr>

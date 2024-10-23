@@ -188,6 +188,7 @@
                     <div class="card-title">직원정보 조회</div>
                   </div>
                   <div class="card-body">
+                  <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                     <table class="table table-striped mt-3" id="resultTable">
                       <thead>
                         <tr>
@@ -205,6 +206,7 @@
                       <tbody>
                       </tbody>
                     </table>
+                  </div>
                   </div>
                 </div>
                 </div>

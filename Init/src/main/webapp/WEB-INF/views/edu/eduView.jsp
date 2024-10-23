@@ -90,7 +90,7 @@
                     <c:if test="${eduInfo.edu_list_status == '임시저장'}">
 		              <button type="submit" id="eduUpdateBtn" class="btn btn-primary">수정하기</button>
                     </c:if>
-		              <button type="button" class="btn btn-primary" onclick="location.href='/edu/eduManage'">목록으로</button>
+		              <button type="button" class="btn btn-primary" onclick="history.back()">목록으로</button>
 		            </div>
                     </div>
                   <div class="card-body">

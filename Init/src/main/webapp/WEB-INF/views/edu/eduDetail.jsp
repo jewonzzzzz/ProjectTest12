@@ -88,7 +88,7 @@
                     <div class="card-title">교육 상세조회</div>
                     <div>
 		              <button type="submit" id="eduApplyBtn" class="btn btn-primary">신청하기</button>
-		              <button type="button" class="btn btn-primary" onclick="location.href='/edu/eduApply'">목록으로</button>
+		              <button type="button" class="btn btn-primary" onclick="history.back()">목록으로</button>
 		            </div>
                     </div>
                   <div class="card-body">

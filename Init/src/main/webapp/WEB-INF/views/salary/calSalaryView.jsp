@@ -96,9 +96,9 @@
             <div class="row">
               <div class="col-md-11">
               	<div style="margin-bottom: 10px; display: flex; justify-content: flex-end;;">
-              		<a href="/salary/calSalary"><button type="button" class="btn btn-primary">
-                            목록으로
-                 	</button></a>
+              		<button type="button" class="btn btn-primary" onclick="history.back()">
+                            	목록으로
+                    </button>
               	</div>
                 <div class="card">
                   <div class="card-header">

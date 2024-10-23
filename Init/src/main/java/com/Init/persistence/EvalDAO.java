@@ -66,7 +66,8 @@ public interface EvalDAO {
 	// 성과이력조회 이동 후 데이터 가져오기
 	public List<EvalVO> getEvalHisInquiry(String emp_id);
 	
-	
+	// 성과관리 상세페이지에서 수정하기
+	public void evalUpdate(EvalVO vo);
 	
 	
 }

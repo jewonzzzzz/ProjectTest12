@@ -106,7 +106,7 @@ ${checkHisInfo } --%>
                       </div>
                         <div class="form-group">
                           <label class="mb-2" style="font-size:16px !important"><b>업무성과 상세보고</b></label>
-                          <textarea name="content" class="form-control" id="comment" rows="9" required
+                          <textarea name="content" class="form-control" id="comment" rows="12" required
                           ><c:choose><c:when test="${checkHisInfo == 'yes'}">${evalHisReportInfo.content }</c:when
                           ><c:otherwise>[0월 업무성과]&#10;1.업무명&#10;:업무성과&#10;&#10;&#10;&#10;[최대 2000자]
 						    </c:otherwise></c:choose></textarea>

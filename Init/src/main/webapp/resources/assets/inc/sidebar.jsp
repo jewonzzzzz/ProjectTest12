@@ -60,7 +60,7 @@
               
               <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#base">
-                  <i class="fas fa-layer-group"></i>
+                  <i class="fas fa-calculator"></i>
                   <p>급여관리</p>
                   <span class="caret"></span>
                 </a>
@@ -96,7 +96,7 @@
               </li>
               <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#maps">
-                  <i class="fas fa-map-marker-alt"></i>
+                  <i class="fas fa-chalkboard-teacher"></i>
                   <p>교육관리</p>
                   <span class="caret"></span>
                 </a>

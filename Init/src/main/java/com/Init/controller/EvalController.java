@@ -103,9 +103,6 @@ public class EvalController {
 		EvalVO evalReportInfo = evService.getEvalReportList();
 		model.addAttribute("evalReportInfo", evalReportInfo);
 		
-		// 평가완료된 내역들 보여주기(성과평가 이후 구현)
-		//List<EvalVO> evalReportInfoList = evService.getHisEvalReportAll((String)session.getAttribute("emp_id"));
-		
 		return "eval/reportEval";
 	}
 	
@@ -218,7 +215,7 @@ public class EvalController {
 	// 성과평가 내용 수정하기
 	@PostMapping(value = "updateResultEval")
 	public String updateResultEval(EvalVO vo) {
-		logger.debug(vo.toString());
+		logger.debug("updateResultEval : "+vo.toString());
 		evService.saveResultEval(vo);
 		return "redirect:/eval/resultEvalDetail?eval_his_id="+vo.getEval_his_id();
 	}
@@ -249,6 +246,25 @@ public class EvalController {
 		return evalHisInquiryInfo;
 	}
 	
+	// 성과관리에서 성과평가명 클릭 시 상세페이지 이동
+	@GetMapping(value = "evalDetail")
+	public String evalDetail(@RequestParam("eval_id") String eval_id, Model model) {
+		logger.debug("eval_id :" + eval_id);
+		
+		// 받아온 eval_id로 정보 가져와서 뷰로 전달
+		EvalVO evalInfo = evService.getEvalInfoForView(eval_id);
+		model.addAttribute("evalInfo", evalInfo);
+		
+		return "eval/evalDetail";
+	}
+	
+	// 성과관리 상세페이지에서 수정하기
+	@PostMapping(value = "evalUpdate")
+	public String evalUpdate(EvalVO vo) {
+		logger.debug(vo.toString());
+		evService.evalUpdate(vo);
+		return "redirect:/eval/evalDetail?eval_id="+vo.getEval_id();
+	}
 	
 	
 }

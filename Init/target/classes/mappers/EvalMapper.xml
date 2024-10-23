@@ -149,7 +149,14 @@
 		order by year desc, branch desc 
 	</select>
 	
-	
+	<!-- 성과관리 상세페이지에서 수정하기 -->
+	<select id="evalUpdate">
+		update eval_list 
+		set eval_type=#{eval_type}, eval_name=#{eval_name}, year=#{year}, branch=#{branch}, 
+		eval_report_start=#{eval_report_start}, eval_report_end=#{eval_report_end}, 
+		eval_start_date=#{eval_start_date}, eval_end_date=#{eval_end_date}, eval_name=#{eval_name} 
+		where eval_id=#{eval_id} 
+	</select>
 	
 	
 	
