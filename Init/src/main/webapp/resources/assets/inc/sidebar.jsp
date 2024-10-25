@@ -157,6 +157,22 @@
                 </div>
               </li>
               <li class="nav-item">
+                <a data-bs-toggle="collapse" href="#atten">
+                  <i class="far fa-chart-bar"></i>
+                  <p>근태테스트</p>
+                  <span class="caret"></span>
+                </a>
+                <div class="collapse" id="atten">
+                  <ul class="nav nav-collapse">
+                    <li>
+                      <a href="/att/attTest">
+                        <span class="sub-item">근태테스트</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li class="nav-item">
                 <a href="widgets.html">
                   <i class="fas fa-desktop"></i>
                   <p>Widgets</p>
